@@ -1,4 +1,4 @@
-
+package k_j_a;
 
 public class JavaClassifier
 {
