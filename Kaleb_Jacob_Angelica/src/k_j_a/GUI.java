@@ -405,7 +405,7 @@ public class GUI extends JFrame {
 
     private void ai_v_ai_butMouseClicked(MouseEvent evt) {
 
-        paint_board(game_board_panel.getGraphics());
+        //paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
 
@@ -482,6 +482,7 @@ public class GUI extends JFrame {
         /* Case Nobody wins */
         int tie = 0;
         if (ai == 0) {
+            System.out.println("SHOULD NOT RUN WITH AI.");
             for (int i = 0; i < legal_moves.length; i++) {
                 if (legal_moves[i][2] == 1) {
                     tie++;
@@ -504,7 +505,7 @@ public class GUI extends JFrame {
         game_board_panel.paint(g);
         g.setColor(Color.BLUE);
 
-        /* Outter Ring */
+        /* Outter Ring */ 
         g.drawOval(25, 25, 450, 450);
 
         /* Second Ring */
@@ -597,10 +598,9 @@ public class GUI extends JFrame {
 
     private void aiSimulation() {
         
-        TDNN test = new TDNN(20, 40, 3);
-        TDNN ran = new TDNN(20, 40, 3);
-        test.train(60);
-        int tie = 0;
+        TDNN test = new TDNN(48, 40, 3);
+        TDNN ran = new TDNN(48, 40, 3);
+        test.train(1000);
 
         //test trained network against random one
         int win = 0;
@@ -645,19 +645,7 @@ public class GUI extends JFrame {
                         y = get_x_y[1];
                         playerMove(x,y,1);
                         GUI.game_state_display.append(" 0.0");
-                        tie++;
-                        if (tie == 48 && i < 49) {
-                            for (int k = 0; k < legal_moves.length; k++) {
-                                legal_moves[k][2] = 0;
-                            }
-                            Graphics g = game_board_panel.getGraphics();
-                            game_board_panel.paint(g);
-                            g.setColor(Color.LIGHT_GRAY);
-                            game_board_panel.repaint();
-                            paint_board(game_board_panel.getGraphics());
-                            tie = 0;
-                        }
-                        
+                        /* need to add something for the winchecker here */
                     } else {
                         GUI.game_state_display.append(" " + board[index]);
                     }
@@ -666,8 +654,27 @@ public class GUI extends JFrame {
                 GUI.game_state_display.append("\n");
             }
             if (Winchecker.check(board) == player) {
+                    for (int k = 0; k < legal_moves.length; k++) {
+                        legal_moves[k][2] = 0;
+                    }
+                    Graphics g = game_board_panel.getGraphics();
+                    game_board_panel.paint(g);
+                    g.setColor(Color.LIGHT_GRAY);
+                    game_board_panel.repaint();
+                    paint_board(game_board_panel.getGraphics());
                 win++;
             }
+            if (Winchecker.check(board) == player2) {
+                    for (int k = 0; k < legal_moves.length; k++) {
+                        legal_moves[k][2] = 0;
+                    }
+                    Graphics g = game_board_panel.getGraphics();
+                    game_board_panel.paint(g);
+                    g.setColor(Color.LIGHT_GRAY);
+                    game_board_panel.repaint();
+                    paint_board(game_board_panel.getGraphics());
+            }
+            
         }
         GUI.game_state_display.append("percent won = " + (double) win / 50.0 + "\n");
         /* Activate play again button*/

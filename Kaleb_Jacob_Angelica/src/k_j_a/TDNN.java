@@ -208,7 +208,7 @@ public class TDNN {
                     board = random(2, board);
                 }
             } while (Winchecker.check(board) < 0);
-            System.out.println("Finished trainging with game " + g + "\nWinner was player " + Winchecker.check(board));
+            //System.out.println("Finished trainging with game " + g + "\nWinner was player " + Winchecker.check(board));
 
             //***********Train from player ones perspective
             int ex = Y.size();
@@ -272,12 +272,12 @@ public class TDNN {
                 for (int i = 0; i < derP1[0].length; i++) {
                     for (int j = 0; j < derP1[1].length; j++) {
                         w[0][j] += derP1[0][i] * sumP1[j];
-                    }
-                    if (w[1][i] > 3) {
-                        w[1][i] = 3;
-                    }
-                    if (w[1][i] < -3) {
-                        w[1][i] = -3;
+                        if (w[0][j] > 3) {
+                            w[0][j] = 3;
+                        }
+                        if (w[0][j] < -3) {
+                            w[0][j] = -3;
+                        }
                     }
                 }
 
@@ -345,12 +345,12 @@ public class TDNN {
                     for (int i = 0; i < derP2[0].length; i++) {
                         for (int j = 0; j < derP2[1].length; j++) {
                             w[0][j] += derP2[0][i] * sumP2[j];
-                        }
-                        if (w[1][i] > 3) {
-                            w[1][i] = 3;
-                        }
-                        if (w[1][i] < -3) {
-                            w[1][i] = -3;
+                            if (w[0][j] > 3) {
+                                w[0][j] = 3;
+                            }
+                            if (w[0][j] < -3) {
+                                w[0][j] = -3;
+                            }
                         }
                     }
 
@@ -358,12 +358,12 @@ public class TDNN {
                 }
             }
 
-            System.out.println("Weights");
+            //System.out.println("Weights");
             for (int i = 0; i < w.length; i++) {
                 for (int j = 0; j < w[i].length; j++) {
-                    System.out.print(" " + w[i][j]);
+                    //System.out.print(" " + w[i][j]);
                 }
-                System.out.println("");
+                // System.out.println("");
             }
         }
     }
@@ -465,7 +465,7 @@ public class TDNN {
 
         //case of empty board then all possible
         if (max == 0) {
-            System.out.println("Empty board");
+            //System.out.println("Empty board");
             for (int i = 0; i < in.length; i++) {
                 all[max++][i] = player;
             }
@@ -594,13 +594,13 @@ public class TDNN {
      */
     public void setWeights(double[][] in) {
         if (in.length != w.length) {
-            System.out.println("Error with set weight input!");
+            //System.out.println("Error with set weight input!");
             return;
         }
 
         for (int i = 0; i < w.length; i++) {
             if (in[i].length != w[i].length) {
-                System.out.println("Error setting weights");
+                //System.out.println("Error setting weights");
                 return;
             }
             for (int j = 0; j < w[i].length; j++) {
