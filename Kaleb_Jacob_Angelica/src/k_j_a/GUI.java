@@ -1,41 +1,40 @@
-
-
 package k_j_a;
+
 /**
  *
  * @author Kaleb
  */
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Robot;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import wincheck.Winchecker;
 
 @SuppressWarnings("serial")
-public class Main extends JFrame {
+public class GUI extends JFrame {
 
     private JLabel ai_lbl;                        /* Label */
-    private static JProgressBar ai_progress_bar;  /* AI progress bar */
-    private JPanel ai_thinking_quit_panel;        /* Panel for ai elements */
-    private static JButton ai_v_ai_but;           /* Button for game mode */
-    private static JButton ai_v_human_but;        /* Button for game mode */
-    private static JButton human_v_ai_but;        /* Button for game mode */
-    private static JButton human_v_human_but;     /* Button for game mode */
-    private static JPanel game_board_panel;       /* Display of the board */
-    private static JTextArea game_state_display;  /* Text area */
+    public static JProgressBar ai_progress_bar;  /* AI progress bar */
+    public JPanel ai_thinking_quit_panel;        /* Panel for ai elements */
+    public static JButton ai_v_ai_but;           /* Button for game mode */
+    public static JButton ai_v_human_but;        /* Button for game mode */
+    public static JButton human_v_ai_but;        /* Button for game mode */
+    public static JButton human_v_human_but;     /* Button for game mode */
+    public static JPanel game_board_panel;       /* Display of the board */
+    public static JTextArea game_state_display;  /* Text area */
     private JLabel game_state_lbl;                /* Label for Text area*/
-    private JPanel game_state_panel;              /* Panel for state elements */
-    private JScrollPane game_state_scrollpane;    /* Scroll pane, Long game */
-    
-    private JPanel options_panel;                 /* Panel for quit/replay */
-    private static JButton play_again_but;        /* Button for replay */
-    private static JButton quit_but;              /* Button for quit */
+    public JPanel game_state_panel;              /* Panel for state elements */
+    public JScrollPane game_state_scrollpane;    /* Scroll pane, Long game */
+    public JPanel options_panel;                 /* Panel for quit/replay */
+    public static JButton play_again_but;        /* Button for replay */
+    public static JButton quit_but;              /* Button for quit */
 
     /* Legal Move Coodinates in (x,y) format:
      * We will use these to judge if a move is legal and paint the pixels up,
@@ -118,30 +117,26 @@ public class Main extends JFrame {
     int[] l4 = {147, 51, 0};
 
     /* An array to store moves that are legal or not legal */
-    int[][] legal_moves = new int[][]{a1, a2, a3, a4, b1, b2, b3, b4, c1, c2,
-        c3, c4, d1, d2, d3, d4, e1, e2, e3, e4,
-        f1, f2, f3, f4, g1, g2, g3, g4, h1, h2,
-        h3, h4, i1, i2, i3, i4, j1, j2, j3, j4,
-        k1, k2, k3, k4, l1, l2, l3, l4};
-    
+    int[][] legal_moves = new int[][]{a1, b1, c1, d1, e1, f1, g1, h1, i1, j1, k1, l1,
+                                      a2, b2, c2, d2, e2, f2, g2, h2, i2, j2, k2, l2,
+                                      a3, b3, c3, d3, e3, f3, g3, h3, i3, j3, k3, l3,
+                                      a4, b4, c4, d4, e4, f4, g4, h4, i4, j4, k4, l4};
+
     char player = 'X';
     ClassLoader cl;
     final BufferedImage playerX_img;
     final BufferedImage playerO_img;
-    final BufferedImage game_over_img;
-    private static MouseListener[] m1;
-    private static MouseListener[] m2;
-    private static MouseListener[] m3;
-    private static MouseListener[] m4;
-    private static MouseListener[] m5;
+    final  BufferedImage game_over_img;
+    public static MouseListener[] m1;
+    public static MouseListener[] m2;
+    public static MouseListener[] m3;
+    public static MouseListener[] m4;
+    public static MouseListener[] m5;
 
-    public Main() throws IOException {
-        this.playerX_img = ImageIO.read(new File
-                                            ("resources/X.png"));
-        this.playerO_img = ImageIO.read(new File
-                                            ("resources/O.png"));
-        this.game_over_img = ImageIO.read(new File
-                                    ("resources/game_over.png"));
+    public GUI() throws IOException {
+        this.playerX_img = ImageIO.read(new File("resources/X.png"));
+        this.playerO_img = ImageIO.read(new File("resources/O.png"));
+        this.game_over_img = ImageIO.read(new File("resources/game_over.png"));
         initComponents();
     }
 
@@ -169,8 +164,7 @@ public class Main extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        game_state_panel.setBorder(BorderFactory.createBevelBorder
-        (javax.swing.border.BevelBorder.RAISED));
+        game_state_panel.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         game_state_lbl.setText("Current Game State");
 
@@ -182,26 +176,20 @@ public class Main extends JFrame {
 
         GroupLayout game_state_panelLayout = new GroupLayout(game_state_panel);
         game_state_panel.setLayout(game_state_panelLayout);
-        game_state_panelLayout.setHorizontalGroup
-        (game_state_panelLayout.createParallelGroup
-        (GroupLayout.Alignment.LEADING)
+        game_state_panelLayout.setHorizontalGroup(game_state_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(GroupLayout.Alignment.TRAILING,
                         game_state_panelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent
-        (game_state_scrollpane, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                                .addContainerGap())
+                        .addComponent(game_state_scrollpane, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                        .addContainerGap())
                 .addGroup(GroupLayout.Alignment.TRAILING,
                         game_state_panelLayout.createSequentialGroup()
-                        .addContainerGap
-        (GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(game_state_lbl)
                         .addGap(49, 49, 49))
         );
 
-        game_state_panelLayout.setVerticalGroup
-        (game_state_panelLayout.createParallelGroup
-        (GroupLayout.Alignment.LEADING)
+        game_state_panelLayout.setVerticalGroup(game_state_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(game_state_panelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(game_state_lbl)
@@ -241,20 +229,16 @@ public class Main extends JFrame {
         GroupLayout options_panelLayout = new GroupLayout(options_panel);
         options_panel.setLayout(options_panelLayout);
         options_panelLayout.setHorizontalGroup(
-                options_panelLayout.createParallelGroup
-        (GroupLayout.Alignment.LEADING)
+                options_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(options_panelLayout.createSequentialGroup()
                         .addContainerGap(69, Short.MAX_VALUE)
-                        .addComponent
-        (human_v_ai_but, GroupLayout.PREFERRED_SIZE,
+                        .addComponent(human_v_ai_but, GroupLayout.PREFERRED_SIZE,
                                 140, GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
-                        .addComponent
-        (ai_v_human_but, GroupLayout.PREFERRED_SIZE,
+                        .addComponent(ai_v_human_but, GroupLayout.PREFERRED_SIZE,
                                 140, GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent
-        (human_v_human_but, GroupLayout.PREFERRED_SIZE,
+                        .addComponent(human_v_human_but, GroupLayout.PREFERRED_SIZE,
                                 140, GroupLayout.PREFERRED_SIZE)
                         .addGap(28, 28, 28)
                         .addComponent(ai_v_ai_but, GroupLayout.PREFERRED_SIZE,
@@ -263,18 +247,13 @@ public class Main extends JFrame {
         );
 
         options_panelLayout.setVerticalGroup(
-                options_panelLayout.createParallelGroup
-        (GroupLayout.Alignment.LEADING)
-                .addGroup(options_panelLayout.createParallelGroup
-        (GroupLayout.Alignment.BASELINE)
-                        .addComponent
-        (ai_v_human_but, GroupLayout.PREFERRED_SIZE,
+                options_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(options_panelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(ai_v_human_but, GroupLayout.PREFERRED_SIZE,
                                 39, GroupLayout.PREFERRED_SIZE)
-                        .addComponent
-        (human_v_ai_but, GroupLayout.PREFERRED_SIZE,
+                        .addComponent(human_v_ai_but, GroupLayout.PREFERRED_SIZE,
                                 40, GroupLayout.PREFERRED_SIZE)
-                        .addComponent
-        (human_v_human_but, GroupLayout.PREFERRED_SIZE,
+                        .addComponent(human_v_human_but, GroupLayout.PREFERRED_SIZE,
                                 38, GroupLayout.PREFERRED_SIZE)
                         .addComponent(ai_v_ai_but, GroupLayout.PREFERRED_SIZE,
                                 36, GroupLayout.PREFERRED_SIZE))
@@ -301,84 +280,66 @@ public class Main extends JFrame {
             }
         });
 
-        GroupLayout ai_thinking_quit_panelLayout = new GroupLayout
-        (ai_thinking_quit_panel);
+        GroupLayout ai_thinking_quit_panelLayout = new GroupLayout(ai_thinking_quit_panel);
         ai_thinking_quit_panel.setLayout(ai_thinking_quit_panelLayout);
-        ai_thinking_quit_panelLayout.setHorizontalGroup
-        (ai_thinking_quit_panelLayout.createParallelGroup
-        (GroupLayout.Alignment.LEADING)
+        ai_thinking_quit_panelLayout.setHorizontalGroup(ai_thinking_quit_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(ai_thinking_quit_panelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent
-        (play_again_but, GroupLayout.PREFERRED_SIZE,
+                        .addComponent(play_again_but, GroupLayout.PREFERRED_SIZE,
                                 100, GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(quit_but, GroupLayout.PREFERRED_SIZE,
                                 100, GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(ai_thinking_quit_panelLayout.
-                                createParallelGroup
-        (GroupLayout.Alignment.LEADING, false)
-                                .addComponent
-        (ai_progress_bar, GroupLayout.DEFAULT_SIZE,
+                                createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addComponent(ai_progress_bar, GroupLayout.DEFAULT_SIZE,
                                         178, Short.MAX_VALUE)
-                                .addComponent
-        (ai_lbl, GroupLayout.DEFAULT_SIZE,
-                                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(ai_lbl, GroupLayout.DEFAULT_SIZE,
+                                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap(GroupLayout.DEFAULT_SIZE,
                                 Short.MAX_VALUE))
         );
 
-        ai_thinking_quit_panelLayout.setVerticalGroup
-        (ai_thinking_quit_panelLayout.createParallelGroup
-        (GroupLayout.Alignment.LEADING)
+        ai_thinking_quit_panelLayout.setVerticalGroup(ai_thinking_quit_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(GroupLayout.Alignment.TRAILING,
                         ai_thinking_quit_panelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup
-        (ai_thinking_quit_panelLayout.createParallelGroup
-        (GroupLayout.Alignment.TRAILING)
-                                .addComponent
-        (play_again_but, GroupLayout.DEFAULT_SIZE,
-                                      GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent
-        (quit_but, GroupLayout.Alignment.LEADING,
-                             GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
+                        .addGroup(ai_thinking_quit_panelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                .addComponent(play_again_but, GroupLayout.DEFAULT_SIZE,
+                                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(quit_but, GroupLayout.Alignment.LEADING,
+                                        GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
                                         Short.MAX_VALUE)
                                 .addGroup(GroupLayout.Alignment.LEADING,
-                            ai_thinking_quit_panelLayout.createSequentialGroup()
+                                        ai_thinking_quit_panelLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
                                         .addComponent(ai_lbl)
-                                        .addPreferredGap
-        (LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent
-        (ai_progress_bar, GroupLayout.PREFERRED_SIZE,
-                                               19, GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(ai_progress_bar, GroupLayout.PREFERRED_SIZE,
+                                                19, GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())
         );
 
         game_board_panel.setBackground(new java.awt.Color(255, 255, 255));
-        game_board_panel.setBorder(BorderFactory.createBevelBorder
-        (javax.swing.border.BevelBorder.RAISED));
+        game_board_panel.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         game_board_panel.setFocusable(false);
         game_board_panel.setMaximumSize(new java.awt.Dimension(500, 500));
         game_board_panel.setMinimumSize(new java.awt.Dimension(500, 500));
         game_board_panel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                    game_board_panelMouseClicked(evt);
+                game_board_panelMouseClicked(evt);
             }
         });
 
         GroupLayout game_board_panelLayout = new GroupLayout(game_board_panel);
         game_board_panel.setLayout(game_board_panelLayout);
         game_board_panelLayout.setHorizontalGroup(
-                game_board_panelLayout.createParallelGroup
-        (GroupLayout.Alignment.LEADING)
+                game_board_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGap(0, 520, Short.MAX_VALUE)
         );
         game_board_panelLayout.setVerticalGroup(
-                game_board_panelLayout.createParallelGroup
-        (GroupLayout.Alignment.LEADING)
+                game_board_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGap(0, 520, Short.MAX_VALUE)
         );
 
@@ -393,36 +354,28 @@ public class Main extends JFrame {
                 .addGroup(GroupLayout.Alignment.TRAILING,
                         layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent
-        (game_board_panel, GroupLayout.PREFERRED_SIZE,
-                           GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(game_board_panel, GroupLayout.PREFERRED_SIZE,
+                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent
-        (game_state_panel, GroupLayout.PREFERRED_SIZE,
-                          GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(game_state_panel, GroupLayout.PREFERRED_SIZE,
+                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
 
-        layout.setVerticalGroup(layout.createParallelGroup
-        (GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                         .addComponent(ai_thinking_quit_panel,
-                           GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
                                 GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup
-        (GroupLayout.Alignment.LEADING, false)
-                                .addComponent
-        (game_board_panel, GroupLayout.DEFAULT_SIZE,
-                                      GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent
-        (game_state_panel, GroupLayout.DEFAULT_SIZE,
-                                     GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap
-        (LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addComponent(game_board_panel, GroupLayout.DEFAULT_SIZE,
+                                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(game_state_panel, GroupLayout.DEFAULT_SIZE,
+                                        GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(options_panel, GroupLayout.PREFERRED_SIZE,
-                           GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap
-        (GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -451,13 +404,16 @@ public class Main extends JFrame {
     }
 
     private void ai_v_ai_butMouseClicked(MouseEvent evt) {
+
         paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
+
+        aiSimulation();
     }
 
     private void play_again_butMouseClicked(MouseEvent evt) {
-        for (int i = 0; i < legal_moves.length; i++){
+        for (int i = 0; i < legal_moves.length; i++) {
             legal_moves[i][2] = 0;
         }
         Graphics g = game_board_panel.getGraphics();
@@ -465,19 +421,24 @@ public class Main extends JFrame {
         g.setColor(Color.LIGHT_GRAY);
         game_board_panel.repaint();
         set_all_focusable();
-        
+
     }
 
-    private void game_board_panelMouseClicked(MouseEvent evt){
-        Point a             = game_board_panel.getMousePosition();
-        int x               = (int) a.getX();
-        int y               = (int) a.getY();
-        boolean successful  = false;
-        String curr         = game_state_display.getText();
+    private void game_board_panelMouseClicked(MouseEvent evt) {
+        Point a = game_board_panel.getMousePosition();
+        int x = (int) a.getX();
+        int y = (int) a.getY();
+        playerMove(x, y, 0);
+    }
+    
+     private void playerMove(int x, int y, int ai){
+        
+        boolean successful = false;
+        String curr = game_state_display.getText();
         int right_x, bottom_y, left_x, top_y;
-        
-        game_state_display.setText(curr + "x,y coordinate: " + x + ", " + y + "\n");
-        
+
+//        game_state_display.setText(curr + "x,y coordinate: " + x + ", " + y + "\n");
+
         /* Logic for checking if a move is legal */
         for (int i = 0; i < legal_moves.length; i++) {
 
@@ -499,7 +460,7 @@ public class Main extends JFrame {
                     game_state_display.setText(curr + "Player X moved\n");
                     g.drawImage(playerX_img, check_x - 10, check_y - 11, this);
                     successful = true;
-                }else {
+                } else {
                     curr = game_state_display.getText();
                     game_state_display.setText(curr + "Player Y moved\n");
                     g.drawImage(playerO_img, check_x - 10, check_y - 11, this);
@@ -508,39 +469,38 @@ public class Main extends JFrame {
                 legal_moves[i][2] = 1;
             }
         } /* END OF IF LEGAL LOOP */
+
         if (successful == false) {
             curr = game_state_display.getText();
             game_state_display.setText(curr + "Not a Legal Move\n");
-        }
-        else if (player == 'X') {
+        } else if (player == 'X') {
             player = 'O';
-        }
-        else{
+        } else {
             player = 'X';
         }
-        
+
         /* Case Nobody wins */
         int tie = 0;
-        for (int i = 0; i < legal_moves.length; i++){
-            if (legal_moves[i][2] == 1){
-                tie++;
-                if (tie == 48){
-                    Graphics g = game_board_panel.getGraphics();
-                    g.drawImage(game_over_img, 10, 60, this);
-                    /* Activate play again button*/
-                    play_again_but.setEnabled(true);  
-                    /* And turn on the mouse listeners so user can click it */
-                    for(int j = 0; j < m5.length; j++){
-                        play_again_but.addMouseListener(m5[j]);
+        if (ai == 0) {
+            for (int i = 0; i < legal_moves.length; i++) {
+                if (legal_moves[i][2] == 1) {
+                    tie++;
+                    if (tie == 48) {
+//                    Graphics g = game_board_panel.getGraphics();
+//                    g.drawImage(game_over_img, 10, 60, this);
+                        /* Activate play again button*/
+                        play_again_but.setEnabled(true);
+                        /* And turn on the mouse listeners so user can click it */
+                        for (int j = 0; j < m5.length; j++) {
+                            play_again_but.addMouseListener(m5[j]);
+                        }
                     }
                 }
             }
         }
-    }
+    }/* END OF playerMove()*/
     
-   
-
-    protected static void paint_board(Graphics g) {
+    public static void paint_board(Graphics g) {
         game_board_panel.paint(g);
         g.setColor(Color.BLUE);
 
@@ -581,78 +541,142 @@ public class Main extends JFrame {
         g.drawLine(175, 250, 25, 250);
     }
 
-    protected static void set_all_non_focusable() {
+    public static void set_all_non_focusable() {
         /* set buttons to appear inactive */
         ai_v_ai_but.setEnabled(false);
         human_v_human_but.setEnabled(false);
         ai_v_human_but.setEnabled(false);
         human_v_ai_but.setEnabled(false);
         play_again_but.setEnabled(false);
-        
+
         /* turn off all the mouselisteners for these buttons */
-        for(int i = 0; i < m1.length; i++){
+        for (int i = 0; i < m1.length; i++) {
             ai_v_ai_but.removeMouseListener(m1[i]);
         }
-        
-        for(int i = 0; i < m2.length; i++){
+
+        for (int i = 0; i < m2.length; i++) {
             human_v_human_but.removeMouseListener(m2[i]);
         }
-        
-        for(int i = 0; i < m3.length; i++){
+
+        for (int i = 0; i < m3.length; i++) {
             ai_v_human_but.removeMouseListener(m3[i]);
         }
-       
-        for(int i = 0; i < m4.length; i++){
+
+        for (int i = 0; i < m4.length; i++) {
             human_v_ai_but.removeMouseListener(m4[i]);
         }
-        
-        for(int i = 0; i < m5.length; i++){
+
+        for (int i = 0; i < m5.length; i++) {
             play_again_but.removeMouseListener(m5[i]);
         }
     }
-    protected static void set_all_focusable() {
+
+    public static void set_all_focusable() {
         ai_v_ai_but.setEnabled(true);
         human_v_human_but.setEnabled(true);
         ai_v_human_but.setEnabled(true);
         human_v_ai_but.setEnabled(true);
-       
+
         /* Turn the mouse listeners back on */
-        for(int i = 0; i < m1.length; i++) {   
+        for (int i = 0; i < m1.length; i++) {
             ai_v_ai_but.addMouseListener(m1[i]);
         }
-        
-        for(int i = 0; i < m2.length; i++){
+
+        for (int i = 0; i < m2.length; i++) {
             human_v_human_but.addMouseListener(m2[i]);
         }
-        
-        for(int i = 0; i < m3.length; i++){
+
+        for (int i = 0; i < m3.length; i++) {
             ai_v_human_but.addMouseListener(m3[i]);
         }
-        
-        for(int i = 0; i < m4.length; i++){
+
+        for (int i = 0; i < m4.length; i++) {
             human_v_ai_but.addMouseListener(m4[i]);
         }
     }
 
-    public static void main(String args[]) {
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+    private void aiSimulation() {
+        
+        TDNN test = new TDNN(20, 40, 3);
+        TDNN ran = new TDNN(20, 40, 3);
+        test.train(60);
+        int tie = 0;
 
-                try {
-                    new Main().setVisible(true);
-                /* store mouselisteners in predefined arrays see variable section */
-                m1 = ai_v_ai_but.getMouseListeners();
-                m2 = human_v_human_but.getMouseListeners();
-                m3 = ai_v_human_but.getMouseListeners();
-                m4 = human_v_ai_but.getMouseListeners();
-                m5 = play_again_but.getMouseListeners();
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        //test trained network against random one
+        int win = 0;
+        for (int i = 0; i < 50; i++) {
+            
+            double[] board = new double[12 * 4];
+            int player = (Math.random() > .5) ? 1 : 2;
+            int player2 = (player == 1) ? 2 : 1;
+            do {
+                if (player == 1) {
+                    board = test.exploit(player, board);
+                    board = ran.random(player2, board);
+                } else {
+                    board = ran.random(player2, board);
+                    board = test.exploit(player, board);
                 }
+            } while (Winchecker.check(board) < 0);
+            GUI.game_state_display.append("Winner was player " + Winchecker.check(board) + " ai was " + player + "\n");
+            GUI.game_state_display.append("Board State\n");
+            int index = 0;
+            int LMSV = 0;
+            int get_x_y[] = new int[3];
+            for (int z = 0; z < 4; z++) {
+                for (int h = 0; h < 12; h++) {
+                    if (board[index] == 0) {
+                        /*LMSV = Legal Move Search Value */
+                        if (z == 0) {
+                            LMSV = z+h;
+                        }
+                        else if (z == 1) {
+                            LMSV = 1+h+(12-1);
+                        }
+                        else if (z == 2) {
+                            LMSV = 1+h+(24-1);
+                        }
+                        else if (z == 3) {
+                            LMSV = 1+h+(36-1);
+                        }
+                        get_x_y = legal_moves[LMSV];
+                        int x, y;
+                        x = get_x_y[0];
+                        y = get_x_y[1];
+                        playerMove(x,y,1);
+                        GUI.game_state_display.append(" 0.0");
+                        tie++;
+                        if (tie == 48 && i < 49) {
+                            for (int k = 0; k < legal_moves.length; k++) {
+                                legal_moves[k][2] = 0;
+                            }
+                            Graphics g = game_board_panel.getGraphics();
+                            game_board_panel.paint(g);
+                            g.setColor(Color.LIGHT_GRAY);
+                            game_board_panel.repaint();
+                            paint_board(game_board_panel.getGraphics());
+                            tie = 0;
+                        }
+                        
+                    } else {
+                        GUI.game_state_display.append(" " + board[index]);
+                    }
+                    index++;
+                }
+                GUI.game_state_display.append("\n");
             }
-        });
+            if (Winchecker.check(board) == player) {
+                win++;
+            }
+        }
+        GUI.game_state_display.append("percent won = " + (double) win / 50.0 + "\n");
+        /* Activate play again button*/
+        play_again_but.setEnabled(true);
+        /* And turn on the mouse listeners so user can click it */
+        for (int j = 0; j < m5.length; j++) {
+            play_again_but.addMouseListener(m5[j]);
+        }
     }
+    
+   
 }
-
