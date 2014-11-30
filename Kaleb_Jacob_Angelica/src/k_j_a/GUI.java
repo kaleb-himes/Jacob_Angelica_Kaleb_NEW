@@ -435,7 +435,12 @@ public class GUI extends JFrame {
         int y = (int) a.getY();
         playerMove(x, y, 0);
     }
-
+    /**
+     * 
+     * @param x the x coordinate gleaned from legal_moves[i][0]
+     * @param y the y coordinate gleaned from legal_moves[i][1]
+     * @param ai a flag to know how to treat game over display
+     */
     public static void playerMove(int x, int y, int ai) {
 
         boolean successful = false;
@@ -485,8 +490,10 @@ public class GUI extends JFrame {
             player = 'X';
         }
     }/* END OF playerMove()*/
-
-
+    /**
+     * 
+     * @param g the graphical display of the game board
+     */
     public static void paint_board(Graphics g) {
         game_board_panel.paint(g);
         g.setColor(Color.BLUE);

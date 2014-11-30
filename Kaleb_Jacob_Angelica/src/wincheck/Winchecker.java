@@ -164,7 +164,7 @@ public class Winchecker {
 
     /**
      * perform a non-brute force, recursive search for a winning state
-     * will search left, right, up, down, eliptical curve for a winner
+     * will search left, right, up, down, elliptical curve for a winner
      *
      * @param node this is the node that was just played. Local search
      * @param player the player who just moved. Since no winning state resulted 
@@ -222,7 +222,7 @@ public class Winchecker {
         board[node][3] = 1; // set the checking for neighbors flag
         winner = check_neighbors(node, player);
         if (winner == 1 && ai == 0) {
-            GUI.game_state_display.append("Player X WINS!!!");
+            GUI.game_state_display.append("Player X WINS!!!\n");
 
             Graphics g = GUI.game_board_panel.getGraphics();
             g.drawImage(GUI.game_over_img, 190, 202, GUI.game_board_panel);
@@ -234,7 +234,7 @@ public class Winchecker {
             }
             return winner;
         } else if (winner == 2 && ai == 0) {
-            GUI.game_state_display.append("Player O WINS!!!");
+            GUI.game_state_display.append("Player O WINS!!!\n");
 
             Graphics g = GUI.game_board_panel.getGraphics();
             g.drawImage(GUI.game_over_img, 190, 202, GUI.game_board_panel);
