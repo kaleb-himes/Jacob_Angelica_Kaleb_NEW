@@ -28,6 +28,12 @@ public class AI_Options_Popup extends JFrame {
     /**
      * Creates new form tempForm
      */
+    private JButton ai_vs_ai_but;
+    private JLabel jLabel1;
+    private JButton min_vs_min_but;
+    private JButton tdnn_vs_min_but;
+    private JButton tdnn_vs_tdnn_but;
+    
     public AI_Options_Popup() {
         initComponents();
     }
@@ -126,28 +132,19 @@ public class AI_Options_Popup extends JFrame {
     private void tdnn_vs_min_butMouseClicked(MouseEvent evt) {
         this.setVisible(false);
         AI_Sim.aiSimulation();
-        // TODO add your handling code here:
     }
 
     private void tdnn_vs_tdnn_butMouseClicked(MouseEvent evt) {
         this.setVisible(false);
         AI_Sim.aiSimulation();
-        // TODO add your handling code here:
     }
 
     private void min_vs_min_butMouseClicked(MouseEvent evt) {
         this.setVisible(false);
         AI_Sim.aiSimulation();
-        // TODO add your handling code here:
     }
     
     public static void ai_popup() {
         new AI_Options_Popup().setVisible(true);
     }
-
-    private JButton ai_vs_ai_but;
-    private JLabel jLabel1;
-    private JButton min_vs_min_but;
-    private JButton tdnn_vs_min_but;
-    private JButton tdnn_vs_tdnn_but;
 }

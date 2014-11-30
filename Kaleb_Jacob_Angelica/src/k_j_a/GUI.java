@@ -389,15 +389,16 @@ public class GUI extends JFrame {
     }
 
     private void human_v_ai_butMouseClicked(MouseEvent evt) {
+        Human_AI_Options.human_v_ai_options();
+        Human_AI_Options.jLabel2.setText("Ok Human is X, AI is O");
         paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
     }
 
     private void ai_v_human_butMouseClicked(MouseEvent evt) {
-        paint_board(game_board_panel.getGraphics());
-        game_state_display.setText("");
-        set_all_non_focusable();
+        Human_AI_Options.human_v_ai_options();
+        Human_AI_Options.jLabel2.setText("Ok AI is X, Human is O");
     }
 
     private void human_v_human_butMouseClicked(MouseEvent evt) {
