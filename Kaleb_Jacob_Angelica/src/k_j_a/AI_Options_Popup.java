@@ -126,22 +126,22 @@ public class AI_Options_Popup extends JFrame {
      */
     private void ai_vs_ai_butMouseClicked(MouseEvent evt) {
         this.setVisible(false);
-        AI_Sim.aiSimulation();
+        TDNN_Sim.tdnn_sim();
     }
 
     private void tdnn_vs_min_butMouseClicked(MouseEvent evt) {
         this.setVisible(false);
-        AI_Sim.aiSimulation();
+        TDNN_Sim.tdnn_sim();
     }
 
     private void tdnn_vs_tdnn_butMouseClicked(MouseEvent evt) {
         this.setVisible(false);
-        AI_Sim.aiSimulation();
+        TDNN_Sim.tdnn_sim();
     }
 
     private void min_vs_min_butMouseClicked(MouseEvent evt) {
         this.setVisible(false);
-        AI_Sim.aiSimulation();
+        Minimax_Sim.minimax_sim();
     }
     
     public static void ai_popup() {

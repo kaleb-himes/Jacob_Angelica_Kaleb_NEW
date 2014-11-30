@@ -13,9 +13,9 @@ import wincheck.Winchecker;
  *
  * @author khimes
  */
-public class AI_Sim {
+public class TDNN_Sim {
 
-    public static void aiSimulation() {
+    public static void tdnn_sim() {
 
         TDNN test = new TDNN(48, 40, 3);
         TDNN ran = new TDNN(48, 40, 3);
@@ -64,16 +64,16 @@ public class AI_Sim {
                         if (GUI.won == player) {
                             win = Winchecker.aiWins;
                         }
-                        GUI.game_state_display.append(" 0.0");
+//                        GUI.game_state_display.append(" 0.0");
                         /* need to add something for the winchecker here */
                     } else {
-                        GUI.game_state_display.append(" " + board[index]);
+//                        GUI.game_state_display.append(" " + board[index]);
                     }
                     index++;
                 }
-                GUI.game_state_display.append("\n");
+//                GUI.game_state_display.append("\n");
             }
-
+            GUI.game_state_display.append("number of nodes searched: " + index + "\n");
         }
         GUI.game_state_display.append("percent won = " + (double) win / 50.0 + "\n");
         /* Activate play again button*/
