@@ -4,11 +4,9 @@ package k_j_a;
  *
  * @author Kaleb
  */
-import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Robot;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -413,8 +411,7 @@ public class GUI extends JFrame {
         //paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
-
-        AI_Sim.aiSimulation();
+        AI_Options_Popup.ai_popup();
     }
 
     private void play_again_butMouseClicked(MouseEvent evt) {

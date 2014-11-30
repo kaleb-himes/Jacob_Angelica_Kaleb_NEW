@@ -5,11 +5,7 @@
  */
 package k_j_a;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import static k_j_a.GUI.game_board_panel;
 import static k_j_a.GUI.m5;
-import static k_j_a.GUI.paint_board;
 import static k_j_a.GUI.play_again_but;
 import wincheck.Winchecker;
 

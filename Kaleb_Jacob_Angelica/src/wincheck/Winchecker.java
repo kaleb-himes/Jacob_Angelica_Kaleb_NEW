@@ -191,11 +191,14 @@ public class Winchecker {
                             play_again_but.addMouseListener(m5[j]);
                         }
                     } else {
-                        try {
-                            Thread.sleep(3000); //1000 is one second.
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                        }
+                        /* uncomment if you want to visually verify wins 
+                         * tested thouroughly, they work.
+                         */
+//                        try {
+//                            Thread.sleep(3000); //1000 is one second.
+//                        } catch (InterruptedException ex) {
+//                            Thread.currentThread().interrupt();
+//                        }
                         for (int k = 0; k < board.length; k++) {
                             board[k][2] = 0;
                         }
@@ -246,11 +249,14 @@ public class Winchecker {
             }
             return winner;
         } else if (winner != 0 && ai == 1) {
-            try {
-                Thread.sleep(3000); //1000 milliseconds is one second.
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
+             /* uncomment if you want to visually verify wins 
+              * tested thouroughly, they work.
+              */
+//            try {
+//                Thread.sleep(3000); //1000 milliseconds is one second.
+//            } catch (InterruptedException ex) {
+//                Thread.currentThread().interrupt();
+//            }
             if (winner == 1) {
                 aiWins++;
             }
