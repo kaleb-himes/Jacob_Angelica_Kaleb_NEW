@@ -35,6 +35,8 @@ public class GUI extends JFrame {
     public JPanel options_panel;                 /* Panel for quit/replay */
     public static JButton play_again_but;        /* Button for replay */
     public static JButton quit_but;              /* Button for quit */
+    
+    public static int won = 0;
 
     /* Legal Move Coodinates in (x,y) format:
      * We will use these to judge if a move is legal and paint the pixels up,
@@ -48,19 +50,21 @@ public class GUI extends JFrame {
      *          (250,175)(250,125)(250,75)(250,25)   North Line ->
      *          (284,183)(308,139)(331,94)(355,50)   Top spoke of Q1
      *          (316,215)(362,193)(406,169)(449,146) Bottom spoke of Q1
+     * 
+     * a1 {x coord, y coord, is moved on flag, neighbor flag}
      */
-    int[] a1 = {250, 175, 0};
-    int[] a2 = {250, 125, 0};
-    int[] a3 = {250, 75, 0};
-    int[] a4 = {250, 25, 0};
-    int[] b1 = {284, 183, 0};
-    int[] b2 = {308, 139, 0};
-    int[] b3 = {331, 94, 0};
-    int[] b4 = {355, 50, 0};
-    int[] c1 = {316, 215, 0};
-    int[] c2 = {362, 193, 0};
-    int[] c3 = {406, 169, 0};
-    int[] c4 = {449, 146, 0};
+    public static int[] a1 = {250, 175, 0, 0};
+    public static int[] a2 = {250, 125, 0, 0};
+    public static int[] a3 = {250, 75, 0, 0};
+    public static int[] a4 = {250, 25, 0, 0};
+    public static int[] b1 = {284, 183, 0, 0};
+    public static int[] b2 = {308, 139, 0, 0};
+    public static int[] b3 = {331, 94, 0, 0};
+    public static int[] b4 = {355, 50, 0, 0};
+    public static int[] c1 = {316, 215, 0, 0};
+    public static int[] c2 = {362, 193, 0, 0};
+    public static int[] c3 = {406, 169, 0, 0};
+    public static int[] c4 = {449, 146, 0, 0};
     /*   
      *    Quadrant Four
      *          (325,250)(375,250)(425,250)(475,250) East Line
@@ -68,65 +72,66 @@ public class GUI extends JFrame {
      *          (284,316)(308,360)(331,404)(354,449) Bottom spoke of Q4
      *   
      */
-    int[] d1 = {325, 250, 0};
-    int[] d2 = {375, 250, 0};
-    int[] d3 = {425, 250, 0};
-    int[] d4 = {475, 250, 0};
-    int[] e1 = {317, 284, 0};
-    int[] e2 = {361, 308, 0};
-    int[] e3 = {406, 332, 0};
-    int[] e4 = {450, 354, 0};
-    int[] f1 = {284, 316, 0};
-    int[] f2 = {308, 360, 0};
-    int[] f3 = {331, 404, 0};
-    int[] f4 = {354, 449, 0};
+    public static int[] d1 = {325, 250, 0, 0};
+    public static int[] d2 = {375, 250, 0, 0};
+    public static int[] d3 = {425, 250, 0, 0};
+    public static int[] d4 = {475, 250, 0, 0};
+    public static int[] e1 = {317, 284, 0, 0};
+    public static int[] e2 = {361, 308, 0, 0};
+    public static int[] e3 = {406, 332, 0, 0};
+    public static int[] e4 = {450, 354, 0, 0};
+    public static int[] f1 = {284, 316, 0, 0};
+    public static int[] f2 = {308, 360, 0, 0};
+    public static int[] f3 = {331, 404, 0, 0};
+    public static int[] f4 = {354, 449, 0, 0};
     /*    Quadrant Three
      *          (250,325)(250,375)(250,425)(250,475) South Line
      *          (215,316)(192,360)(169,405)(146,449) Bottom spoke of Q3
      *          (184,284)(140,308)(95,330)(50,354)   TOp spoke of Q3
      * 
      */
-    int[] g1 = {250, 325, 0};
-    int[] g2 = {250, 375, 0};
-    int[] g3 = {250, 425, 0};
-    int[] g4 = {250, 475, 0};
-    int[] h1 = {215, 316, 0};
-    int[] h2 = {192, 360, 0};
-    int[] h3 = {169, 405, 0};
-    int[] h4 = {146, 449, 0};
-    int[] i1 = {184, 284, 0};
-    int[] i2 = {140, 308, 0};
-    int[] i3 = {95, 330, 0};
-    int[] i4 = {50, 354, 0};
+    public static int[] g1 = {250, 325, 0, 0};
+    public static int[] g2 = {250, 375, 0, 0};
+    public static int[] g3 = {250, 425, 0, 0};
+    public static int[] g4 = {250, 475, 0, 0};
+    public static int[] h1 = {215, 316, 0, 0};
+    public static int[] h2 = {192, 360, 0, 0};
+    public static int[] h3 = {169, 405, 0, 0};
+    public static int[] h4 = {146, 449, 0, 0};
+    public static int[] i1 = {184, 284, 0, 0};
+    public static int[] i2 = {140, 308, 0, 0};
+    public static int[] i3 = {95, 330, 0, 0};
+    public static int[] i4 = {50, 354, 0, 0};
     /*    Quadrant Two 
      *          (175,250)(125,250)(75,250)(25,250)   West Line
      *          (184,216)(140,192)(95,170)(51,146)   Bottom spoke of Q2
      *          (216,184)(192,139)(169,95)(147,51)   Top spoke of Q2
      */
-    int[] j1 = {175, 250, 0};
-    int[] j2 = {125, 250, 0};
-    int[] j3 = {75, 250, 0};
-    int[] j4 = {25, 250, 0};
-    int[] k1 = {184, 216, 0};
-    int[] k2 = {140, 192, 0};
-    int[] k3 = {95, 170, 0};
-    int[] k4 = {51, 146, 0};
-    int[] l1 = {216, 184, 0};
-    int[] l2 = {192, 139, 0};
-    int[] l3 = {169, 95, 0};
-    int[] l4 = {147, 51, 0};
+    public static int[] j1 = {175, 250, 0, 0};
+    public static int[] j2 = {125, 250, 0, 0};
+    public static int[] j3 = {75, 250, 0, 0};
+    public static int[] j4 = {25, 250, 0, 0};
+    public static int[] k1 = {184, 216, 0, 0};
+    public static int[] k2 = {140, 192, 0, 0};
+    public static int[] k3 = {95, 170, 0, 0};
+    public static int[] k4 = {51, 146, 0, 0};
+    public static int[] l1 = {216, 184, 0, 0};
+    public static int[] l2 = {192, 139, 0, 0};
+    public static int[] l3 = {169, 95, 0, 0};
+    public static int[] l4 = {147, 51, 0, 0};
 
     /* An array to store moves that are legal or not legal */
-    int[][] legal_moves = new int[][]{a1, b1, c1, d1, e1, f1, g1, h1, i1, j1, k1, l1,
-                                      a2, b2, c2, d2, e2, f2, g2, h2, i2, j2, k2, l2,
-                                      a3, b3, c3, d3, e3, f3, g3, h3, i3, j3, k3, l3,
-                                      a4, b4, c4, d4, e4, f4, g4, h4, i4, j4, k4, l4};
+    public static int[][] legal_moves = new int[][]{
+        a1, b1, c1, d1, e1, f1, g1, h1, i1, j1, k1, l1,
+        a2, b2, c2, d2, e2, f2, g2, h2, i2, j2, k2, l2,
+        a3, b3, c3, d3, e3, f3, g3, h3, i3, j3, k3, l3,
+        a4, b4, c4, d4, e4, f4, g4, h4, i4, j4, k4, l4};
 
-    char player = 'X';
+    public static char player = 'X';
     ClassLoader cl;
-    final BufferedImage playerX_img;
-    final BufferedImage playerO_img;
-    final  BufferedImage game_over_img;
+    public static BufferedImage playerX_img;
+    public static BufferedImage playerO_img;
+    public static BufferedImage game_over_img;
     public static MouseListener[] m1;
     public static MouseListener[] m2;
     public static MouseListener[] m3;
@@ -409,7 +414,7 @@ public class GUI extends JFrame {
         game_state_display.setText("");
         set_all_non_focusable();
 
-        aiSimulation();
+        AI_Sim.aiSimulation();
     }
 
     private void play_again_butMouseClicked(MouseEvent evt) {
@@ -430,9 +435,9 @@ public class GUI extends JFrame {
         int y = (int) a.getY();
         playerMove(x, y, 0);
     }
-    
-     private void playerMove(int x, int y, int ai){
-        
+
+    public static void playerMove(int x, int y, int ai) {
+
         boolean successful = false;
         String curr = game_state_display.getText();
         int right_x, bottom_y, left_x, top_y;
@@ -457,16 +462,17 @@ public class GUI extends JFrame {
                     && check_moved == 0) {
                 if (player == 'X') {
                     curr = game_state_display.getText();
-                    game_state_display.setText(curr + "Player X moved\n");
-                    g.drawImage(playerX_img, check_x - 10, check_y - 11, this);
+                    g.drawImage(playerX_img, check_x - 10, check_y - 11, game_board_panel);
+                    legal_moves[i][2] = 1;
                     successful = true;
+                    won = Winchecker.check2(i, 1, ai);
                 } else {
                     curr = game_state_display.getText();
-                    game_state_display.setText(curr + "Player Y moved\n");
-                    g.drawImage(playerO_img, check_x - 10, check_y - 11, this);
+                    g.drawImage(playerO_img, check_x - 10, check_y - 11, game_board_panel);
+                    legal_moves[i][2] = 2;
                     successful = true;
+                    won = Winchecker.check2(i, 2, ai);
                 }
-                legal_moves[i][2] = 1;
             }
         } /* END OF IF LEGAL LOOP */
 
@@ -478,34 +484,14 @@ public class GUI extends JFrame {
         } else {
             player = 'X';
         }
-
-        /* Case Nobody wins */
-        int tie = 0;
-        if (ai == 0) {
-            System.out.println("SHOULD NOT RUN WITH AI.");
-            for (int i = 0; i < legal_moves.length; i++) {
-                if (legal_moves[i][2] == 1) {
-                    tie++;
-                    if (tie == 48) {
-//                    Graphics g = game_board_panel.getGraphics();
-//                    g.drawImage(game_over_img, 10, 60, this);
-                        /* Activate play again button*/
-                        play_again_but.setEnabled(true);
-                        /* And turn on the mouse listeners so user can click it */
-                        for (int j = 0; j < m5.length; j++) {
-                            play_again_but.addMouseListener(m5[j]);
-                        }
-                    }
-                }
-            }
-        }
     }/* END OF playerMove()*/
-    
+
+
     public static void paint_board(Graphics g) {
         game_board_panel.paint(g);
         g.setColor(Color.BLUE);
 
-        /* Outter Ring */ 
+        /* Outter Ring */
         g.drawOval(25, 25, 450, 450);
 
         /* Second Ring */
@@ -595,95 +581,4 @@ public class GUI extends JFrame {
             human_v_ai_but.addMouseListener(m4[i]);
         }
     }
-
-    private void aiSimulation() {
-        
-        TDNN test = new TDNN(48, 40, 3);
-        TDNN ran = new TDNN(48, 40, 3);
-        test.train(1000);
-
-        //test trained network against random one
-        int win = 0;
-        for (int i = 0; i < 50; i++) {
-            
-            double[] board = new double[12 * 4];
-            int player = (Math.random() > .5) ? 1 : 2;
-            int player2 = (player == 1) ? 2 : 1;
-            do {
-                if (player == 1) {
-                    board = test.exploit(player, board);
-                    board = ran.random(player2, board);
-                } else {
-                    board = ran.random(player2, board);
-                    board = test.exploit(player, board);
-                }
-            } while (Winchecker.check(board) < 0);
-            GUI.game_state_display.append("Winner was player " + Winchecker.check(board) + " ai was " + player + "\n");
-            GUI.game_state_display.append("Board State\n");
-            int index = 0;
-            int LMSV = 0;
-            int get_x_y[] = new int[3];
-            for (int z = 0; z < 4; z++) {
-                for (int h = 0; h < 12; h++) {
-                    if (board[index] == 0) {
-                        /*LMSV = Legal Move Search Value */
-                        if (z == 0) {
-                            LMSV = z+h;
-                        }
-                        else if (z == 1) {
-                            LMSV = 1+h+(12-1);
-                        }
-                        else if (z == 2) {
-                            LMSV = 1+h+(24-1);
-                        }
-                        else if (z == 3) {
-                            LMSV = 1+h+(36-1);
-                        }
-                        get_x_y = legal_moves[LMSV];
-                        int x, y;
-                        x = get_x_y[0];
-                        y = get_x_y[1];
-                        playerMove(x,y,1);
-                        GUI.game_state_display.append(" 0.0");
-                        /* need to add something for the winchecker here */
-                    } else {
-                        GUI.game_state_display.append(" " + board[index]);
-                    }
-                    index++;
-                }
-                GUI.game_state_display.append("\n");
-            }
-            if (Winchecker.check(board) == player) {
-                    for (int k = 0; k < legal_moves.length; k++) {
-                        legal_moves[k][2] = 0;
-                    }
-                    Graphics g = game_board_panel.getGraphics();
-                    game_board_panel.paint(g);
-                    g.setColor(Color.LIGHT_GRAY);
-                    game_board_panel.repaint();
-                    paint_board(game_board_panel.getGraphics());
-                win++;
-            }
-            if (Winchecker.check(board) == player2) {
-                    for (int k = 0; k < legal_moves.length; k++) {
-                        legal_moves[k][2] = 0;
-                    }
-                    Graphics g = game_board_panel.getGraphics();
-                    game_board_panel.paint(g);
-                    g.setColor(Color.LIGHT_GRAY);
-                    game_board_panel.repaint();
-                    paint_board(game_board_panel.getGraphics());
-            }
-            
-        }
-        GUI.game_state_display.append("percent won = " + (double) win / 50.0 + "\n");
-        /* Activate play again button*/
-        play_again_but.setEnabled(true);
-        /* And turn on the mouse listeners so user can click it */
-        for (int j = 0; j < m5.length; j++) {
-            play_again_but.addMouseListener(m5[j]);
-        }
-    }
-    
-   
 }
