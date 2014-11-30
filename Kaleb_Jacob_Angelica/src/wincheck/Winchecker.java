@@ -161,16 +161,15 @@ public class Winchecker {
      *
      * @author kaleb
      */
-
     /**
-     * perform a non-brute force, recursive search for a winning state
-     * will search left, right, up, down, elliptical curve for a winner
+     * perform a non-brute force, recursive search for a winning state will
+     * search left, right, up, down, elliptical curve for a winner
      *
      * @param node this is the node that was just played. Local search
-     * @param player the player who just moved. Since no winning state resulted 
-     *        previously, check current player only for a win.
+     * @param player the player who just moved. Since no winning state resulted
+     * previously, check current player only for a win.
      * @param ai {0,1} this flag is only set to 1 when ai vs ai is playing. It
-     *        will not display a game over when the ai beats itself.
+     * will not display a game over when the ai beats itself.
      */
     public static int check2(int node, int player, int ai) {
         /* Case Nobody wins */
@@ -249,9 +248,9 @@ public class Winchecker {
             }
             return winner;
         } else if (winner != 0 && ai == 1) {
-             /* uncomment if you want to visually verify wins 
-              * tested thouroughly, they work.
-              */
+            /* uncomment if you want to visually verify wins 
+             * tested thouroughly, they work.
+             */
 //            try {
 //                Thread.sleep(3000); //1000 milliseconds is one second.
 //            } catch (InterruptedException ex) {
@@ -274,14 +273,15 @@ public class Winchecker {
         }
         return winner;
     }
+
     /**
      * Controls and separates up/down, left/right, northeast/southwest, and
      * northwest/southeast searches, resets flags after each respective search.
      *
      * @param node this is the node that was just played. Locally search from
-     *        this node only.
-     * @param player the player who just moved. Since no winning state resulted 
-     *        previously, check current player only for a win.
+     * this node only.
+     * @param player the player who just moved. Since no winning state resulted
+     * previously, check current player only for a win.
      */
     public static int check_neighbors(int node, int player) {
         int upper = 0, lower = 0;
@@ -441,9 +441,9 @@ public class Winchecker {
      * Search west (left).
      *
      * @param node this is the node that was just played. Locally search from
-     *        this node only.
-     * @param player the player who just moved. Since no winning state resulted 
-     *        previously, check current player only for a win.
+     * this node only.
+     * @param player the player who just moved. Since no winning state resulted
+     * previously, check current player only for a win.
      * @param upper the upper bound of the search.
      * @param lower the lower bound of the search.
      */
@@ -477,13 +477,14 @@ public class Winchecker {
         }
         return connected;
     }
+
     /**
      * Search east (right).
      *
      * @param node this is the node that was just played. Locally search from
-     *        this node only.
-     * @param player the player who just moved. Since no winning state resulted 
-     *        previously, check current player only for a win.
+     * this node only.
+     * @param player the player who just moved. Since no winning state resulted
+     * previously, check current player only for a win.
      * @param upper the upper bound of the search.
      * @param lower the lower bound of the search.
      */
@@ -517,13 +518,14 @@ public class Winchecker {
         }
         return connected;
     }
+
     /**
      * Search North (up).
      *
      * @param node this is the node that was just played. Locally search from
-     *        this node only.
-     * @param player the player who just moved. Since no winning state resulted 
-     *        previously, check current player only for a win.
+     * this node only.
+     * @param player the player who just moved. Since no winning state resulted
+     * previously, check current player only for a win.
      */
     public static int check_up(int node, int player) {
         /* it was verified that check_up is ok for first node with "node > 11".
@@ -542,13 +544,14 @@ public class Winchecker {
         }
         return connected;
     }
+
     /**
      * Search South (down).
      *
      * @param node this is the node that was just played. Locally search from
-     *        this node only.
-     * @param player the player who just moved. Since no winning state resulted 
-     *        previously, check current player only for a win.
+     * this node only.
+     * @param player the player who just moved. Since no winning state resulted
+     * previously, check current player only for a win.
      */
     public static int check_down(int node, int player) {
         /* it was verified that check_down is ok for first node with "node < 36".
@@ -566,43 +569,61 @@ public class Winchecker {
         }
         return connected;
     }
+
     /**
      * Search South-east (right-down).
      *
      * @param node this is the node that was just played. Locally search from
-     *        this node only.
-     * @param player the player who just moved. Since no winning state resulted 
-     *        previously, check current player only for a win.
+     * this node only.
+     * @param player the player who just moved. Since no winning state resulted
+     * previously, check current player only for a win.
      */
     public static int check_rdown(int node, int player) {
         /* right and down = down+1 = node + 12 + 1. Same logic applies,
          * node must be < 36 to check down and < 35 to check right-down
          */
-        if (node < 35) {
-            int rdown = node + 13;
-            if (board[rdown][2] == player && board[rdown][3] == 0) {
-                board[rdown][3] = 1;
-                connected += 1;
-                if (rdown < 36) {
-                    check_rdown(rdown, player);
-                }
+        int rdown = node + 13;
+        if (node == 11) {
+            rdown = 12;
+        }
+        if (node == 23) {
+            rdown = 24;
+        }
+        if (node == 35) {
+            rdown = 36;
+        }
+        if (board[rdown][2] == player && board[rdown][3] == 0) {
+            board[rdown][3] = 1;
+            connected += 1;
+            if (rdown < 36) {
+                check_rdown(rdown, player);
             }
         }
         return connected;
     }
+
     /**
      * Search South-west (left-down).
      *
      * @param node this is the node that was just played. Locally search from
-     *        this node only.
-     * @param player the player who just moved. Since no winning state resulted 
-     *        previously, check current player only for a win.
+     * this node only.
+     * @param player the player who just moved. Since no winning state resulted
+     * previously, check current player only for a win.
      */
     public static int check_ldown(int node, int player) {
         /* left and down = down-1 = node + 12 - 1. Same logic applies,
          * node must be < 36 to check diagonal down
          */
         int ldown = node + 11;
+        if (node == 0) {
+            ldown = 23;
+        }
+        if (node == 12) {
+            ldown = 35;
+        }
+        if (node == 24) {
+            ldown = 47;
+        }
         if (board[ldown][2] == player && board[ldown][3] == 0) {
             board[ldown][3] = 1;
             connected += 1;
@@ -612,19 +633,29 @@ public class Winchecker {
         }
         return connected;
     }
+
     /**
      * Search North-east (right-up).
      *
      * @param node this is the node that was just played. Locally search from
-     *        this node only.
-     * @param player the player who just moved. Since no winning state resulted 
-     *        previously, check current player only for a win.
+     * this node only.
+     * @param player the player who just moved. Since no winning state resulted
+     * previously, check current player only for a win.
      */
     public static int check_rup(int node, int player) {
         /* right and up = up + 1 = node - 12 + 1. Same logic applies,
          * node must be > 11 to check diagonal up
          */
         int rup = node - 11;
+        if (node == 23) {
+            rup = 0;
+        }
+        if (node == 35) {
+            rup = 12;
+        }
+        if (node == 47) {
+            rup = 24;
+        }
         if (board[rup][2] == player && board[rup][3] == 0) {
             board[rup][3] = 1;
             connected += 1;
@@ -634,26 +665,34 @@ public class Winchecker {
         }
         return connected;
     }
+
     /**
      * Search North-west (left-up).
      *
      * @param node this is the node that was just played. Locally search from
-     *        this node only.
-     * @param player the player who just moved. Since no winning state resulted 
-     *        previously, check current player only for a win.
+     * this node only.
+     * @param player the player who just moved. Since no winning state resulted
+     * previously, check current player only for a win.
      */
     public static int check_lup(int node, int player) {
         /* left and up = up - 1 = node - 12 - 1. Same logic applies,
          * node must be > 11 to check up, and greater than 12 to check left-up
          */
-        if (node > 12) {
-            int lup = node - 13;
-            if (board[lup][2] == player && board[lup][3] == 0) {
-                board[lup][3] = 1;
-                connected += 1;
-                if (lup > 11) {
-                    check_lup(lup, player);
-                }
+        int lup = node - 13;
+        if (node == 12) {
+            lup = 11;
+        }
+        if (node == 24) {
+            lup = 23;
+        }
+        if (node == 36) {
+            lup = 35;
+        }
+        if (board[lup][2] == player && board[lup][3] == 0) {
+            board[lup][3] = 1;
+            connected += 1;
+            if (lup > 11) {
+                check_lup(lup, player);
             }
         }
         return connected;
