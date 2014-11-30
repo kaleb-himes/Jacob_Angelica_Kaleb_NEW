@@ -186,13 +186,13 @@ public class Winchecker {
                         g.drawImage(game_over_img, 190, 202, game_board_panel);
                         /* Activate play again button*/
                         play_again_but.setEnabled(true);
-                        /* And turn on the mouse listeners so user can click it */
+                        /* Turn on the mouse listeners so user can click it */
                         for (int j = 0; j < m5.length; j++) {
                             play_again_but.addMouseListener(m5[j]);
                         }
                     } else {
                         try {
-                            Thread.sleep(3000);                 //1000 milliseconds is one second.
+                            Thread.sleep(3000); //1000 is one second.
                         } catch (InterruptedException ex) {
                             Thread.currentThread().interrupt();
                         }
@@ -247,7 +247,7 @@ public class Winchecker {
             return winner;
         } else if (winner != 0 && ai == 1) {
             try {
-                Thread.sleep(3000);                 //1000 milliseconds is one second.
+                Thread.sleep(3000); //1000 milliseconds is one second.
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
@@ -264,13 +264,13 @@ public class Winchecker {
             paint_board(game_board_panel.getGraphics());
             return winner;
         } else {
-            GUI.game_state_display.append(GUI.player + " moved");
+            GUI.game_state_display.append(GUI.player + " moved\n");
         }
         return winner;
     }
     /**
      * Controls and separates up/down, left/right, northeast/southwest, and
-     * northwest/southeast searches. resets flags after each respective search.
+     * northwest/southeast searches, resets flags after each respective search.
      *
      * @param node this is the node that was just played. Locally search from
      *        this node only.
@@ -306,7 +306,7 @@ public class Winchecker {
             }
         }
         /*
-         * if win_check reaches 4 we have win_check in a straight line
+         * if win_check reaches 4 we have win in a straight line
          * otherwise reset win_check to zero and proceed to check 
          * diagonals.
          */
@@ -395,7 +395,7 @@ public class Winchecker {
         /*
          * check diagonal right up (node - 11)
          * if not row 1 (a1-l1) = (0 - 11)
-         * and not off the board (
+         * and not off the board
          *
          * check diagonal left down (node + 11)
          * if not row 4 (a4-l4) = (36 - 47)
