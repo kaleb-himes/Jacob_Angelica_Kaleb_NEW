@@ -42,8 +42,9 @@ public class Minimax_Sim {
                     board = tree.exploit(player, board, d);
                 }
             } while (Winchecker.check(board) < 0);
-            System.out.println("Winner was player " + Winchecker.check(board) + " ai was " + player);
-            System.out.println("Board State");
+            GUI.game_state_display.append("Winner was player "
+                    + "" + Winchecker.check(board) + " ai was " + player +"\n");
+            GUI.game_state_display.append("Board State\n");
             int LMSV = 0;
             int index = 0;
             int get_x_y[] = new int[3];

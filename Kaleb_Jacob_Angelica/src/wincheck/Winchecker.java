@@ -207,7 +207,7 @@ public class Winchecker {
                         game_board_panel.repaint();
                         paint_board(game_board_panel.getGraphics());
                     }
-                    System.out.println("TIE !!!!!!!!!!");
+                    GUI.game_state_display.append("TIE !!!!!!!!!!\n");
                     return winner; /* tie game, no winner */
 
                 }
@@ -269,7 +269,7 @@ public class Winchecker {
             paint_board(game_board_panel.getGraphics());
             return winner;
         } else {
-            GUI.game_state_display.append(GUI.player + " moved\n");
+//            GUI.game_state_display.append(GUI.player + " moved\n");
         }
         return winner;
     }
@@ -301,7 +301,7 @@ public class Winchecker {
             upper = 47;
             lower = 36;
         }
-        if (node - 1 > 0) {
+        if (node - 1 >= 0) {
             if (board[node - 1][2] == player) {
                 win_check += check_left(node, player, upper, lower);
             }
