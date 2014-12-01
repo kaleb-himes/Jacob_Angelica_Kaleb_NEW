@@ -225,7 +225,7 @@ public class Winchecker {
         winner = check_neighbors(node, player);
         if (winner == 1 && ai == 0) {
             GUI.game_state_display.append("Player X WINS!!!\n");
-
+            
             Graphics g = GUI.game_board_panel.getGraphics();
             g.drawImage(GUI.game_over_img, 190, 202, GUI.game_board_panel);
             /* Activate play again button*/
@@ -237,7 +237,9 @@ public class Winchecker {
             return winner;
         } else if (winner == 2 && ai == 0) {
             GUI.game_state_display.append("Player O WINS!!!\n");
-
+            
+            
+            
             Graphics g = GUI.game_board_panel.getGraphics();
             g.drawImage(GUI.game_over_img, 190, 202, GUI.game_board_panel);
             /* Activate play again button*/
@@ -252,7 +254,7 @@ public class Winchecker {
              * tested thouroughly, they work.
              */
 //            try {
-//                Thread.sleep(3000); //1000 milliseconds is one second.
+//                Thread.sleep(6000); //1000 milliseconds is one second.
 //            } catch (InterruptedException ex) {
 //                Thread.currentThread().interrupt();
 //            }
