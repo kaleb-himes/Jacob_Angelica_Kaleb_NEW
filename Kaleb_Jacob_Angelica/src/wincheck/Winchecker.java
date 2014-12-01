@@ -406,12 +406,12 @@ public class Winchecker {
          * check diagonal left down (node + 11)
          * if not row 4 (a4-l4) = (36 - 47)
          */
-        if (node > 11) {
+        if (node > 10) {
             if (board[node - 11][2] == player) {
                 win_check += check_rup(node, player);
             }
         }
-        if (node < 36) {
+        if (node < 37) {
             if (board[node + 11][2] == player) {
                 win_check += check_ldown(node, player);
             }
