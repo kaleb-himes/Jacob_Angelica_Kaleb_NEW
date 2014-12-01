@@ -423,7 +423,7 @@ public class Minimax {
                     break;
                 }
             }
-            System.out.println("Finshed training game " + i);
+            GUI.game_state_display.append("Finshed training game " + i + "\n");
         }
     }
 

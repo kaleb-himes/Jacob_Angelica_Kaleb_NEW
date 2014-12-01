@@ -269,7 +269,7 @@ public class Winchecker {
             paint_board(game_board_panel.getGraphics());
             return winner;
         } else {
-//            GUI.game_state_display.append(GUI.player + " moved\n");
+            GUI.game_state_display.append(GUI.player + " moved\n");
         }
         return winner;
     }
@@ -378,8 +378,18 @@ public class Winchecker {
                 win_check += check_lup(node, player);
             }
         }
+        if (node == 12 || node == 24 || node == 36) {
+            if (board[node - 1][2] == player) {
+                win_check += check_lup(node, player);
+            }
+        }
         if (node < 35) {
             if (board[node + 13][2] == player) {
+                win_check += check_rdown(node, player);
+            }
+        }
+        if (node == 11 || node == 23 || node == 35) {
+            if (board[node + 1][2] == player) {
                 win_check += check_rdown(node, player);
             }
         }
@@ -406,14 +416,24 @@ public class Winchecker {
          * check diagonal left down (node + 11)
          * if not row 4 (a4-l4) = (36 - 47)
          */
-        if (node > 10) {
+        if (node > 11) {
             if (board[node - 11][2] == player) {
                 win_check += check_rup(node, player);
             }
+            if (node == 23 || node == 35 || node == 47) {
+                if (board[node - 23][2] == player) {
+                    win_check += check_rup(node, player);
+                }
+            }
         }
-        if (node < 37) {
+        if (node < 36) {
             if (board[node + 11][2] == player) {
                 win_check += check_ldown(node, player);
+            }
+            if (node == 0 || node == 12 || node == 24) {
+                if (board[node + 23][2] == player) {
+                    win_check += check_ldown(node, player);
+                }
             }
         }
         if (win_check >= 3) {
