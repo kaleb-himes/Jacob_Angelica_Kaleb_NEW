@@ -59,10 +59,11 @@ public class TDNN_Sim {
                         int x, y;
                         x = get_x_y[0];
                         y = get_x_y[1];
-
-                        GUI.playerMove(x, y, 1);
-                        if (GUI.won == player) {
-                            win = Winchecker.aiWins;
+                        if (get_x_y[2] == 0) {
+                            GUI.playerMove(x, y, 1);
+                            if (GUI.won == player) {
+                                win = Winchecker.aiWins;
+                            }
                         }
 //                        GUI.game_state_display.append(" 0.0");
                         /* need to add something for the winchecker here */

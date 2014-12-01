@@ -65,10 +65,11 @@ public class Minimax_Sim {
                         int x, y;
                         x = get_x_y[0];
                         y = get_x_y[1];
-
-                        GUI.playerMove(x, y, 1);
-                        if (GUI.won == player) {
-                            win = Winchecker.aiWins;
+                        if (get_x_y[2] == 0) {
+                            GUI.playerMove(x, y, 1);
+                            if (GUI.won == player) {
+                                win = Winchecker.aiWins;
+                            }
                         }
 //                        try {
 //                            Thread.sleep(100);                 //1000 milliseconds is one second.
