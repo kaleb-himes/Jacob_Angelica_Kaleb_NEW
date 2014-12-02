@@ -7,8 +7,6 @@ package k_j_a;
 //import javax.swing.*;
 //import java.awt.event.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.GroupLayout;
@@ -51,6 +49,7 @@ public class AI_Options_Popup extends JFrame {
 
         ai_vs_ai_but.setText("ai vs ai");
         ai_vs_ai_but.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 ai_vs_ai_butMouseClicked(evt);
             }
@@ -58,6 +57,7 @@ public class AI_Options_Popup extends JFrame {
 
         tdnn_vs_min_but.setText("tdnn vs minimax");
         tdnn_vs_min_but.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 tdnn_vs_min_butMouseClicked(evt);
             }
@@ -65,6 +65,7 @@ public class AI_Options_Popup extends JFrame {
 
         tdnn_vs_tdnn_but.setText("tdnn vs tdnn");
         tdnn_vs_tdnn_but.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 tdnn_vs_tdnn_butMouseClicked(evt);
             }
@@ -72,6 +73,7 @@ public class AI_Options_Popup extends JFrame {
 
         min_vs_min_but.setText("minimax vs minimax");
         min_vs_min_but.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 min_vs_min_butMouseClicked(evt);
             }

@@ -59,10 +59,11 @@ public class TDNN_Sim {
                         int x, y;
                         x = get_x_y[0];
                         y = get_x_y[1];
-
-                        GUI.playerMove(x, y, 1);
-                        if (GUI.won == player) {
-                            win = Winchecker.aiWins;
+                        if (get_x_y[2] == 0) {
+                            GUI.playerMove(x, y, 1);
+                            if (GUI.won == player) {
+                                win = Winchecker.aiWins;
+                            }
                         }
 //                        GUI.game_state_display.append(" 0.0");
                         /* need to add something for the winchecker here */
@@ -76,6 +77,10 @@ public class TDNN_Sim {
             GUI.game_state_display.append("number of nodes searched: " + index + "\n");
         }
         GUI.game_state_display.append("percent won = " + (double) win / 50.0 + "\n");
+        GUI.game_state_display.append("illegal moves attempted:"
+                    + ""+GUI.illegal_moves_made+"\n");
+        GUI.illegal_moves_made = 0;
+        
         /* Activate play again button*/
         play_again_but.setEnabled(true);
         /* And turn on the mouse listeners so user can click it */

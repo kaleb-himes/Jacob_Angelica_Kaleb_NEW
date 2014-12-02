@@ -7,12 +7,24 @@ package k_j_a;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.LayoutStyle;
+import javax.swing.WindowConstants;
 import wincheck.Winchecker;
 
 @SuppressWarnings("serial")
@@ -33,6 +45,8 @@ public class GUI extends JFrame {
     public JPanel options_panel;                 /* Panel for quit/replay */
     public static JButton play_again_but;        /* Button for replay */
     public static JButton quit_but;              /* Button for quit */
+    
+    public static int illegal_moves_made = 0;
     
     public static int won = 0;
 
@@ -174,7 +188,7 @@ public class GUI extends JFrame {
         game_state_display.setColumns(20);
         game_state_display.setRows(5);
         game_state_display.setText("Select a game mode\nto begin!");
-        game_state_display.setFocusable(false);
+        game_state_display.setFocusable(true);
         game_state_scrollpane.setViewportView(game_state_display);
 
         GroupLayout game_state_panelLayout = new GroupLayout(game_state_panel);
@@ -442,10 +456,7 @@ public class GUI extends JFrame {
     public static void playerMove(int x, int y, int ai) {
 
         boolean successful = false;
-        String curr = game_state_display.getText();
         int right_x, bottom_y, left_x, top_y;
-
-//        game_state_display.setText(curr + "x,y coordinate: " + x + ", " + y + "\n");
 
         /* Logic for checking if a move is legal */
         for (int i = 0; i < legal_moves.length; i++) {
@@ -464,13 +475,11 @@ public class GUI extends JFrame {
                     && (top_y <= check_y && check_y <= bottom_y)
                     && check_moved == 0) {
                 if (player == 'X') {
-                    curr = game_state_display.getText();
                     g.drawImage(playerX_img, check_x - 10, check_y - 11, game_board_panel);
                     legal_moves[i][2] = 1;
                     successful = true;
                     won = Winchecker.check2(i, 1, ai);
                 } else {
-                    curr = game_state_display.getText();
                     g.drawImage(playerO_img, check_x - 10, check_y - 11, game_board_panel);
                     legal_moves[i][2] = 2;
                     successful = true;
@@ -480,8 +489,8 @@ public class GUI extends JFrame {
         } /* END OF IF LEGAL LOOP */
 
         if (successful == false) {
-            curr = game_state_display.getText();
-            game_state_display.setText(curr + "Not a Legal Move\n");
+            game_state_display.append("Not a Legal Move\n");
+            illegal_moves_made++;
         } else if (player == 'X') {
             player = 'O';
         } else {

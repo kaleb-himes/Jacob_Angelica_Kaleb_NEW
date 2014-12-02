@@ -225,7 +225,7 @@ public class Winchecker {
         winner = check_neighbors(node, player);
         if (winner == 1 && ai == 0) {
             GUI.game_state_display.append("Player X WINS!!!\n");
-
+            
             Graphics g = GUI.game_board_panel.getGraphics();
             g.drawImage(GUI.game_over_img, 190, 202, GUI.game_board_panel);
             /* Activate play again button*/
@@ -237,7 +237,9 @@ public class Winchecker {
             return winner;
         } else if (winner == 2 && ai == 0) {
             GUI.game_state_display.append("Player O WINS!!!\n");
-
+            
+            
+            
             Graphics g = GUI.game_board_panel.getGraphics();
             g.drawImage(GUI.game_over_img, 190, 202, GUI.game_board_panel);
             /* Activate play again button*/
@@ -252,7 +254,7 @@ public class Winchecker {
              * tested thouroughly, they work.
              */
 //            try {
-//                Thread.sleep(3000); //1000 milliseconds is one second.
+//                Thread.sleep(6000); //1000 milliseconds is one second.
 //            } catch (InterruptedException ex) {
 //                Thread.currentThread().interrupt();
 //            }
@@ -269,7 +271,7 @@ public class Winchecker {
             paint_board(game_board_panel.getGraphics());
             return winner;
         } else {
-//            GUI.game_state_display.append(GUI.player + " moved\n");
+            GUI.game_state_display.append(GUI.player + " moved\n");
         }
         return winner;
     }
@@ -378,8 +380,18 @@ public class Winchecker {
                 win_check += check_lup(node, player);
             }
         }
+        if (node == 12 || node == 24 || node == 36) {
+            if (board[node - 1][2] == player) {
+                win_check += check_lup(node, player);
+            }
+        }
         if (node < 35) {
             if (board[node + 13][2] == player) {
+                win_check += check_rdown(node, player);
+            }
+        }
+        if (node == 11 || node == 23 || node == 35) {
+            if (board[node + 1][2] == player) {
                 win_check += check_rdown(node, player);
             }
         }
@@ -406,14 +418,24 @@ public class Winchecker {
          * check diagonal left down (node + 11)
          * if not row 4 (a4-l4) = (36 - 47)
          */
-        if (node > 10) {
+        if (node > 11) {
             if (board[node - 11][2] == player) {
                 win_check += check_rup(node, player);
             }
+            if (node == 23 || node == 35 || node == 47) {
+                if (board[node - 23][2] == player) {
+                    win_check += check_rup(node, player);
+                }
+            }
         }
-        if (node < 37) {
+        if (node < 36) {
             if (board[node + 11][2] == player) {
                 win_check += check_ldown(node, player);
+            }
+            if (node == 0 || node == 12 || node == 24) {
+                if (board[node + 23][2] == player) {
+                    win_check += check_ldown(node, player);
+                }
             }
         }
         if (win_check >= 3) {

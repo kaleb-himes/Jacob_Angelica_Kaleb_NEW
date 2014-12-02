@@ -9,13 +9,13 @@ import static k_j_a.GUI.m5;
 import static k_j_a.GUI.play_again_but;
 import wincheck.Winchecker;
 
-
 /**
  *
  * @author sweetness
  */
 public class Minimax_Sim {
-        /**
+
+    /**
      * @param args the command line arguments
      */
     public static void minimax_sim() {
@@ -24,10 +24,10 @@ public class Minimax_Sim {
         //tree.turnPruningOff();
         tree.train(1);
         tree.prun(true, false);
-        
+
         int d = 2; //depth
-        
-               //test trained network against random one
+
+        //test trained network against random one
         int win = 0;
         for (int i = 0; i < 50; i++) {
             double[] board = new double[12 * 4];
@@ -43,7 +43,7 @@ public class Minimax_Sim {
                 }
             } while (Winchecker.check(board) < 0);
             GUI.game_state_display.append("Winner was player "
-                    + "" + Winchecker.check(board) + " ai was " + player +"\n");
+                    + "" + Winchecker.check(board) + " ai was " + player + "\n");
             GUI.game_state_display.append("Board State\n");
             int LMSV = 0;
             int index = 0;
@@ -51,7 +51,7 @@ public class Minimax_Sim {
             for (int z = 0; z < 4; z++) {
                 for (int h = 0; h < 12; h++) {
                     if (board[index] == 0) {
-                         /*LMSV = Legal Move Search Value */
+                        /*LMSV = Legal Move Search Value */
                         if (z == 0) {
                             LMSV = z + h;
                         } else if (z == 1) {
@@ -65,11 +65,17 @@ public class Minimax_Sim {
                         int x, y;
                         x = get_x_y[0];
                         y = get_x_y[1];
-
-                        GUI.playerMove(x, y, 1);
-                        if (GUI.won == player) {
-                            win = Winchecker.aiWins;
+                        if (get_x_y[2] == 0) {
+                            GUI.playerMove(x, y, 1);
+                            if (GUI.won == player) {
+                                win = Winchecker.aiWins;
+                            }
                         }
+//                        try {
+//                            Thread.sleep(100);                 //1000 milliseconds is one second.
+//                        } catch (InterruptedException ex) {
+//                            Thread.currentThread().interrupt();
+//                        }
 //                        System.out.print(" 0.0");
                     } else {
 //                        System.out.print(" " + board[index]);
@@ -81,6 +87,9 @@ public class Minimax_Sim {
             GUI.game_state_display.append("number of nodes searched: " + index + "\n");
         }
         GUI.game_state_display.append("percent won = " + (double) win / 50.0 + "\n");
+        GUI.game_state_display.append("illegal moves attempted:"
+                + "" + GUI.illegal_moves_made + "\n");
+        GUI.illegal_moves_made = 0;
         /* Activate play again button*/
         play_again_but.setEnabled(true);
         /* And turn on the mouse listeners so user can click it */
