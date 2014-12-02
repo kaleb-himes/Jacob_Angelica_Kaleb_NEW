@@ -63,7 +63,7 @@ public class TDNN {
         int numWeightLayers = lay + 1;
         int i;
         Random r = new Random();
-        lr = 0.0001;
+        lr = 0.001;
         bias = -1.0;
         lambda = 0.3;
 
