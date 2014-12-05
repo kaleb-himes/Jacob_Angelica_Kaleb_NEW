@@ -11,7 +11,7 @@ import java.util.Arrays;
  *
  * @author sweetness
  */
-public class AI {
+public abstract class AI {
 
     static int offset = 12;
     static int max; //used as a counter in possible_helper
@@ -148,4 +148,16 @@ public class AI {
         int index = (int) (Math.random() * (double) all.length);
         return all[index];
     }
+    
+    /**
+     * This takes in the current board state and return a new board state with
+     * the AI's move.
+     * The returned value is in the format of 0.0 for no move 1.0 for player 1
+     * 2.0 for player 2 and the outer ring is the first 12 elements in the array
+     * 
+     * @param board current state of the board
+     * @param player player to make a move
+     * @return new board state that includes the players move
+     */
+    abstract double[] exploit(double[] board, int player);
 }
