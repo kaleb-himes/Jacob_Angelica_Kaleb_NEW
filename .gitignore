@@ -1,7 +1,10 @@
 *.class
 *.xml
 *.properties
-Kaleb_Jacob_Angelica/build/built-jar.properties
-Kaleb_Jacob_Angelica/dist/Kaleb_Jacob_Angelica.jar
-Kaleb_Jacob_Angelica/nbproject/private/private.xml
-Kaleb_Jacob_Angelica/nbproject/project.properties
+
+# solved. Run the following to untrack file changes without deleting them
+# from the repository itself:
+# 
+# git update-index --assume-unchanged <file_name>
+#
+# works wonders!!
