@@ -30,11 +30,11 @@ public class TDNN_Sim {
             int player2 = (player == 1) ? 2 : 1;
             do {
                 if (player == 1) {
-                    board = test.exploit(player, board);
-                    board = ran.random(player2, board);
+                    board = test.exploit(board, player);
+                    board = ran.random(board, player2);
                 } else {
-                    board = ran.random(player2, board);
-                    board = test.exploit(player, board);
+                    board = ran.random(board, player2);
+                    board = test.exploit(board, player);
                 }
             } while (Winchecker.check(board) < 0);
             GUI.game_state_display.append("Winner was player " + Winchecker.check(board) + " ai was " + player + "\n");

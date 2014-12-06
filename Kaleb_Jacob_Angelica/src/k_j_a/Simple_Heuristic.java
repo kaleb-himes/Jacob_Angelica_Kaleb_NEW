@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 /**
  * Used to find a heuristic value for movement
+ *
  * @author sweetness
  */
 public class Simple_Heuristic {
@@ -17,6 +18,124 @@ public class Simple_Heuristic {
 
     public Simple_Heuristic() {
 
+    }
+
+    /**
+     * Find the heuristic value of the move if the index of move is known
+     *
+     * @param in the move to get the heuristic of
+     * @param play the move index
+     * @return double indicating heuristic value
+     */
+    public double getHeuristic(double[] in, int play) {
+        int index = play;
+        int i;
+        double heur = 0.0;
+        double temp = 0.0;
+
+        if (index < 0) {
+            System.out.println("Error in getting heuristic");
+            return 0;
+        }
+
+        //case to the right
+        i = index;
+        temp = 0.0;
+        for (int j = 0; j < 3; j++) {
+            i = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
+            if (in[i] == in[index]) {
+                temp++;
+            } else {
+                break;
+            }
+        }
+
+        //case to the left -- add on to previous heur
+        i = index;
+        for (int j = 0; j < 3; j++) {
+            i = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
+            if (i >= in.length) {
+                break;
+            }
+            if (in[i] == in[index]) {
+                temp++;
+            } else {
+                break;
+            }
+        }
+        if (temp > heur) {
+            heur = temp;
+        }
+
+        //case of to the left and up
+        i = index;
+        temp = 0.0;
+        for (int j = 0; j < 3; j++) {
+            i = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
+            i += offset;
+            if (i >= in.length) {
+                break;
+            }
+            if (in[i] == in[index]) {
+                temp++;
+            } else {
+                break;
+            }
+        }
+
+        //case of to the right and down -- add on to previous heur
+        i = index;
+        for (int j = 0; j < 3; j++) {
+            i = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
+            i -= offset;
+            if (i < 0) {
+                break;
+            }
+            if (in[i] == in[index]) {
+                temp++;
+            } else {
+                break;
+            }
+        }
+        if (temp > heur) {
+            heur = temp;
+        }
+
+        //case of to the right and up
+        i = index;
+        temp = 0.0;
+        for (int j = 0; j < 3; j++) {
+            i = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
+            i += offset;
+            if (i >= in.length) {
+                break;
+            }
+            if (in[i] == in[index]) {
+                temp++;
+            } else {
+                break;
+            }
+        }
+
+        //case of to the left and down -- add on to last heur
+        i = index;
+        for (int j = 0; j < 3; j++) {
+            i = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
+            i -= offset;
+            if (i < 0) {
+                break;
+            }
+            if (in[i] == in[index]) {
+                temp++;
+            } else {
+                break;
+            }
+        }
+        if (temp > heur) {
+            heur = temp;
+        }
+
+        return heur;
     }
 
     /**
@@ -59,6 +178,9 @@ public class Simple_Heuristic {
         i = index;
         for (int j = 0; j < 3; j++) {
             i = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
+            if (i >= board.length) {
+                break;
+            }
             if (board[i] == in[index]) {
                 temp++;
             } else {
@@ -75,7 +197,7 @@ public class Simple_Heuristic {
         for (int j = 0; j < 3; j++) {
             i = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
             i += offset;
-            if (i > board.length) {
+            if (i >= board.length) {
                 break;
             }
             if (board[i] == in[index]) {
@@ -109,7 +231,7 @@ public class Simple_Heuristic {
         for (int j = 0; j < 3; j++) {
             i = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
             i += offset;
-            if (i > board.length) {
+            if (i >= board.length) {
                 break;
             }
             if (board[i] == in[index]) {
@@ -138,7 +260,6 @@ public class Simple_Heuristic {
         }
 
         return heur;
-
     }
 
     private double[] best(double[][] all, int player, double[] board) {

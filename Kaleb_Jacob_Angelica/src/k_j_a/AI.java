@@ -160,4 +160,11 @@ public abstract class AI {
      * @return new board state that includes the players move
      */
     abstract double[] exploit(double[] board, int player);
+    
+    /**
+     * Number of nodes evaluated for the last move the AI made.
+     * 
+     * @return number of nodes evaluated. 
+     */
+    //abstract int numEvaluated();
 }

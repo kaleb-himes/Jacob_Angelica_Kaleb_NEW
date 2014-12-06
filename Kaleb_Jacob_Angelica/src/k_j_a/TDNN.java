@@ -15,9 +15,13 @@
  */
 package k_j_a;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //local packages
 import wincheck.Winchecker;
@@ -26,7 +30,7 @@ import wincheck.Winchecker;
  *
  * @author sweetness
  */
-public class TDNN {
+public class TDNN extends AI {
 
     Stack<double[][]> Y;  //memory for outcomes of moves
     Stack<double[][]> Y2; //memory for outcomes of moves
@@ -165,7 +169,7 @@ public class TDNN {
 
             //play both sides player one and player two
             //uses TD(lambda) algorithm with backpropogation
-            board = exploit(1, board);
+            board = exploit(board, 1);
             double[][] temp = new double[state.length][];
             for (int i = 0; i < temp.length; i++) {
                 temp[i] = new double[state[i].length];
@@ -173,7 +177,7 @@ public class TDNN {
             }
             Y.push(temp);
 
-            board = exploit(2, board);
+            board = exploit(board, 2);
 
             temp = new double[state.length][];
             for (int i = 0; i < temp.length; i++) {
@@ -185,7 +189,7 @@ public class TDNN {
             int move = 1;
             do {
                 //System.out.println("move " + move);
-                board = exploit(1, board);
+                board = exploit(board, 1);
 
                 temp = new double[state.length][];
                 for (int i = 0; i < temp.length; i++) {
@@ -196,7 +200,7 @@ public class TDNN {
 
                 //Player twos move
                 if (g < trainRandom) {
-                    board = exploit(2, board);
+                    board = exploit(board, 2);
 
                     temp = new double[state.length][];
                     for (int i = 0; i < temp.length; i++) {
@@ -205,7 +209,7 @@ public class TDNN {
                     }
                     Y2.push(temp);
                 } else {
-                    board = random(2, board);
+                    board = random(board, 2);
                 }
             } while (Winchecker.check(board) < 0);
             //System.out.println("Finished trainging with game " + g + "\nWinner was player " + Winchecker.check(board));
@@ -368,121 +372,6 @@ public class TDNN {
         }
     }
 
-    static int max; //used as a counter in possible_helper
-    static boolean[] checked;
-
-    //used for recursive search on possible moves
-    private void possible_helper(double[][] all, double[] in,
-            int i, int player) {
-        if (checked[i] || i >= in.length || i < 0) {
-            //base case of already being checked or array bounds
-            return;
-        }
-
-        //base case of possible move
-        if (in[i] == 0) {
-            checked[i] = true;
-            all[max++][i] = player;
-            return;
-        }
-        checked[i] = true;
-
-        //case of to the left
-        int index = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
-        if (index < in.length && !checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-
-        //case of to the left and up
-        index = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
-        index += offset;
-        if (index < in.length && !checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-
-        //case of to the left and down
-        index = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
-        index -= offset;
-        if (index >= 0 && !checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-
-        //case of to the right
-        index = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
-        if (!checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-
-        //case of to the right and up
-        index = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
-        index += offset;
-        if (index < in.length) {
-            if (!checked[index]) {
-                possible_helper(all, in, index, player);
-            }
-        }
-
-        //case of to the right and down
-        index = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
-        index -= offset;
-        if (index >= 0) {
-            if (!checked[index]) {
-                possible_helper(all, in, index, player);
-            }
-        }
-
-        //case of up and case of down
-        index = i + offset;
-        if (index < in.length && !checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-
-        index = i - offset;
-        if (index >= 0 && !checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-    }
-
-    //find all possible moves. Specific to polar tic tac toe
-    private double[][] possible(double[] in, int player) {
-        max = offset * 4;
-        checked = new boolean[in.length];
-        double[][] all = new double[max + 1][in.length];
-        double[][] ret;
-
-        for (double[] x : all) {
-            System.arraycopy(in, 0, x, 0, x.length);
-        }
-
-        Arrays.fill(checked, false);
-        max = 0;
-
-        for (int i = 0; i < in.length; i++) {
-            if (in[i] != 0 && !checked[i]) {
-                possible_helper(all, in, i, player);
-            }
-        }
-
-        //case of empty board then all possible
-        if (max == 0) {
-            //System.out.println("Empty board");
-            for (int i = 0; i < in.length; i++) {
-                all[max++][i] = player;
-            }
-        }
-
-        ret = new double[max][in.length];
-        int i = 0;
-        for (double[] current : all) {
-            System.arraycopy(current, 0, ret[i++], 0, in.length);
-            if (i == max) {
-                break;
-            }
-        }
-
-        return ret;
-    }
-
     //find best move for all possible moves
     private double[] best(double[][] all, int desired) {
         double max = 0.0; //diffrence in win vs loss for desired
@@ -541,7 +430,7 @@ public class TDNN {
      * player 1 and 2 for player 2
      * @return the best board position
      */
-    public double[][] exploit(int desired, double[][] input) {
+    public double[][] exploit(double[][] input, int desired) {
         if (input == null) {
             return null;
         }
@@ -557,7 +446,8 @@ public class TDNN {
         return convert(in, input.length, input[0].length);
     }
 
-    public double[] exploit(int desired, double[] input) {
+    @Override
+    double[] exploit(double[] input, int desired) {
         double[][] all;
 
         //find all possible moves
@@ -567,23 +457,6 @@ public class TDNN {
         input = best(all, desired);
 
         return input;
-    }
-
-    /**
-     * Make a random move
-     *
-     * @param desired player to move
-     * @param input board state
-     * @return
-     */
-    public double[] random(int desired, double[] input) {
-        double[][] all;
-
-        //find all possible moves
-        all = possible(input, desired);
-
-        int index = (int) (Math.random() * (double) all.length);
-        return all[index];
     }
 
     /**
@@ -607,5 +480,30 @@ public class TDNN {
                 w[i][j] = in[i][j];
             }
         }
+    }
+
+    /**
+     * Save the weights to be loaded later.
+     *
+     * @param file file name to save weight values to.
+     */
+    public void saveWeights(String file) {
+        try {
+            File f = new File(file);
+            PrintWriter out = new PrintWriter(f, "UTF-8");
+            for (int j = 0; j < w.length; j++) {
+                String s = "";
+                for (int i = 0; i < w[j].length - 1; i++) {
+                    s += w[j][i] + ",";
+                }
+                s += w[j][w[j].length - 1];
+                out.println(s);
+            }
+            out.close();
+
+        } catch (Exception ex) {
+            Logger.getLogger(TDNN.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 }

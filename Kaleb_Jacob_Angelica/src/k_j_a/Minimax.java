@@ -36,6 +36,8 @@ public class Minimax {
     static boolean[] checked;
     static int max;
 
+    Simple_Heuristic sh = new Simple_Heuristic();
+    ;
     node currentHead;
     node head;
 
@@ -51,7 +53,7 @@ public class Minimax {
     }
 
     //bubble up value from an end node (win/lose/tie)
-    private void bubble(node in, int player, int value) {
+    private void bubble(node in, int player, double value) {
 
         /* player one was last to play meaning the parent of the node is lookin
          to minamize */
@@ -59,41 +61,50 @@ public class Minimax {
 
         node current = in;
         node parent = current.getParent();
-        ArrayList<node> chldrn;
+        //ArrayList<node> chldrn;
         current.setValue(value);
 
         while (parent != null) {
-            chldrn = parent.getChildren();
-            double temp = (min) ? Double.MAX_VALUE : Double.MIN_VALUE;
+            //chldrn = parent.getChildren();
+            //double temp = (parent.player == 1) ? Double.MAX_VALUE : Double.MIN_VALUE;
 
-            for (node x : chldrn) {
-                if (min) {
-                    if (x.getValue() != null && x.getValue() < temp) {
-                        temp = x.getValue();
+            //for (node x : chldrn) {
+                //if childern are player one than the parent is 2 and wants min
+                if (current.player == 1) {
+                    if (parent.player != 2) {
+                        System.out.println("well theres your problem");
+                        System.exit(0);
+                    }
+                    if (current.getValue() < parent.getValue()) {
+                        parent.setValue(current.getValue());
                     }
                 } else {
-                    if (x.getValue() != null && x.getValue() > temp) {
-                        temp = x.getValue();
+                    if(current.player != 2 || parent.player !=1) {
+                        System.out.println("no heres a big problem");
+                        System.exit(0);
+                    }
+                    if (current.getValue() > parent.getValue()) {
+                        parent.setValue(current.getValue());
                     }
                 }
-            }
+            //}
 
-            Double v = parent.getValue();
-            if (v == null) {
-                parent.setValue(temp);
-            } else {
-                if (min) {
-                    if (temp < v) {
-                        parent.setValue(temp);
-                    }
-                } else {
-                    if (temp > v) {
-                        parent.setValue(temp);
-                    }
-                }
-            }
+//            Double v = parent.getValue();
+//            if (v == null) {
+//                parent.setValue(temp);
+//            } else {
+//                if (parent.player == 2) {
+//                    if (temp < v) {
+//                        parent.setValue(temp);
+//                    }
+//                } else {
+//                    if (temp > v) {
+//                        parent.setValue(temp);
+//                    }
+//                }
+//            }
 
-            min = !min;
+            //min = !min;
             current = current.getParent();
             parent = current.getParent();
         }
@@ -143,10 +154,34 @@ public class Minimax {
                     }
                     if (!exists) {
                         current = new node(all[i]);
+                        if (all[i] == null) {
+                            System.out.println("all is null");
+                        }
+                        if (localHead == null) {
+                            System.out.println("local head is null");
+                        }
+                        if (localHead.getState() == null) {
+                            System.out.println("local heads state is null");
+                        }
+                        if (current == null) {
+                            System.out.println("current is null");
+                        }
+                        if (sh == null) {
+                            System.out.println("sh is null");
+                        }
+                        
                         current.player = player;
+                        //if(current.player == 1){
+                        //current.setValue(sh.getHeuristic(all[i], localHead.getState()));
+                        //}else{
+                        //    current.setValue(-sh.getHeuristic(all[i], localHead.getState()));
+                        //}
+                        //bubble(current, player, current.getValue());
                         double win = Winchecker.check(all[i]);
-                        if (win != 0) {
-                            bubble(current, player, (win == 1) ? 1 : -1);
+                        if (win > -1) {
+                            bubble(current, player, (win == 1.0) ? 5 : (win == 2.0) ? -5 : 0);
+                            //System.out.println("flagged as a win");
+                            //printBoard(all[i]);
                         }
 
                         current.setParent(localHead);
@@ -354,11 +389,11 @@ public class Minimax {
                     boolean complete = true;
                     int index = 0;
                     for (int j = 0; j < chd.size(); j++) {
-                        if (chd.get(j).getValue() == null && !chd.get(j).prunned) {
+                        if (!chd.get(j).prunned) {
                             complete = false;
                             break;
                         } else {
-                            if (chd.get(j).getValue().doubleValue() == alpha.doubleValue()) {
+                            if (chd.get(j).getValue() == alpha.doubleValue()) {
                                 index = j;
                             }
                         }
@@ -423,8 +458,45 @@ public class Minimax {
                     break;
                 }
             }
-            GUI.game_state_display.append("Finshed training game " + i + "\n");
+            printBoard(board);
         }
+        print();
+    }
+
+    private void printBoard(double[] board) {
+        int index = 0;
+        for (int k = 0; k < 4; k++) {
+            for (int y = 0; y < 12; y++) {
+                System.out.print(board[index++] + " ");
+            }
+            System.out.println("");
+        }
+        System.out.println("");
+    }
+
+    private void print() {
+        int ply = 0;
+        Stack<node> stk = new Stack();
+        Stack<node> next = new Stack();
+        System.out.println("Printing");
+        node lh;
+        stk.push(head);
+        ArrayList<node> ch;
+        while (!stk.isEmpty()) {
+
+            lh = stk.pop();
+            ch = lh.getChildren();
+            System.out.println(ply + " Player: " + lh.player + " Head = " + lh.getValue());
+            System.out.print("Childern : ");
+            for (node x : ch) {
+                System.out.print("  " + x.getValue() + "  ");
+                stk.push(x);
+            }
+            System.out.println("\n");
+
+            ply++;
+        }
+
     }
 
     private node find(double[] in) {
@@ -551,7 +623,7 @@ public class Minimax {
     private class node {
 
         private double[] state;
-        private Double value;
+        private double value;
         private ArrayList<node> childern;
         private node parent;
         public boolean prunned; //stop at this node and don't explore farther
@@ -569,7 +641,7 @@ public class Minimax {
             for (int i = 0; i < in.length; i++) {
                 state[i] = in[i];
             }
-            value = null;
+            value = 0.0;
         }
 
         /**
@@ -635,7 +707,7 @@ public class Minimax {
             value = in;
         }
 
-        public Double getValue() {
+        public double getValue() {
             return value;
         }
     }
