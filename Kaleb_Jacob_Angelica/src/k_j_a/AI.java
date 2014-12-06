@@ -33,44 +33,44 @@ public abstract class AI {
         }
 
         //case of to the left
-        int index = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
+        int index = ((i % offset - 1 >= 0) ? i - 1 : i + offset - 1);
         if (index < in.length && !checked[index]) {
             possible_helper(all, in, index, player);
         }
 
         //case of to the left and up
-        index = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
-        index += offset;
-        if (index < in.length && !checked[index]) {
+        index = (((i % offset) - 1 >= 0) ? i - 1 : i + offset - 1);
+        index -= offset;
+        if (index < in.length && index >= 0 && !checked[index]) {
             possible_helper(all, in, index, player);
         }
 
         //case of to the left and down
-        index = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
-        index -= offset;
-        if (index >= 0 && !checked[index]) {
+        index = ((i % offset - 1 >= 0) ? i - 1 : i + offset - 1);
+        index += offset;
+        if (index >= 0 && index < in.length && !checked[index]) {
             possible_helper(all, in, index, player);
         }
 
         //case of to the right
-        index = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
-        if (!checked[index]) {
+        index = ((i % offset) + 1 >= offset) ? (i - offset + 1) : (i + 1);
+        if (index >= 0 && index < in.length && !checked[index]) {
             possible_helper(all, in, index, player);
         }
 
         //case of to the right and up
-        index = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
-        index += offset;
-        if (index < in.length) {
+        index = ((i % offset) + 1 >= offset) ? (i - offset + 1) : (i + 1);
+        index -= offset;
+        if (index < in.length && index >= 0) {
             if (!checked[index]) {
                 possible_helper(all, in, index, player);
             }
         }
 
         //case of to the right and down
-        index = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
-        index -= offset;
-        if (index >= 0) {
+        index = ((i % offset) + 1 >= offset) ? (i - offset + 1) : (i + 1);
+        index += offset;
+        if (index >= 0 && index < in.length) {
             if (!checked[index]) {
                 possible_helper(all, in, index, player);
             }
@@ -148,23 +148,23 @@ public abstract class AI {
         int index = (int) (Math.random() * (double) all.length);
         return all[index];
     }
-    
+
     /**
      * This takes in the current board state and return a new board state with
-     * the AI's move.
-     * The returned value is in the format of 0.0 for no move 1.0 for player 1
-     * 2.0 for player 2 and the outer ring is the first 12 elements in the array
-     * 
+     * the AI's move. The returned value is in the format of 0.0 for no move 1.0
+     * for player 1 2.0 for player 2 and the outer ring is the first 12 elements
+     * in the array
+     *
      * @param board current state of the board
      * @param player player to make a move
      * @return new board state that includes the players move
      */
     abstract double[] exploit(double[] board, int player);
-    
+
     /**
      * Number of nodes evaluated for the last move the AI made.
-     * 
-     * @return number of nodes evaluated. 
+     *
+     * @return number of nodes evaluated.
      */
     //abstract int numEvaluated();
 }
