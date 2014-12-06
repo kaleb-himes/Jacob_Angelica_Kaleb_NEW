@@ -23,7 +23,7 @@ import wincheck.Winchecker;
  *
  * @author sweetness
  */
-public class Minimax {
+public class Minimax extends AI {
 
     boolean prunning;
     double alpha;
@@ -33,8 +33,6 @@ public class Minimax {
     int offset;
 
     int maxDepth;
-    static boolean[] checked;
-    static int max;
 
     Simple_Heuristic sh = new Simple_Heuristic();
     ;
@@ -44,6 +42,7 @@ public class Minimax {
     public Minimax() {
         offset = 12;
         int player = 2; //start with player one
+        maxDepth = 2;
 
         double[] board = new double[offset * 4];
         head = new node(board);
@@ -199,167 +198,6 @@ public class Minimax {
         }
     }
 
-    //create a minimax tree
-//    private void construct(node localHead, int player) {
-//        double[][] all = possible(localHead.getState(), player);
-//        
-//        //change for next player
-//        player = (player == 1)? 2 : 1;
-//        
-//        if (all == null) {
-//            return;
-//        }
-//        
-//        for (int i = 0; i < all.length; i++) {
-//            node current = new node(all[i]);
-//            
-//            current.setParent(localHead);
-//            localHead.addChild(current);
-//            
-//            construct(current, player);
-//        }
-//    }
-    //used for recursive search on possible moves
-    private void possible_helper(double[][] all, double[] in,
-            int i, int player) {
-        if (checked[i] || i >= in.length || i < 0) {
-            //base case of already being checked or array bounds
-            return;
-        }
-
-        //base case of possible move
-        if (in[i] == 0) {
-            if (max > 48) { //@TODO check since more options than possible ...error
-                System.out.println("strange error index of in at " + i + " been checked ? " + checked[i]);
-                return;
-            }
-            all[max++][i] = player;
-            checked[i] = true;
-            return;
-        }
-        checked[i] = true;
-
-        //case of to the left
-        int index = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
-        if (index < in.length && !checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-
-        //case of to the left and up
-        index = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
-        index += offset;
-        if (index < in.length && !checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-
-        //case of to the left and down
-        index = ((i % offset - 1 > 0) ? i - 1 : i + offset - 1);
-        index -= offset;
-        if (index >= 0 && !checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-
-        //case of to the right
-        index = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
-        if (!checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-
-        //case of to the right and up
-        index = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
-        index += offset;
-        if (index < in.length) {
-            if (!checked[index]) {
-                possible_helper(all, in, index, player);
-            }
-        }
-
-        //case of to the right and down
-        index = ((i + 1) % offset == 0) ? (i - offset + 1) % in.length : (i + 1) % in.length;
-        index -= offset;
-        if (index >= 0) {
-            if (!checked[index]) {
-                possible_helper(all, in, index, player);
-            }
-        }
-
-        //case of up and case of down
-        index = i + offset;
-        if (index < in.length && !checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-
-        index = i - offset;
-        if (index >= 0 && !checked[index]) {
-            possible_helper(all, in, index, player);
-        }
-    }
-
-    //find all possible moves. Specific to polar tic tac toe
-    private double[][] possible(double[] in, int player) {
-        max = offset * 4;
-        int full = 0;
-        checked = new boolean[in.length];
-        double[][] all = new double[max + 1][in.length];
-        double[][] ret;
-
-        for (double[] x : all) {
-            System.arraycopy(in, 0, x, 0, x.length);
-        }
-
-        Arrays.fill(checked, false);
-        max = 0;
-
-        for (int i = 0; i < in.length; i++) {
-            if (in[i] != 0 && !checked[i]) {
-                possible_helper(all, in, i, player);
-                full++;
-            }
-        }
-
-        //case of empty or full board
-        if (max == 0) {
-            if (full >= (4 * offset)) {
-                return null; //board is full
-            }
-            for (int i = 0; i < in.length; i++) {
-                all[max++][i] = player;
-            }
-        }
-
-        ret = new double[max][in.length];
-        int i = 0;
-        for (double[] current : all) {
-            System.arraycopy(current, 0, ret[i++], 0, in.length);
-            if (i == max) {
-                break;
-            }
-        }
-
-        return ret;
-    }
-
-    /**
-     * Make a random move
-     *
-     * @param desired player to move
-     * @param input board state
-     * @return
-     */
-    public double[] random(int desired, double[] input) {
-        double[][] all;
-
-        if (input == null) {
-            System.out.println("random of null board input errer");
-            return null;
-        }
-
-        //find all possible moves
-        all = possible(input, desired);
-
-        int index = (int) (Math.random() * (double) all.length);
-        return all[index];
-    }
 
     /**
      * Alpha, Beta prunning, prune depending on which player
@@ -449,18 +287,18 @@ public class Minimax {
         for (int i = 0; i < g; i++) {
             double[] board = new double[offset * 4];
             while (true) {
-                board = exploit(1, board, 2);
+                board = exploit(board, 1);
                 if (Winchecker.check(board) > -1) {
                     break;
                 }
-                board = random(2, board);
+                board = random(board, 2);
                 if (Winchecker.check(board) > -1) {
                     break;
                 }
             }
-            printBoard(board);
+            //printBoard(board);
         }
-        print();
+        //print();
     }
 
     private void printBoard(double[] board) {
@@ -533,7 +371,8 @@ public class Minimax {
         return null;
     }
 
-    public double[] exploit(int player, double[] in, int depth) {
+    @Override
+    double[] exploit(double[] in, int player) {
         if (in == null) {
             System.out.println("error null board used for exploit");
             return null;
@@ -548,29 +387,29 @@ public class Minimax {
         //find max or min
         if (currentHead == null) {
             System.out.println("could not find node");
-            for (int i = 0; i < in.length; i++) {
-                if (in[i] > 0) {
-                    System.out.print(" " + i + " value of " + in[i]);
-                }
-            }
-            System.out.println(" indexs searching for");
-            ArrayList<node> temp = head.getChildren();
-
-            ArrayList<node> temp2;
-            for (node x1 : temp) {
-                temp2 = x1.getChildren();
-                for (node x : temp2) {
-                    for (int i = 0; i < in.length; i++) {
-                        if (x.getState()[i] > 0) {
-                            System.out.print(" " + i + " value of " + x.getState()[i]);
-                        }
-                    }
-                    System.out.println("");
-                }
-            }
-            return null;
+//            for (int i = 0; i < in.length; i++) {
+//                if (in[i] > 0) {
+//                    System.out.print(" " + i + " value of " + in[i]);
+//                }
+//            }
+//            System.out.println(" indexs searching for");
+//            ArrayList<node> temp = head.getChildren();
+//
+//            ArrayList<node> temp2;
+//            for (node x1 : temp) {
+//                temp2 = x1.getChildren();
+//                for (node x : temp2) {
+//                    for (int i = 0; i < in.length; i++) {
+//                        if (x.getState()[i] > 0) {
+//                            System.out.print(" " + i + " value of " + x.getState()[i]);
+//                        }
+//                    }
+//                    System.out.println("");
+//                }
+//            }
+//            return null;
         }
-        currentHead = best(player, currentHead, depth);
+        currentHead = best(player, currentHead, maxDepth);
 
         return currentHead.getState();
     }
@@ -583,13 +422,11 @@ public class Minimax {
 
         construct(localHead, player, depth);
 
-        boolean min = (player != 1);
-
         ArrayList<node> chd = localHead.getChildren();
         node b = null;
         Double temp;
 
-        if (min) {
+        if (localHead.player == 2) {
             temp = Double.MAX_VALUE;
             for (int i = 0; i < chd.size(); i++) {
                 Double x = chd.get(i).getValue();
@@ -618,6 +455,10 @@ public class Minimax {
         }
 
         return b;
+    }
+    
+    public void setDepth(int d) {
+        maxDepth = d;
     }
 
     private class node {

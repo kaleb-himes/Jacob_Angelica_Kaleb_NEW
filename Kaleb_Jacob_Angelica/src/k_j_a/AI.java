@@ -114,7 +114,7 @@ public abstract class AI {
             if (full >= (offset * 4)) {
                 return null; //board is full
             }
-            System.out.println("Empty board");
+            //System.out.println("Empty board");
             for (int i = 0; i < in.length; i++) {
                 all[max++][i] = player;
             }
