@@ -271,7 +271,7 @@ public class Winchecker {
             paint_board(game_board_panel.getGraphics());
             return winner;
         } else {
-            GUI.game_state_display.append(GUI.player + " moved\n");
+            //GUI.game_state_display.append(GUI.player + " moved\n");
         }
         return winner;
     }

@@ -7,6 +7,7 @@ package k_j_a;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Random;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,6 +17,7 @@ import javax.swing.WindowConstants;
 import static k_j_a.GUI.game_board_panel;
 import static k_j_a.GUI.game_state_display;
 import static k_j_a.GUI.paint_board;
+import static k_j_a.GUI.playerMove;
 import static k_j_a.GUI.set_all_non_focusable;
 
 /**
@@ -31,7 +33,7 @@ public class Human_AI_Options extends JFrame {
     private JButton tdnn_but;
     private JButton minimax_but;
     private JLabel jLabel1;
-    public static JLabel jLabel2; 
+    public static JLabel jLabel2;
     
     public Human_AI_Options() {
         initComponents();
@@ -106,27 +108,47 @@ public class Human_AI_Options extends JFrame {
     }                       
 
     private void normalAI_butMouseClicked(MouseEvent evt) {
+        GUI.playingNorm = 1;
         this.setVisible(false);
-        System.out.println("Human can not play AI yet.");
         paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
     }
 
     private void tdnn_butMouseClicked(MouseEvent evt) {
+        GUI.playingTDNN = 1;
+        TDNN_Sim.newPlayer();
         this.setVisible(false);
-        System.out.println("Human can not play AI yet.");
         paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
+        if (GUI.human_second == 1) {
+            int get_x_y[], x, y;
+            double rand = Math.random()*47;
+            int castRand = (int) rand;
+            get_x_y = GUI.legal_moves[castRand];
+            x = get_x_y[0];
+            y = get_x_y[1];
+            GUI.playerMove(x, y, 0);
+        }
     }
 
     private void minimax_butMouseClicked(MouseEvent evt) {
+        GUI.playingMinimax = 1;
+        Minimax_Sim.newPlayer();
         this.setVisible(false);
-        System.out.println("Human can not play AI yet.");
         paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
+        if (GUI.human_second == 1) {
+            int get_x_y[], x, y;
+            double rand = Math.random()*47;
+            int castRand = (int) rand;
+            get_x_y = GUI.legal_moves[castRand];
+            x = get_x_y[0];
+            y = get_x_y[1];
+            GUI.playerMove(x, y, 0);
+        }
     }
 
     public static void human_v_ai_options() {

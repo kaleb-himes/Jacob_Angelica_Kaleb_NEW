@@ -289,4 +289,8 @@ public class Simple_Heuristic extends AI{
         //evaluate possible moves and choose best
         return best(all, desired, input);
     }
+    public static void Normal_move()
+    {
+        
+    }
 }

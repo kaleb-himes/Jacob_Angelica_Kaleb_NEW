@@ -30,24 +30,40 @@ import wincheck.Winchecker;
 @SuppressWarnings("serial")
 public class GUI extends JFrame {
 
-    private JLabel ai_lbl;                        /* Label */
+    private JLabel ai_lbl;                        /* Label for ai progress */
+    private JLabel game_state_lbl;               /* Label for Text area */
+
     public static JProgressBar ai_progress_bar;  /* AI progress bar */
+
     public JPanel ai_thinking_quit_panel;        /* Panel for ai elements */
+    public JPanel game_state_panel;              /* Panel for state elements */
+    public JPanel options_panel;                 /* Panel for quit/replay */
+    public static JPanel game_board_panel;       /* Display of the board */
+
     public static JButton ai_v_ai_but;           /* Button for game mode */
     public static JButton ai_v_human_but;        /* Button for game mode */
     public static JButton human_v_ai_but;        /* Button for game mode */
     public static JButton human_v_human_but;     /* Button for game mode */
-    public static JPanel game_board_panel;       /* Display of the board */
-    public static JTextArea game_state_display;  /* Text area */
-    private JLabel game_state_lbl;                /* Label for Text area*/
-    public JPanel game_state_panel;              /* Panel for state elements */
-    public JScrollPane game_state_scrollpane;    /* Scroll pane, Long game */
-    public JPanel options_panel;                 /* Panel for quit/replay */
     public static JButton play_again_but;        /* Button for replay */
     public static JButton quit_but;              /* Button for quit */
-    
+
+
+    public static JTextArea game_state_display;  /* Text area */
+
+    public JScrollPane game_state_scrollpane;    /* Scroll pane, Long game */
+
+
+    public static int human_playing_ai = 0;
+    public static int human_first = 0;
+    public static int human_second = 0;
+    private static int humans_turn = 0;
+    public static int playingTDNN = 0;
+    public static int playingMinimax = 0;
+    public static int playingNorm = 0;
+    private static int checkMoves = 0;
+    private static double[] ai_board = new double[12 * 4];
+
     public static int illegal_moves_made = 0;
-    
     public static int won = 0;
 
     /* Legal Move Coodinates in (x,y) format:
@@ -403,6 +419,10 @@ public class GUI extends JFrame {
     }
 
     private void human_v_ai_butMouseClicked(MouseEvent evt) {
+        human_first = 1;
+        human_second = 0;
+        humans_turn = 1;
+        human_playing_ai = 1;
         Human_AI_Options.human_v_ai_options();
         Human_AI_Options.jLabel2.setText("Ok Human is X, AI is O");
         paint_board(game_board_panel.getGraphics());
@@ -411,18 +431,26 @@ public class GUI extends JFrame {
     }
 
     private void ai_v_human_butMouseClicked(MouseEvent evt) {
+        human_first = 0;
+        human_second = 1;
+        humans_turn = 0;
+        human_playing_ai = 1;
         Human_AI_Options.human_v_ai_options();
         Human_AI_Options.jLabel2.setText("Ok AI is X, Human is O");
     }
 
     private void human_v_human_butMouseClicked(MouseEvent evt) {
+        human_first = 1;
+        human_second = 1;
+        humans_turn = 1;
         paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
     }
 
     private void ai_v_ai_butMouseClicked(MouseEvent evt) {
-
+        human_first = 0;
+        human_second = 0;
         //paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
@@ -430,6 +458,10 @@ public class GUI extends JFrame {
     }
 
     private void play_again_butMouseClicked(MouseEvent evt) {
+        human_first = 0;
+        human_second = 0;
+        humans_turn = 0;
+        GUI.player = 'X';
         for (int i = 0; i < legal_moves.length; i++) {
             legal_moves[i][2] = 0;
         }
@@ -441,14 +473,17 @@ public class GUI extends JFrame {
 
     }
 
-    private void game_board_panelMouseClicked(MouseEvent evt) {
-        Point a = game_board_panel.getMousePosition();
-        int x = (int) a.getX();
-        int y = (int) a.getY();
-        playerMove(x, y, 0);
+    public static void game_board_panelMouseClicked(MouseEvent evt) {
+        if (humans_turn == 1) {
+            Point a = game_board_panel.getMousePosition();
+            int x = (int) a.getX();
+            int y = (int) a.getY();
+            playerMove(x, y, 0);
+        }
     }
+
     /**
-     * 
+     *
      * @param x the x coordinate gleaned from legal_moves[i][0]
      * @param y the y coordinate gleaned from legal_moves[i][1]
      * @param ai a flag to know how to treat game over display
@@ -492,13 +527,115 @@ public class GUI extends JFrame {
             game_state_display.append("Not a Legal Move\n");
             illegal_moves_made++;
         } else if (player == 'X') {
-            player = 'O';
+            if (human_playing_ai == 1) {
+                if (human_first == 1) {
+                    game_state_display.append("Computers turn puny mortal.\n");
+                    player = 'O';
+                    humans_turn = 0;
+                    if (playingTDNN == 1) {
+                        int index = 0;
+                        int movedOn = 0;
+                        for (int i = 0; i < 12*4; i++) {
+                                movedOn = legal_moves[index][2];
+                                if (movedOn == 1) {
+                                    ai_board[i] = 1.0;
+                                } 
+                                else if (movedOn == 2) {
+                                    ai_board[i] = 2.0;
+                                }
+                                else {
+                                    ai_board[i] = 0.0;
+                                }
+                                index++;
+                            }
+                        TDNN_Sim.TDNN_move(ai_board, 2);
+                    } else if (playingMinimax == 1) {
+                        int index = 0;
+                        int movedOn = 0;
+                        for (int i = 0; i < 12*4; i++) {
+                                movedOn = legal_moves[index][2];
+                                if (movedOn == 1) {
+                                    ai_board[i] = 1.0;
+                                }
+                                else if (movedOn == 2) {
+                                    ai_board[i] = 2.0;
+                                }
+                                else {
+                                    ai_board[i] = 0.0;
+                                }
+                                index++;
+                            }
+                        Minimax_Sim.Minimax_move(ai_board, 2);
+                    } else {
+                        Simple_Heuristic.Normal_move();
+                    }
+                    
+                } else if (human_second == 1) {
+                    game_state_display.append("Your turn puny human.\n");
+                    player = 'O';
+                    humans_turn = 1;
+                }
+            } else {
+                player = 'O';
+            }
+
         } else {
-            player = 'X';
+            if (human_playing_ai == 1) {
+                if (human_first == 1) {
+                    game_state_display.append("Your turn puny human.\n");
+                    player = 'X';
+                    humans_turn = 1;
+                } else if (human_second == 1) {
+                    game_state_display.append("Computers turn puny mortal.\n");
+                    player = 'X';
+                    humans_turn = 0;
+                    if (playingTDNN == 1) {
+                        int index = 0;
+                        int movedOn = 0;
+                        for (int i = 0; i < 12*4; i++) {
+                                movedOn = legal_moves[index][2];
+                                if (movedOn == 1) {
+                                    ai_board[i] = 1.0;
+                                } 
+                                else if (movedOn == 2) {
+                                    ai_board[i] = 2.0;
+                                }
+                                else {
+                                    ai_board[i] = 0.0;
+                                }
+                                index++;
+                            }
+                        TDNN_Sim.TDNN_move(ai_board, 1);
+                    } else if (playingMinimax == 1) {
+                        int index = 0;
+                        int movedOn = 0;
+                        for (int i = 0; i < 12*4; i++) {
+                                movedOn = legal_moves[index][2];
+                                if (movedOn == 1) {
+                                    ai_board[i] = 1.0;
+                                }
+                                else if (movedOn == 2) {
+                                    ai_board[i] = 2.0;
+                                }
+                                else {
+                                    ai_board[i] = 0.0;
+                                }
+                                index++;
+                            }
+                        Minimax_Sim.Minimax_move(ai_board, 1);
+                    } else {
+                        Simple_Heuristic.Normal_move();
+                    }
+                }
+            } else {
+                player = 'X';
+            }
         }
     }/* END OF playerMove()*/
+
+
     /**
-     * 
+     *
      * @param g the graphical display of the game board
      */
     public static void paint_board(Graphics g) {
