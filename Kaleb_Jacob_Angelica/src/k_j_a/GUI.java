@@ -53,14 +53,14 @@ public class GUI extends JFrame {
     public JScrollPane game_state_scrollpane;    /* Scroll pane, Long game */
 
 
-    public static int human_playing_ai = 0;
-    public static int human_first = 0;
-    public static int human_second = 0;
-    private static int humans_turn = 0;
-    public static int playingTDNN = 0;
-    public static int playingMinimax = 0;
-    public static int playingNorm = 0;
-    private static int checkMoves = 0;
+    public static int human_playing_ai  = 0;
+    public static int human_first       = 0;
+    public static int human_second      = 0;
+    private static int humans_turn      = 0;
+    public static int playingTDNN       = 0;
+    public static int playingMinimax    = 0;
+    public static int playingNorm       = 0;
+    private static int checkMoves       = 0;
     private static double[] ai_board = new double[12 * 4];
 
     public static int illegal_moves_made = 0;
