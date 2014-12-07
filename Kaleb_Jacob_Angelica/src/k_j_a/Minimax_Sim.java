@@ -92,7 +92,6 @@ public class Minimax_Sim {
         int y;
         int legal;
         int get_x_y[];
-        int d = 2;
         
         double[] temp_board = new double[12*4];
         for (int i = 0; i < 12*4; i++) {
