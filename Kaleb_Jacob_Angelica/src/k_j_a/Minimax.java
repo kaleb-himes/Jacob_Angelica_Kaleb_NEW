@@ -24,86 +24,57 @@ import wincheck.Winchecker;
  * @author sweetness
  */
 public class Minimax extends AI {
-
-    boolean prunning;
-    double alpha;
-    double beta;
-
-    double[][] values;
-    int offset;
-
-    int maxDepth;
-
-    Simple_Heuristic sh = new Simple_Heuristic();
-    ;
-    node currentHead;
-    node head;
-
+    
+    private boolean prunning;
+    private double alpha;
+    private double beta;
+    
+    private double[][] values;
+    private int offset;
+    
+    private int maxDepth;
+    
+    private Simple_Heuristic sh = new Simple_Heuristic();
+    
+    private node currentHead;
+    private node head;
+    
     public Minimax() {
         offset = 12;
         int player = 2; //start with player one
         maxDepth = 2;
-
         double[] board = new double[offset * 4];
         head = new node(board);
-        head.player = 2;
+        head.player = 1;
         currentHead = head; //keep track of location in tree during games
         construct(head, player, 1);
     }
 
     //bubble up value from an end node (win/lose/tie)
-    private void bubble(node in, int player, double value) {
-
-        /* player one was last to play meaning the parent of the node is lookin
-         to minamize */
-        boolean min = (player == 1);
-
+    private void bubble(node in, double value) {
         node current = in;
         node parent = current.getParent();
-        //ArrayList<node> chldrn;
+        ArrayList<node> chldrn;
         current.setValue(value);
-
+        
         while (parent != null) {
-            //chldrn = parent.getChildren();
-            //double temp = (parent.player == 1) ? Double.MAX_VALUE : Double.MIN_VALUE;
-
-            //for (node x : chldrn) {
+            chldrn = parent.getChildren();
+            double temp = (parent.player == 1) ? 0 : Double.MAX_VALUE;
+            
+            for (node x : chldrn) {
                 //if childern are player one than the parent is 2 and wants min
                 if (current.player == 1) {
-                    if (parent.player != 2) {
-                        System.out.println("well theres your problem");
-                        System.exit(0);
-                    }
-                    if (current.getValue() < parent.getValue()) {
-                        parent.setValue(current.getValue());
+                    if (x.getValue() < temp) {
+                        temp = x.getValue();
                     }
                 } else {
-                    if(current.player != 2 || parent.player !=1) {
-                        System.out.println("no heres a big problem");
-                        System.exit(0);
-                    }
-                    if (current.getValue() > parent.getValue()) {
-                        parent.setValue(current.getValue());
+                    if (x.getValue() > temp) {
+                        temp = x.getValue();
                     }
                 }
-            //}
-
-//            Double v = parent.getValue();
-//            if (v == null) {
-//                parent.setValue(temp);
-//            } else {
-//                if (parent.player == 2) {
-//                    if (temp < v) {
-//                        parent.setValue(temp);
-//                    }
-//                } else {
-//                    if (temp > v) {
-//                        parent.setValue(temp);
-//                    }
-//                }
-//            }
-
-            //min = !min;
+            }
+            //set value and advance to next ply
+            parent.setValue(temp);
             current = current.getParent();
             parent = current.getParent();
         }
@@ -111,11 +82,11 @@ public class Minimax extends AI {
 
     //create a minimax tree
     private void construct(node localHead, int player, int depth) {
-
+        
         Stack<node> stk = new Stack();
         Stack<node> stk2 = new Stack();
         int localDepth = 0;
-
+        
         stk2.push(localHead);
         while (!stk2.isEmpty() && localDepth < depth) {
             while (!stk2.isEmpty()) {
@@ -123,21 +94,19 @@ public class Minimax extends AI {
             }
             while (!stk.isEmpty()) {
                 localHead = stk.pop();
-                //change for next player
                 player = localHead.player;
-                player = (player == 1) ? 2 : 1;
                 if (localHead == null) {
                     break;
                 }
-
+                
                 double[][] all = possible(localHead.getState(), player);
                 if (all == null) {
-                    bubble(localHead, player, 0);
+                    bubble(localHead, 0);
                     return; //no more moves possible
                 }
-
+                
                 ArrayList<node> chd = localHead.getChildren();
-
+                
                 for (int i = 0; i < all.length; i++) {
                     node current = null;
                     boolean exists = false;
@@ -153,39 +122,18 @@ public class Minimax extends AI {
                     }
                     if (!exists) {
                         current = new node(all[i]);
-                        if (all[i] == null) {
-                            System.out.println("all is null");
-                        }
-                        if (localHead == null) {
-                            System.out.println("local head is null");
-                        }
-                        if (localHead.getState() == null) {
-                            System.out.println("local heads state is null");
-                        }
-                        if (current == null) {
-                            System.out.println("current is null");
-                        }
-                        if (sh == null) {
-                            System.out.println("sh is null");
-                        }
-                        
-                        current.player = player;
-                        //if(current.player == 1){
-                        //current.setValue(sh.getHeuristic(all[i], localHead.getState()));
-                        //}else{
-                        //    current.setValue(-sh.getHeuristic(all[i], localHead.getState()));
-                        //}
-                        //bubble(current, player, current.getValue());
-                        double win = Winchecker.check(all[i]);
-                        if (win > -1) {
-                            bubble(current, player, (win == 1.0) ? 5 : (win == 2.0) ? -5 : 0);
-                            //System.out.println("flagged as a win");
-                            //printBoard(all[i]);
-                        }
-
                         current.setParent(localHead);
                         localHead.addChild(current);
-
+                        current.player = (player == 1) ? 2 : 1;
+                        
+                        if (current.player == 1) {
+                            current.setValue(sh.getHeuristic(all[i], localHead.getState()));
+                            bubble(current, current.getValue());
+                        }
+                        double win = Winchecker.check(all[i]);
+                        if (win > -1) {
+                            bubble(current, (win == 1.0) ? 5 : (win == 2.0) ? -5 : 0);
+                        }
                     }
 
                     //check if its been prunned and if so do not explore
@@ -198,7 +146,6 @@ public class Minimax extends AI {
         }
     }
 
-
     /**
      * Alpha, Beta prunning, prune depending on which player
      *
@@ -209,14 +156,14 @@ public class Minimax extends AI {
         ArrayList<node> chd;
         Stack<node> stk = new Stack();
         Stack<node> stk2 = new Stack();
-
+        
         System.out.println("prunning for p1 " + p1);
         Double alpha;
         Double beta;
         if (p1) {
             node localHead = head;
             stk.push(localHead);
-
+            
             while (!stk.isEmpty()) {
                 localHead = stk.pop();
                 alpha = localHead.getValue();
@@ -246,7 +193,7 @@ public class Minimax extends AI {
                             }
                         }
                     }
-
+                    
                     for (node x : chd) {
                         if (!x.prunned) {
                             ArrayList<node> temp = x.getChildren();
@@ -257,14 +204,12 @@ public class Minimax extends AI {
                             }
                         }
                     }
-
                 }
             }
-
         }
-
+        
         if (p2) {
-
+            
         }
     }
 
@@ -282,7 +227,7 @@ public class Minimax extends AI {
     public void turnPruningOff() {
         prunning = false;
     }
-
+    
     public void train(int g) {
         for (int i = 0; i < g; i++) {
             double[] board = new double[offset * 4];
@@ -300,7 +245,7 @@ public class Minimax extends AI {
         }
         //print();
     }
-
+    
     private void printBoard(double[] board) {
         int index = 0;
         for (int k = 0; k < 4; k++) {
@@ -311,7 +256,7 @@ public class Minimax extends AI {
         }
         System.out.println("");
     }
-
+    
     private void print() {
         int ply = 0;
         Stack<node> stk = new Stack();
@@ -321,7 +266,7 @@ public class Minimax extends AI {
         stk.push(head);
         ArrayList<node> ch;
         while (!stk.isEmpty()) {
-
+            
             lh = stk.pop();
             ch = lh.getChildren();
             System.out.println(ply + " Player: " + lh.player + " Head = " + lh.getValue());
@@ -331,12 +276,12 @@ public class Minimax extends AI {
                 stk.push(x);
             }
             System.out.println("\n");
-
+            
             ply++;
         }
-
+        
     }
-
+    
     private node find(double[] in) {
         double[] cmp;
         node current;
@@ -350,7 +295,7 @@ public class Minimax extends AI {
             }
             while (!stk2.isEmpty()) {
                 current = stk2.pop();
-
+                
                 cmp = current.getState();
                 boolean matched = true;
                 for (int i = 0; i < cmp.length; i++) {
@@ -370,99 +315,70 @@ public class Minimax extends AI {
         }
         return null;
     }
-
+    
     @Override
     double[] exploit(double[] in, int player) {
         if (in == null) {
             System.out.println("error null board used for exploit");
             return null;
         }
-
         currentHead = find(in);
         if (currentHead == null) { //restart search from top of list
             currentHead = head;
             currentHead = find(in);
         }
-
-        //find max or min
         if (currentHead == null) {
-            System.out.println("could not find node");
-//            for (int i = 0; i < in.length; i++) {
-//                if (in[i] > 0) {
-//                    System.out.print(" " + i + " value of " + in[i]);
-//                }
-//            }
-//            System.out.println(" indexs searching for");
-//            ArrayList<node> temp = head.getChildren();
-//
-//            ArrayList<node> temp2;
-//            for (node x1 : temp) {
-//                temp2 = x1.getChildren();
-//                for (node x : temp2) {
-//                    for (int i = 0; i < in.length; i++) {
-//                        if (x.getState()[i] > 0) {
-//                            System.out.print(" " + i + " value of " + x.getState()[i]);
-//                        }
-//                    }
-//                    System.out.println("");
-//                }
-//            }
-//            return null;
+            System.out.println("could not find node in tree");
+            System.exit(1);
         }
         currentHead = best(player, currentHead, maxDepth);
-
         return currentHead.getState();
     }
-
+    
     private node best(int player, node localHead, int depth) {
         if (localHead == null) {
             System.out.println("Error localHead null when calling best function");
             return null;
         }
-
+        
         construct(localHead, player, depth);
-
         ArrayList<node> chd = localHead.getChildren();
         node b = null;
-        Double temp;
-
+        double temp;
         if (localHead.player == 2) {
             temp = Double.MAX_VALUE;
             for (int i = 0; i < chd.size(); i++) {
-                Double x = chd.get(i).getValue();
-                if (x != null && x < temp) {
+                double x = chd.get(i).getValue();
+                if (x < temp) {
                     temp = x;
                     b = chd.get(i);
                 }
-            }
-            //none found so random
-            if (temp == Double.MAX_VALUE) {
-                b = chd.get((int) (Math.random() * chd.size()));
             }
         } else {
-            temp = Double.MIN_VALUE;
+            temp = -6.0;
             for (int i = 0; i < chd.size(); i++) {
-                Double x = chd.get(i).getValue();
-                if (x != null && x > temp) {
+                double x = chd.get(i).getValue();
+                if (x > temp) {
                     temp = x;
                     b = chd.get(i);
                 }
             }
-            //none found so random
-            if (temp == Double.MIN_VALUE) {
-                b = chd.get((int) (Math.random() * chd.size()));
-            }
         }
-
+        //@TODO possibility to handle none found -- so maybe random?
+        if (temp == 0.0) {
+            //System.out.println("random selected");
+            //b = chd.get((int) (Math.random() * chd.size()));
+        }
+        
         return b;
     }
     
     public void setDepth(int d) {
         maxDepth = d;
     }
-
+    
     private class node {
-
+        
         private double[] state;
         private double value;
         private ArrayList<node> childern;
@@ -547,7 +463,7 @@ public class Minimax extends AI {
         public void setValue(double in) {
             value = in;
         }
-
+        
         public double getValue() {
             return value;
         }
