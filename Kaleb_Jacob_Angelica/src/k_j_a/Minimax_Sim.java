@@ -37,11 +37,11 @@ public class Minimax_Sim {
             int player2 = (player == 1) ? 2 : 1;
             do {
                 if (player == 1) {
-                    board = tree.exploit(player, board, d);
-                    board = tree.random(player2, board);
+                    board = tree.exploit(board, player);
+                    board = tree.random(board, player2);
                 } else {
-                    board = tree.random(player2, board);
-                    board = tree.exploit(player, board, d);
+                    board = tree.random(board, player2);
+                    board = tree.exploit(board, player);
                 }
             } while (Winchecker.check(board) < 0);
             GUI.game_state_display.append("Winner was player "
@@ -103,7 +103,7 @@ public class Minimax_Sim {
                 temp_board[i] = 0.0;
             }
         }
-        ai_board = aiPlayer.exploit(player, ai_board, d);
+        ai_board = aiPlayer.exploit(ai_board, player);
         
         for (int i = 0; i < 12*4; i++) {
             if ((ai_board[i] == 1.0 || ai_board[i] == 2.0) && temp_board[i] == 0.0) {
