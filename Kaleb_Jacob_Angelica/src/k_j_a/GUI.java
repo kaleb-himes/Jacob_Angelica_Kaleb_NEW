@@ -541,7 +541,7 @@ public class GUI extends JFrame {
             if (successful == false) {
                 game_state_display.append("Not a Legal Move\n");
                 illegal_moves_made++;
-            } else if (player == 'X') {
+            } else if (player == 'X' && won == 0) {
                 if (human_playing_ai == 1) {
                     if (human_first == 1) {
                         game_state_display.append("Computers turn puny mortal.\n");
@@ -591,7 +591,7 @@ public class GUI extends JFrame {
                 }
 
             } else {
-                if (human_playing_ai == 1) {
+                if (human_playing_ai == 1 && won == 0) {
                     if (human_first == 1) {
                         game_state_display.append("Your turn puny human.\n");
                         player = 'X';
