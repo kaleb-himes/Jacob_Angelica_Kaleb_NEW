@@ -71,6 +71,7 @@ public class GUI extends JFrame {
     public static int playingNorm       = 0;
     private static int checkMoves       = 0;
     private static double[] ai_board    = new double[12 * 4];
+    public static int moves_made = 0;
 
     public static int illegal_moves_made = 0;
     public static int won = 0;
@@ -503,6 +504,7 @@ public class GUI extends JFrame {
      */
     public static void playerMove(int x, int y, int ai) {
         if (ai == 1 && won != 0) {
+            moves_made = 0;
             won = 0;
         }
         if (won == 0) {
@@ -529,11 +531,13 @@ public class GUI extends JFrame {
                         g.drawImage(playerX_img, check_x - 10, check_y - 11, game_board_panel);
                         legal_moves[i][2] = 1;
                         successful = true;
+                        moves_made++;
                         won = Winchecker.check2(i, 1, ai);
                     } else {
                         g.drawImage(playerO_img, check_x - 10, check_y - 11, game_board_panel);
                         legal_moves[i][2] = 2;
                         successful = true;
+                        moves_made++;
                         won = Winchecker.check2(i, 2, ai);
                     }
                     if (won == 0 && human_playing_ai == 0) {
