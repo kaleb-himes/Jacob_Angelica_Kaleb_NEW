@@ -25,7 +25,7 @@ public class Minimax_Sim {
         tree.turnPruningOn();
         //tree.turnPruningOff();
         tree.train(1);
-        tree.prun(true, false);
+        tree.prun();
 
         int d = 2; //depth
 
@@ -124,6 +124,6 @@ public class Minimax_Sim {
     {
         aiPlayer = new Minimax();
         aiPlayer.train(1);
-        aiPlayer.prun(true, false);
+        aiPlayer.prun();
     }
 }

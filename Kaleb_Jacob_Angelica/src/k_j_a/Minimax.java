@@ -11,6 +11,8 @@
  * alpha-beta
  * http://repository.cmu.edu/cgi/viewcontent.cgi?article=2700&context=compsci
  *
+ * School text book
+ *
  */
 package k_j_a;
 
@@ -24,21 +26,16 @@ import wincheck.Winchecker;
  * @author sweetness
  */
 public class Minimax extends AI {
-    
+
     private boolean prunning;
-    private double alpha;
-    private double beta;
-    
-    private double[][] values;
-    private int offset;
-    
+
     private int maxDepth;
-    
-    private Simple_Heuristic sh = new Simple_Heuristic();
-    
+
+    private final Simple_Heuristic sh = new Simple_Heuristic();
+
     private node currentHead;
-    private node head;
-    
+    private final node head;
+
     public Minimax() {
         offset = 12;
         int player = 2; //start with player one
@@ -56,11 +53,11 @@ public class Minimax extends AI {
         node parent = current.getParent();
         ArrayList<node> chldrn;
         current.setValue(value);
-        
+
         while (parent != null) {
             chldrn = parent.getChildren();
             double temp = (parent.player == 1) ? 0 : Double.MAX_VALUE;
-            
+
             for (node x : chldrn) {
                 //if childern are player one than the parent is 2 and wants min
                 if (current.player == 1) {
@@ -82,11 +79,12 @@ public class Minimax extends AI {
 
     //create a minimax tree
     private void construct(node localHead, int player, int depth) {
-        
+
         Stack<node> stk = new Stack();
         Stack<node> stk2 = new Stack();
         int localDepth = 0;
-        
+        node prunFrom = localHead; //in case of pruning
+
         stk2.push(localHead);
         while (!stk2.isEmpty() && localDepth < depth) {
             while (!stk2.isEmpty()) {
@@ -98,15 +96,15 @@ public class Minimax extends AI {
                 if (localHead == null) {
                     break;
                 }
-                
+
                 double[][] all = possible(localHead.getState(), player);
                 if (all == null) {
                     bubble(localHead, 0);
                     return; //no more moves possible
                 }
-                
+
                 ArrayList<node> chd = localHead.getChildren();
-                
+
                 for (int i = 0; i < all.length; i++) {
                     node current = null;
                     boolean exists = false;
@@ -125,7 +123,7 @@ public class Minimax extends AI {
                         current.setParent(localHead);
                         localHead.addChild(current);
                         current.player = (player == 1) ? 2 : 1;
-                        
+
                         if (current.player == 1) {
                             current.setValue(sh.getHeuristic(all[i], localHead.getState()));
                             bubble(current, current.getValue());
@@ -137,80 +135,119 @@ public class Minimax extends AI {
                     }
 
                     //check if its been prunned and if so do not explore
-                    if (!current.prunned) {
+                    if (prunning) {
+                        if (!current.prunned) {
+                            stk2.push(current);
+                        }
+                    } else { //none prunning explore everything
                         stk2.push(current);
                     }
                 }
             }
             localDepth++;
         }
+
+        if (prunning) {
+            prun(prunFrom);
+        }
+    }
+
+    //find the minumum value for all childern used with pruning
+    private node minValue(node localHead, double alpha, double beta) {
+        ArrayList<node> ch = localHead.getChildren();
+        double temp = Double.MAX_VALUE;
+
+        //terminating state
+        if (localHead.getValue() == 5 || localHead.getValue() == -5) {
+            return localHead;
+        }
+
+        //leaf node
+        if (ch.size() < 1) {
+            return localHead;
+        }
+
+        node ret = null;
+        for (int i = 0; i < ch.size(); i++) {
+
+            if (temp > maxValue(ch.get(i), alpha, beta).getValue()) {
+                ret = ch.get(i);
+                temp = ret.getValue();
+            }
+
+            if (temp <= alpha) {
+                for (int j = 0; j < ch.size(); j++) {
+                    if (j != i) {
+                        ch.get(j).prunned = true;
+                    }
+                }
+                return ret;
+            }
+            beta = Math.min(beta, temp);
+        }
+        return ret;
+    }
+
+    //find the minumum value for all childern used with pruning
+    private node maxValue(node localHead, double alpha, double beta) {
+        ArrayList<node> ch = localHead.getChildren();
+        double temp = -100;
+
+        //terminating state
+        if (localHead.getValue() == 5 || localHead.getValue() == -5) {
+            return localHead;
+        }
+
+        //leaf node
+        if (ch.size() < 1) {
+            return localHead;
+        }
+
+        node ret = null;
+        for (int i = 0; i < ch.size(); i++) {
+
+            if (temp < minValue(ch.get(i), alpha, beta).getValue()) {
+                ret = ch.get(i);
+                temp = ret.getValue();
+            }
+
+            if (temp >= beta) {
+                for (int j = 0; j < ch.size(); j++) {
+                    if (j != i) {
+                        ch.get(j).prunned = true;
+                        //System.out.println("prunned");
+                    }
+                }
+                return ret;
+            }
+            alpha = Math.max(alpha, temp);
+        }
+        return ret;
     }
 
     /**
-     * Alpha, Beta prunning, prune depending on which player
+     * Alpha, Beta pruning This function is called to prune an existing minimax
+     * tree To continuously prune while constructing the tree call
+     * turnPruningOn()
      *
-     * @param p1 if true than prune for player one
-     * @param p2 if true than prune for player two
      */
-    public void prun(boolean p1, boolean p2) {
-        ArrayList<node> chd;
-        Stack<node> stk = new Stack();
-        Stack<node> stk2 = new Stack();
-        
-        System.out.println("prunning for p1 " + p1);
-        Double alpha;
-        Double beta;
-        if (p1) {
-            node localHead = head;
-            stk.push(localHead);
-            
-            while (!stk.isEmpty()) {
-                localHead = stk.pop();
-                alpha = localHead.getValue();
+    public void prun() {
+        node localHead = head;
+        double alpha = -100; //smaller than all values
+        double beta = 100;   //larger than all values
+        maxValue(localHead, alpha, beta);
+    }
 
-                // check if no childern have values yet...can not prune
-                if (alpha != null) {
-                    chd = localHead.getChildren();
-                    boolean complete = true;
-                    int index = 0;
-                    for (int j = 0; j < chd.size(); j++) {
-                        if (!chd.get(j).prunned) {
-                            complete = false;
-                            break;
-                        } else {
-                            if (chd.get(j).getValue() == alpha.doubleValue()) {
-                                index = j;
-                            }
-                        }
-                    }
-
-                    // if complete than atomaticlly prun
-                    if (complete) {
-                        for (int j = 0; j < chd.size(); j++) {
-                            if (j != index) {
-                                System.out.println("Prunned a node");
-                                chd.get(j).prunned = true;
-                            }
-                        }
-                    }
-                    
-                    for (node x : chd) {
-                        if (!x.prunned) {
-                            ArrayList<node> temp = x.getChildren();
-                            for (node next : temp) {
-                                if (!next.prunned) {
-                                    stk.push(next);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        if (p2) {
-            
-        }
+    /**
+     * Alpha, Beta pruning This function is called to prune an existing minimax
+     * This allows for pruning a sub section of the tree tree To continuously
+     * prune while constructing the tree call turnPruningOn()
+     *
+     */
+    public void prun(node localHead) {
+        double alpha = -100; //smaller than all values
+        double beta = 100;   //larger than all values
+        maxValue(localHead, alpha, beta);
     }
 
     /**
@@ -227,7 +264,12 @@ public class Minimax extends AI {
     public void turnPruningOff() {
         prunning = false;
     }
-    
+
+    /**
+     * Used to create some tree and store it in memory.
+     *
+     * @param g number of games to go through when creating the pre tree
+     */
     public void train(int g) {
         for (int i = 0; i < g; i++) {
             double[] board = new double[offset * 4];
@@ -245,7 +287,7 @@ public class Minimax extends AI {
         }
         //print();
     }
-    
+
     private void printBoard(double[] board) {
         int index = 0;
         for (int k = 0; k < 4; k++) {
@@ -256,32 +298,32 @@ public class Minimax extends AI {
         }
         System.out.println("");
     }
-    
-    private void print() {
+
+    public void print() {
         int ply = 0;
         Stack<node> stk = new Stack();
-        Stack<node> next = new Stack();
-        System.out.println("Printing");
         node lh;
         stk.push(head);
         ArrayList<node> ch;
         while (!stk.isEmpty()) {
-            
             lh = stk.pop();
             ch = lh.getChildren();
             System.out.println(ply + " Player: " + lh.player + " Head = " + lh.getValue());
             System.out.print("Childern : ");
             for (node x : ch) {
                 System.out.print("  " + x.getValue() + "  ");
+                if (x.prunned) {
+                    System.out.print(" isPruned : " + x.prunned + "  ");
+                }
                 stk.push(x);
             }
             System.out.println("\n");
-            
+
             ply++;
         }
-        
+
     }
-    
+
     private node find(double[] in) {
         double[] cmp;
         node current;
@@ -295,7 +337,7 @@ public class Minimax extends AI {
             }
             while (!stk2.isEmpty()) {
                 current = stk2.pop();
-                
+
                 cmp = current.getState();
                 boolean matched = true;
                 for (int i = 0; i < cmp.length; i++) {
@@ -315,7 +357,7 @@ public class Minimax extends AI {
         }
         return null;
     }
-    
+
     @Override
     double[] exploit(double[] in, int player) {
         if (in == null) {
@@ -334,13 +376,13 @@ public class Minimax extends AI {
         currentHead = best(player, currentHead, maxDepth);
         return currentHead.getState();
     }
-    
+
     private node best(int player, node localHead, int depth) {
         if (localHead == null) {
             System.out.println("Error localHead null when calling best function");
             return null;
         }
-        
+
         construct(localHead, player, depth);
         ArrayList<node> chd = localHead.getChildren();
         node b = null;
@@ -369,16 +411,21 @@ public class Minimax extends AI {
             //System.out.println("random selected");
             //b = chd.get((int) (Math.random() * chd.size()));
         }
-        
+
         return b;
     }
-    
+
+    /**
+     * Set the depth of search for the minimax algorithm
+     *
+     * @param d depth to search
+     */
     public void setDepth(int d) {
         maxDepth = d;
     }
-    
+
     private class node {
-        
+
         private double[] state;
         private double value;
         private ArrayList<node> childern;
@@ -463,7 +510,12 @@ public class Minimax extends AI {
         public void setValue(double in) {
             value = in;
         }
-        
+
+        /**
+         * Get the value of the state after action is made
+         *
+         * @return value of the state
+         */
         public double getValue() {
             return value;
         }
