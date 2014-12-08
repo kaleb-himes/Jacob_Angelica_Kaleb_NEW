@@ -288,7 +288,7 @@ public class Winchecker {
     public static int check_neighbors(int node, int player) {
         int upper = 0, lower = 0;
         /*
-         * check left
+         * check left and right
          */
         if (node <= 11) {
             upper = 11;
@@ -335,19 +335,19 @@ public class Winchecker {
         }
         /*
          * check up
-         * if not row 1 (a1-l1) = (0 - 11)
+         * if not row 4
          *
          * check down
-         * if not row 4 (a4-l4) = (36 - 47)
+         * if not row 1
          * 
          */
-        if (node > 11) {
-            if (board[node - 12][2] == player) {
+        if (node < 36) {
+            if (board[node + 12][2] == player) {
                 win_check += check_up(node, player);
             }
         }
-        if (node < 36) {
-            if (board[node + 12][2] == player) {
+        if (node > 11) {
+            if (board[node - 12][2] == player) {
                 win_check += check_down(node, player);
             }
         }
@@ -367,31 +367,31 @@ public class Winchecker {
             connected = 0;
         }
         /*
-         * check diagonal left up (node - 13)
-         * if not row 1 (a1-l1) = (0 - 11)
-         * and not off the board (12)
+         * check diagonal left up (node + 11)
+         * if not row 4
+         * and not off the board
          * 
-         * check diagonal right down (node + 13)
-         * if not row 4 (a4-l4) = (36 - 47)
-         * and not off the board (35)
+         * check diagonal right down (node - 11)
+         * if not row 1
+         * and not off the board
          */
-        if (node > 12) {
-            if (board[node - 13][2] == player) {
+        if (node < 36) {
+            if (board[node + 11][2] == player) {
                 win_check += check_lup(node, player);
             }
         }
-        if (node == 12 || node == 24 || node == 36) {
-            if (board[node - 1][2] == player) {
+        else if (node == a1 || node == a2 || node == a3) {
+            if (board[node + 23][2] == player) {
                 win_check += check_lup(node, player);
             }
         }
-        if (node < 35) {
-            if (board[node + 13][2] == player) {
+        if (node > 11) {
+            if (board[node - 11][2] == player) {
                 win_check += check_rdown(node, player);
             }
         }
-        if (node == 11 || node == 23 || node == 35) {
-            if (board[node + 1][2] == player) {
+        else if (node == l4 || node == l3|| node == l2) {
+            if (board[node - 23][2] == player) {
                 win_check += check_rdown(node, player);
             }
         }
@@ -411,33 +411,33 @@ public class Winchecker {
             connected = 0;
         }
         /*
-         * check diagonal right up (node - 11)
-         * if not row 1 (a1-l1) = (0 - 11)
+         * check diagonal right up (node + 13)
+         * if not row 4
          * and not off the board
          *
-         * check diagonal left down (node + 11)
+         * check diagonal left down (node - 13)
          * if not row 4 (a4-l4) = (36 - 47)
          */
-        if (node > 11) {
-            if (board[node - 11][2] == player) {
+        if (node < 35) {
+            if (board[node + 13][2] == player) {
                 win_check += check_rup(node, player);
-            }
-            if (node == 23 || node == 35 || node == 47) {
-                if (board[node - 23][2] == player) {
+            } 
+        }
+        else if (node == l3 || node == l2 || node == l1) {
+                if (board[node + 1][2] == player) {
                     win_check += check_rup(node, player);
                 }
             }
-        }
-        if (node < 36) {
-            if (board[node + 11][2] == player) {
+        if (node > 12) {
+            if (board[node - 13][2] == player) {
                 win_check += check_ldown(node, player);
             }
-            if (node == 0 || node == 12 || node == 24) {
-                if (board[node + 23][2] == player) {
+        }
+        else if (node == a2|| node == a3 || node == a4) {
+                if (board[node - 1][2] == player) {
                     win_check += check_ldown(node, player);
                 }
             }
-        }
         if (win_check >= 3) {
             for (int i = 0; i < board.length; i++) {
                 board[i][3] = 0;
@@ -478,17 +478,17 @@ public class Winchecker {
          * the next left node
          */
         int left = node - 1;
-        if (node == 0) {
-            left = 11;
+        if (node == a1) {
+            left = a1_ln;
         }
-        if (node == 12) {
-            left = 23;
+        if (node == a2) {
+            left = a2_ln;
         }
-        if (node == 24) {
-            left = 35;
+        if (node == a3) {
+            left = a3_ln;
         }
-        if (node == 36) {
-            left = 47;
+        if (node == a4) {
+            left = a4_ln;
         }
         if (left <= upper && left >= lower) {
             if (board[left][2] == player && board[left][3] == 0) {
@@ -519,17 +519,17 @@ public class Winchecker {
          * the next right node
          */
         int right = node + 1;
-        if (node == 11) {
-            right = 0;
+        if (node == l1) {
+            right = l1_rn;
         }
-        if (node == 23) {
-            right = 12;
+        if (node == l2) {
+            right = l2_rn;
         }
-        if (node == 35) {
-            right = 24;
+        if (node == l3) {
+            right = l3_rn;
         }
-        if (node == 47) {
-            right = 36;
+        if (node == l4) {
+            right = l4_rn;
         }
         if (right <= upper && right >= lower) {
             if (board[right][2] == player && board[right][3] == 0) {
@@ -550,17 +550,17 @@ public class Winchecker {
      * previously, check current player only for a win.
      */
     public static int check_up(int node, int player) {
-        /* it was verified that check_up is ok for first node with "node > 11".
+        /* it was verified that check_up is ok for first node with "node < 36".
          * if check node is occupied by player and not checked this round
          * set as checked and increase connectivity by 1, recursively check up
-         * while up > 11
+         * while up < 36
          */
-        int up = node - 12;
+        int up = node + 12;
         if (board[up][2] == player && board[up][3] == 0) {
             board[up][3] = 1;
             connected += 1;
-            /* up needs to be greater then 11 to continue checking up */
-            if (up > 11) {
+            /* up needs to be less than 36 to continue checking up */
+            if (up < 36) {
                 check_up(up, player);
             }
         }
@@ -576,16 +576,16 @@ public class Winchecker {
      * previously, check current player only for a win.
      */
     public static int check_down(int node, int player) {
-        /* it was verified that check_down is ok for first node with "node < 36".
+        /* it was verified that check_down is ok for first node with "node > 11".
          * if check node is occupied by player and not checked this round
          * set as checked and increase connectivity by 1, recursively check down
-         * while down < 36
+         * while down > 11
          */
-        int down = node + 12;
+        int down = node - 12;
         if (board[down][2] == player && board[down][3] == 0) {
             board[down][3] = 1;
             connected += 1;
-            if (down < 36) {
+            if (down > 11) {
                 check_down(down, player);
             }
         }
@@ -601,23 +601,23 @@ public class Winchecker {
      * previously, check current player only for a win.
      */
     public static int check_rdown(int node, int player) {
-        /* right and down = down+1 = node + 12 + 1. Same logic applies,
-         * node must be < 36 to check down and < 35 to check right-down
+        /* right and down = down+1 = node - 12 + 1. Same logic applies,
+         * node must be > 11 to check down and right
          */
-        int rdown = node + 13;
-        if (node == 11) {
-            rdown = 12;
+        int rdown = node - 11;
+        if (node == l2) {
+            rdown = l2_drn;
         }
-        if (node == 23) {
-            rdown = 24;
+        if (node == l3) {
+            rdown = l3_drn;
         }
-        if (node == 35) {
-            rdown = 36;
+        if (node == l4) {
+            rdown = l4_drn;
         }
         if (board[rdown][2] == player && board[rdown][3] == 0) {
             board[rdown][3] = 1;
             connected += 1;
-            if (rdown < 36) {
+            if (rdown > 11) {
                 check_rdown(rdown, player);
             }
         }
@@ -633,23 +633,23 @@ public class Winchecker {
      * previously, check current player only for a win.
      */
     public static int check_ldown(int node, int player) {
-        /* left and down = down-1 = node + 12 - 1. Same logic applies,
-         * node must be < 36 to check diagonal down
+        /* left and down = down-1 = node - 12 - 1. Same logic applies,
+         * node must be > 11 to check diagonal down
          */
-        int ldown = node + 11;
-        if (node == 0) {
-            ldown = 23;
+        int ldown = node - 13;
+        if (node == a2) {
+            ldown = a2_dln;
         }
-        if (node == 12) {
-            ldown = 35;
+        if (node == a3) {
+            ldown = a3_dln;
         }
-        if (node == 24) {
-            ldown = 47;
+        if (node == a4) {
+            ldown = a4_dln;
         }
         if (board[ldown][2] == player && board[ldown][3] == 0) {
             board[ldown][3] = 1;
             connected += 1;
-            if (ldown < 36) {
+            if (ldown > 11) {
                 check_ldown(ldown, player);
             }
         }
@@ -665,23 +665,23 @@ public class Winchecker {
      * previously, check current player only for a win.
      */
     public static int check_rup(int node, int player) {
-        /* right and up = up + 1 = node - 12 + 1. Same logic applies,
-         * node must be > 11 to check diagonal up
+        /* right and up = up + 1 = node + 12 + 1. Same logic applies,
+         * node must be < 36 to check diagonal up
          */
-        int rup = node - 11;
-        if (node == 23) {
-            rup = 0;
+        int rup = node + 13;
+        if (node == l1) {
+            rup = l1_urn;
         }
-        if (node == 35) {
-            rup = 12;
+        if (node == l2) {
+            rup = l2_urn;
         }
-        if (node == 47) {
-            rup = 24;
+        if (node == l3) {
+            rup = l3_urn;
         }
         if (board[rup][2] == player && board[rup][3] == 0) {
             board[rup][3] = 1;
             connected += 1;
-            if (rup > 11) {
+            if (rup < 36) {
                 check_rup(rup, player);
             }
         }
@@ -697,27 +697,70 @@ public class Winchecker {
      * previously, check current player only for a win.
      */
     public static int check_lup(int node, int player) {
-        /* left and up = up - 1 = node - 12 - 1. Same logic applies,
-         * node must be > 11 to check up, and greater than 12 to check left-up
+        /* left and up = up - 1 = node + 12 - 1. Same logic applies,
+         * node must be < 36 to check up and left
          */
-        int lup = node - 13;
-        if (node == 12) {
-            lup = 11;
+        int lup = node + 11;
+        if (node == a1) {
+            lup = a1_uln;
         }
-        if (node == 24) {
-            lup = 23;
+        if (node == a2) {
+            lup = a2_uln;
         }
-        if (node == 36) {
-            lup = 35;
+        if (node == a3) {
+            lup = a3_uln;
         }
         if (board[lup][2] == player && board[lup][3] == 0) {
             board[lup][3] = 1;
             connected += 1;
-            if (lup > 11) {
+            if (lup < 36) {
                 check_lup(lup, player);
             }
         }
         return connected;
     }
+    /* The rules of the array */
+    
+    /* the edges cases */
+    private static final int a1 = 0;
+    private static final int a2 = 12;
+    private static final int a3 = 24;
+    private static final int a4 = 36;
+    
+    private static final int l1 = 11;
+    private static final int l2 = 23;
+    private static final int l3 = 35;
+    private static final int l4 = 47;
+    
+    /* define left and right neighbors */
+    private static final int a1_ln = l1;
+    private static final int a2_ln = l2;
+    private static final int a3_ln = l3;
+    private static final int a4_ln = l4;
+    
+    private static final int l1_rn = a1;
+    private static final int l2_rn = a2;
+    private static final int l3_rn = a3;
+    private static final int l4_rn = a4;
+    
+    /* Define North-east */
+    private static final int l1_urn = a2;
+    private static final int l2_urn = a3;
+    private static final int l3_urn = a4;
+    
+    /* Define North-west */
+    private static final int a1_uln = l2;
+    private static final int a2_uln = l3;
+    private static final int a3_uln = l4;
+    
+    /* Define South-east */
+    private static final int l2_drn = a1;
+    private static final int l3_drn = a2;
+    private static final int l4_drn = a3;
+    
+    /* Define South-west */
+    private static final int a2_dln = l1;
+    private static final int a3_dln = l2;
+    private static final int a4_dln = l3;
 
 }
