@@ -470,6 +470,7 @@ public class GUI extends JFrame {
         human_first = 0;
         human_second = 0;
         humans_turn = 0;
+        human_playing_ai = 0;
         if (won != 0) {
             won = 0;
         }
@@ -501,6 +502,9 @@ public class GUI extends JFrame {
      * @param ai a flag to know how to treat game over display
      */
     public static void playerMove(int x, int y, int ai) {
+        if (ai == 1 && won != 0) {
+            won = 0;
+        }
         if (won == 0) {
             boolean successful = false;
             int right_x, bottom_y, left_x, top_y;
@@ -532,7 +536,7 @@ public class GUI extends JFrame {
                         successful = true;
                         won = Winchecker.check2(i, 2, ai);
                     }
-                    if (won == 0) {
+                    if (won == 0 && human_playing_ai == 0) {
                         game_state_display.append("player " + player + "'s turn\n");
                     }
                 }
@@ -541,10 +545,11 @@ public class GUI extends JFrame {
             if (successful == false) {
                 game_state_display.append("Not a Legal Move\n");
                 illegal_moves_made++;
-            } else if (player == 'X' && won == 0) {
+            } else if (player == 'X') {
                 if (human_playing_ai == 1) {
                     if (human_first == 1) {
-                        game_state_display.append("Computers turn puny mortal.\n");
+                        if (won == 0)
+                            game_state_display.append("Computers turn puny mortal.\n");
                         player = 'O';
                         humans_turn = 0;
                         if (playingTDNN == 1) {
@@ -582,7 +587,8 @@ public class GUI extends JFrame {
                         }
 
                     } else if (human_second == 1) {
-                        game_state_display.append("Your turn puny human.\n");
+                        if (won == 0 )
+                            game_state_display.append("Your turn puny human.\n");
                         player = 'O';
                         humans_turn = 1;
                     }
@@ -591,13 +597,15 @@ public class GUI extends JFrame {
                 }
 
             } else {
-                if (human_playing_ai == 1 && won == 0) {
+                if (human_playing_ai == 1) {
                     if (human_first == 1) {
-                        game_state_display.append("Your turn puny human.\n");
+                        if (won == 0)
+                            game_state_display.append("Your turn puny human.\n");
                         player = 'X';
                         humans_turn = 1;
                     } else if (human_second == 1) {
-                        game_state_display.append("Computers turn puny mortal.\n");
+                        if (won == 0)
+                            game_state_display.append("Computers turn puny mortal.\n");
                         player = 'X';
                         humans_turn = 0;
                         if (playingTDNN == 1) {
