@@ -25,7 +25,8 @@ public class TDNN_Sim {
         test.train(1000);
 
         //test trained network against random one
-        int win = 0;
+        int win;
+        int notLoss;
         for (int i = 0; i < games_to_play; i++) {
 
             double[] board = new double[12 * 4];
@@ -43,7 +44,7 @@ public class TDNN_Sim {
             GUI.game_state_display.append("Winner was player " + Winchecker.check(board) + " ai was " + player + "\n");
             GUI.game_state_display.append("Board State\n");
             int index = 0;
-            int get_x_y[] = new int[3];
+            int get_x_y[];
             for (int z = 0; z < 4; z++) {
                 for (int h = 0; h < 12; h++) {
                     if (board[index] == 0) {
@@ -53,9 +54,6 @@ public class TDNN_Sim {
                         y = get_x_y[1];
                         if (get_x_y[2] == 0) {
                             GUI.playerMove(x, y, 1);
-                            if (GUI.won == player) {
-                                win = Winchecker.aiWins;
-                            }
                         }
                         /* need to add something for the winchecker here */
                     } else {
@@ -65,7 +63,10 @@ public class TDNN_Sim {
             }
             GUI.game_state_display.append("number of nodes searched: " + index + "\n");
         }
+        win = Winchecker.aiWins;
+        notLoss = Winchecker.aiNotLoss;
         GUI.game_state_display.append("percent won = " + (double) win / games_to_play + "\n");
+        GUI.game_state_display.append("percent not losing = " + (double) notLoss/games_to_play + "\n");
         GUI.game_state_display.append("illegal moves attempted:"
                     + ""+GUI.illegal_moves_made+"\n");
         GUI.illegal_moves_made = 0;

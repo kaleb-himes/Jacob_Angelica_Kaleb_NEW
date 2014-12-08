@@ -35,6 +35,7 @@ public class Winchecker {
     static protected int check_node = 0;
 
     public static int aiWins = 0;
+    public static int aiNotLoss = 0;
 
     private static double check(double[] in, int i) {
         boolean won = false;
@@ -183,42 +184,43 @@ public class Winchecker {
     public static int check2(int node, int player, int ai) {
         /* Case Nobody wins */
         int winner = 0;
-                if (GUI.moves_made == 48) {
-                    GUI.moves_made = 0;
-                    for (int i = 0; i < legal_moves.length; i++) {
-                        legal_moves[i][2] = 0;
-                    }
-                    if (ai == 0) {
-                        Graphics g = game_board_panel.getGraphics();
-                        g.drawImage(game_over_img, 190, 202, game_board_panel);
-                        /* Activate play again button*/
-                        play_again_but.setEnabled(true);
-                        /* Turn on the mouse listeners so user can click it */
-                        for (int j = 0; j < m5.length; j++) {
-                            play_again_but.addMouseListener(m5[j]);
-                        }
-                    } else {
-                        /* uncomment if you want to visually verify wins 
-                         * tested thouroughly, they work.
-                         */
+        if (GUI.moves_made == 48) {
+            GUI.moves_made = 0;
+            for (int i = 0; i < legal_moves.length; i++) {
+                legal_moves[i][2] = 0;
+            }
+            if (ai == 0) {
+                Graphics g = game_board_panel.getGraphics();
+                g.drawImage(game_over_img, 190, 202, game_board_panel);
+                /* Activate play again button*/
+                play_again_but.setEnabled(true);
+                /* Turn on the mouse listeners so user can click it */
+                for (int j = 0; j < m5.length; j++) {
+                    play_again_but.addMouseListener(m5[j]);
+                }
+            } else {
+                /* uncomment if you want to visually verify wins 
+                 * tested thouroughly, they work.
+                 */
 //                        try {
 //                            Thread.sleep(20000); //1000 is one second.
 //                        } catch (InterruptedException ex) {
 //                            Thread.currentThread().interrupt();
 //                        }
-                        for (int k = 0; k < board.length; k++) {
-                            board[k][2] = 0;
-                        }
-                        Graphics g = game_board_panel.getGraphics();
-                        game_board_panel.paint(g);
-                        g.setColor(Color.LIGHT_GRAY);
-                        game_board_panel.repaint();
-                        paint_board(game_board_panel.getGraphics());
-                    }
-                    GUI.game_state_display.append("TIE !!!!!!!!!!\n");
-                    return winner; /* tie game, no winner */
-
+                for (int k = 0; k < board.length; k++) {
+                    board[k][2] = 0;
                 }
+                Graphics g = game_board_panel.getGraphics();
+                game_board_panel.paint(g);
+                g.setColor(Color.LIGHT_GRAY);
+                game_board_panel.repaint();
+                paint_board(game_board_panel.getGraphics());
+            }
+            GUI.game_state_display.append("TIE !!!!!!!!!!\n");
+            aiNotLoss++;
+            return winner; /* tie game, no winner */
+
+        }
 
         /* 
          * board[i][0] = x coordinate
@@ -296,6 +298,7 @@ public class Winchecker {
 //            }
             if (winner == 1) {
                 aiWins++;
+                aiNotLoss++;
             }
             for (int k = 0; k < GUI.legal_moves.length; k++) {
                 GUI.legal_moves[k][2] = 0;
@@ -305,7 +308,7 @@ public class Winchecker {
             g.setColor(Color.LIGHT_GRAY);
             game_board_panel.repaint();
             paint_board(game_board_panel.getGraphics());
-            GUI.game_state_display.append("moves made this game: " + GUI.moves_made+"\n");
+            GUI.game_state_display.append("moves made this game: " + GUI.moves_made + "\n");
             return winner;
         } else {
             //GUI.game_state_display.append(GUI.player + " moved\n");
