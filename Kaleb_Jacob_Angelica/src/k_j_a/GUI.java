@@ -470,6 +470,9 @@ public class GUI extends JFrame {
         human_first = 0;
         human_second = 0;
         humans_turn = 0;
+        if (won != 0) {
+            won = 0;
+        }
         GUI.player = 'X';
         for (int i = 0; i < legal_moves.length; i++) {
             legal_moves[i][2] = 0;
