@@ -520,6 +520,7 @@ public class GUI extends JFrame {
                     successful = true;
                     won = Winchecker.check2(i, 2, ai);
                 }
+                System.out.println("won this move is: " + won);
             }
         } /* END OF IF LEGAL LOOP */
 

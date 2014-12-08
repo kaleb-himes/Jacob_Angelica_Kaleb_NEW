@@ -456,6 +456,8 @@ public class Winchecker {
             connected = 0;
         }
         /* if we made it here then this move did not result in a win */
+        win_check = 0;
+        connected = 0;
         return 0;
     }
 
