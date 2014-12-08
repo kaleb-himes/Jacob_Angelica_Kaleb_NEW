@@ -31,20 +31,29 @@ import wincheck.Winchecker;
 public class GUI extends JFrame {
 
     private JLabel ai_lbl;                        /* Label for ai progress */
+
     private JLabel game_state_lbl;               /* Label for Text area */
 
     public static JProgressBar ai_progress_bar;  /* AI progress bar */
 
     public JPanel ai_thinking_quit_panel;        /* Panel for ai elements */
+
     public JPanel game_state_panel;              /* Panel for state elements */
+
     public JPanel options_panel;                 /* Panel for quit/replay */
+
     public static JPanel game_board_panel;       /* Display of the board */
 
     public static JButton ai_v_ai_but;           /* Button for game mode */
+
     public static JButton ai_v_human_but;        /* Button for game mode */
+
     public static JButton human_v_ai_but;        /* Button for game mode */
+
     public static JButton human_v_human_but;     /* Button for game mode */
+
     public static JButton play_again_but;        /* Button for replay */
+
     public static JButton quit_but;              /* Button for quit */
 
 
@@ -61,7 +70,7 @@ public class GUI extends JFrame {
     public static int playingMinimax    = 0;
     public static int playingNorm       = 0;
     private static int checkMoves       = 0;
-    private static double[] ai_board = new double[12 * 4];
+    private static double[] ai_board    = new double[12 * 4];
 
     public static int illegal_moves_made = 0;
     public static int won = 0;
@@ -489,148 +498,147 @@ public class GUI extends JFrame {
      * @param ai a flag to know how to treat game over display
      */
     public static void playerMove(int x, int y, int ai) {
+        if (won == 0) {
+            boolean successful = false;
+            int right_x, bottom_y, left_x, top_y;
 
-        boolean successful = false;
-        int right_x, bottom_y, left_x, top_y;
+            /* Logic for checking if a move is legal */
+            for (int i = 0; i < legal_moves.length; i++) {
 
-        /* Logic for checking if a move is legal */
-        for (int i = 0; i < legal_moves.length; i++) {
+                Graphics g = game_board_panel.getGraphics();
+                int check_x = legal_moves[i][0];
+                int check_y = legal_moves[i][1];
+                int check_moved = legal_moves[i][2];
 
-            Graphics g = game_board_panel.getGraphics();
-            int check_x = legal_moves[i][0];
-            int check_y = legal_moves[i][1];
-            int check_moved = legal_moves[i][2];
+                left_x = x - 10;
+                right_x = x + 10;
+                top_y = y - 11;
+                bottom_y = y + 11;
 
-            left_x = x - 10;
-            right_x = x + 10;
-            top_y = y - 11;
-            bottom_y = y + 11;
+                if ((left_x <= check_x && check_x <= right_x)
+                        && (top_y <= check_y && check_y <= bottom_y)
+                        && check_moved == 0) {
+                    if (player == 'X') {
+                        g.drawImage(playerX_img, check_x - 10, check_y - 11, game_board_panel);
+                        legal_moves[i][2] = 1;
+                        successful = true;
+                        won = Winchecker.check2(i, 1, ai);
+                    } else {
+                        g.drawImage(playerO_img, check_x - 10, check_y - 11, game_board_panel);
+                        legal_moves[i][2] = 2;
+                        successful = true;
+                        won = Winchecker.check2(i, 2, ai);
+                    }
+                    if (won == 0) {
+                        game_state_display.append("player " + player + "'s turn\n");
+                    }
+                }
+            } /* END OF IF LEGAL LOOP */
 
-            if ((left_x <= check_x && check_x <= right_x)
-                    && (top_y <= check_y && check_y <= bottom_y)
-                    && check_moved == 0) {
-                if (player == 'X') {
-                    g.drawImage(playerX_img, check_x - 10, check_y - 11, game_board_panel);
-                    legal_moves[i][2] = 1;
-                    successful = true;
-                    won = Winchecker.check2(i, 1, ai);
+            if (successful == false) {
+                game_state_display.append("Not a Legal Move\n");
+                illegal_moves_made++;
+            } else if (player == 'X') {
+                if (human_playing_ai == 1) {
+                    if (human_first == 1) {
+                        game_state_display.append("Computers turn puny mortal.\n");
+                        player = 'O';
+                        humans_turn = 0;
+                        if (playingTDNN == 1) {
+                            int index = 0;
+                            int movedOn = 0;
+                            for (int i = 0; i < 12 * 4; i++) {
+                                movedOn = legal_moves[index][2];
+                                if (movedOn == 1) {
+                                    ai_board[i] = 1.0;
+                                } else if (movedOn == 2) {
+                                    ai_board[i] = 2.0;
+                                } else {
+                                    ai_board[i] = 0.0;
+                                }
+                                index++;
+                            }
+                            TDNN_Sim.TDNN_move(ai_board, 2);
+                        } else if (playingMinimax == 1) {
+                            int index = 0;
+                            int movedOn = 0;
+                            for (int i = 0; i < 12 * 4; i++) {
+                                movedOn = legal_moves[index][2];
+                                if (movedOn == 1) {
+                                    ai_board[i] = 1.0;
+                                } else if (movedOn == 2) {
+                                    ai_board[i] = 2.0;
+                                } else {
+                                    ai_board[i] = 0.0;
+                                }
+                                index++;
+                            }
+                            Minimax_Sim.Minimax_move(ai_board, 2);
+                        } else {
+                            Simple_Heuristic.Normal_move();
+                        }
+
+                    } else if (human_second == 1) {
+                        game_state_display.append("Your turn puny human.\n");
+                        player = 'O';
+                        humans_turn = 1;
+                    }
                 } else {
-                    g.drawImage(playerO_img, check_x - 10, check_y - 11, game_board_panel);
-                    legal_moves[i][2] = 2;
-                    successful = true;
-                    won = Winchecker.check2(i, 2, ai);
+                    player = 'O';
                 }
-                System.out.println("won this move is: " + won);
-            }
-        } /* END OF IF LEGAL LOOP */
 
-        if (successful == false) {
-            game_state_display.append("Not a Legal Move\n");
-            illegal_moves_made++;
-        } else if (player == 'X') {
-            if (human_playing_ai == 1) {
-                if (human_first == 1) {
-                    game_state_display.append("Computers turn puny mortal.\n");
-                    player = 'O';
-                    humans_turn = 0;
-                    if (playingTDNN == 1) {
-                        int index = 0;
-                        int movedOn = 0;
-                        for (int i = 0; i < 12*4; i++) {
-                                movedOn = legal_moves[index][2];
-                                if (movedOn == 1) {
-                                    ai_board[i] = 1.0;
-                                } 
-                                else if (movedOn == 2) {
-                                    ai_board[i] = 2.0;
-                                }
-                                else {
-                                    ai_board[i] = 0.0;
-                                }
-                                index++;
-                            }
-                        TDNN_Sim.TDNN_move(ai_board, 2);
-                    } else if (playingMinimax == 1) {
-                        int index = 0;
-                        int movedOn = 0;
-                        for (int i = 0; i < 12*4; i++) {
-                                movedOn = legal_moves[index][2];
-                                if (movedOn == 1) {
-                                    ai_board[i] = 1.0;
-                                }
-                                else if (movedOn == 2) {
-                                    ai_board[i] = 2.0;
-                                }
-                                else {
-                                    ai_board[i] = 0.0;
-                                }
-                                index++;
-                            }
-                        Minimax_Sim.Minimax_move(ai_board, 2);
-                    } else {
-                        Simple_Heuristic.Normal_move();
-                    }
-                    
-                } else if (human_second == 1) {
-                    game_state_display.append("Your turn puny human.\n");
-                    player = 'O';
-                    humans_turn = 1;
-                }
             } else {
-                player = 'O';
+                if (human_playing_ai == 1) {
+                    if (human_first == 1) {
+                        game_state_display.append("Your turn puny human.\n");
+                        player = 'X';
+                        humans_turn = 1;
+                    } else if (human_second == 1) {
+                        game_state_display.append("Computers turn puny mortal.\n");
+                        player = 'X';
+                        humans_turn = 0;
+                        if (playingTDNN == 1) {
+                            int index = 0;
+                            int movedOn = 0;
+                            for (int i = 0; i < 12 * 4; i++) {
+                                movedOn = legal_moves[index][2];
+                                if (movedOn == 1) {
+                                    ai_board[i] = 1.0;
+                                } else if (movedOn == 2) {
+                                    ai_board[i] = 2.0;
+                                } else {
+                                    ai_board[i] = 0.0;
+                                }
+                                index++;
+                            }
+                            TDNN_Sim.TDNN_move(ai_board, 1);
+                        } else if (playingMinimax == 1) {
+                            int index = 0;
+                            int movedOn = 0;
+                            for (int i = 0; i < 12 * 4; i++) {
+                                movedOn = legal_moves[index][2];
+                                if (movedOn == 1) {
+                                    ai_board[i] = 1.0;
+                                } else if (movedOn == 2) {
+                                    ai_board[i] = 2.0;
+                                } else {
+                                    ai_board[i] = 0.0;
+                                }
+                                index++;
+                            }
+                            Minimax_Sim.Minimax_move(ai_board, 1);
+                        } else {
+                            Simple_Heuristic.Normal_move();
+                        }
+                    }
+                } else {
+                    player = 'X';
+                }
             }
-
         } else {
-            if (human_playing_ai == 1) {
-                if (human_first == 1) {
-                    game_state_display.append("Your turn puny human.\n");
-                    player = 'X';
-                    humans_turn = 1;
-                } else if (human_second == 1) {
-                    game_state_display.append("Computers turn puny mortal.\n");
-                    player = 'X';
-                    humans_turn = 0;
-                    if (playingTDNN == 1) {
-                        int index = 0;
-                        int movedOn = 0;
-                        for (int i = 0; i < 12*4; i++) {
-                                movedOn = legal_moves[index][2];
-                                if (movedOn == 1) {
-                                    ai_board[i] = 1.0;
-                                } 
-                                else if (movedOn == 2) {
-                                    ai_board[i] = 2.0;
-                                }
-                                else {
-                                    ai_board[i] = 0.0;
-                                }
-                                index++;
-                            }
-                        TDNN_Sim.TDNN_move(ai_board, 1);
-                    } else if (playingMinimax == 1) {
-                        int index = 0;
-                        int movedOn = 0;
-                        for (int i = 0; i < 12*4; i++) {
-                                movedOn = legal_moves[index][2];
-                                if (movedOn == 1) {
-                                    ai_board[i] = 1.0;
-                                }
-                                else if (movedOn == 2) {
-                                    ai_board[i] = 2.0;
-                                }
-                                else {
-                                    ai_board[i] = 0.0;
-                                }
-                                index++;
-                            }
-                        Minimax_Sim.Minimax_move(ai_board, 1);
-                    } else {
-                        Simple_Heuristic.Normal_move();
-                    }
-                }
-            } else {
-                player = 'X';
-            }
+            game_state_display.append("The game is over.\n"
+                    + "Either choose play again or quit.\n"
+                    + "Thank You for playing Polar_TTT.\n");
         }
     }/* END OF playerMove()*/
 
