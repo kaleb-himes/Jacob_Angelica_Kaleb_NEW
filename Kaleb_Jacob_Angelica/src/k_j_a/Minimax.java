@@ -233,8 +233,8 @@ public class Minimax extends AI {
      */
     public void prun() {
         node localHead = head;
-        double alpha = -100; //smaller than all values
-        double beta = 100;   //larger than all values
+        double alpha = Double.NEGATIVE_INFINITY; //smaller than all values
+        double beta = Double.POSITIVE_INFINITY;   //larger than all values
         maxValue(localHead, alpha, beta);
     }
 
@@ -243,10 +243,11 @@ public class Minimax extends AI {
      * This allows for pruning a sub section of the tree tree To continuously
      * prune while constructing the tree call turnPruningOn()
      *
+     * @param localHead node to prune down tree from
      */
     public void prun(node localHead) {
-        double alpha = -100; //smaller than all values
-        double beta = 100;   //larger than all values
+        double alpha = Double.NEGATIVE_INFINITY; //smaller than all values
+        double beta = Double.POSITIVE_INFINITY;   //larger than all values
         maxValue(localHead, alpha, beta);
     }
 
@@ -370,9 +371,13 @@ public class Minimax extends AI {
             currentHead = find(in);
         }
         if (currentHead == null) {
-            System.out.println("could not find node in tree");
-            System.exit(1);
+            //since was not in remembered tree than go off of a stateless place
+            node localHead = new node(in);
+            localHead.player = player;
+            localHead = best(player, localHead, maxDepth);
+            return localHead.getState();
         }
+        
         currentHead = best(player, currentHead, maxDepth);
         return currentHead.getState();
     }
