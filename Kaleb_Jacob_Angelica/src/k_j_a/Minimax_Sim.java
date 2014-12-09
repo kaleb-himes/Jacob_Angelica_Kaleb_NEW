@@ -88,6 +88,7 @@ public class Minimax_Sim {
             play_again_but.addMouseListener(m5[j]);
         }
         Winchecker.aiWins = 0;
+        Winchecker.aiNotLoss = 0;
     }
  public static void Minimax_move(double[] ai_board, int player)
     {
@@ -127,6 +128,7 @@ public class Minimax_Sim {
     {
         aiPlayer = new Minimax();
         aiPlayer.train(1);
+        aiPlayer.setDepth(2);
         aiPlayer.prun();
     }
 }
