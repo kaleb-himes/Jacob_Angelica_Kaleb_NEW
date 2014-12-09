@@ -369,7 +369,11 @@ public class Minimax extends AI {
             System.out.println("error null board used for exploit");
             return null;
         }
-        currentHead = find(in);
+        
+        if(currentHead != null) {
+            currentHead = find(in);
+        }
+        
         if (currentHead == null) { //restart search from top of list
             currentHead = head;
             currentHead = find(in);
