@@ -279,7 +279,7 @@ public class Simple_Heuristic extends AI {
     }
 
     @Override
-    double[] exploit(double[] input, int desired) {
+    public double[] exploit(double[] input, int desired) {
         if (input == null) {
             return null;
         }
@@ -293,7 +293,12 @@ public class Simple_Heuristic extends AI {
     }
 
     @Override
-    int numEvaluated() {
+    public int numEvaluated() {
         return evaluated;
+    }
+
+    @Override
+    public String getName() {
+        return "Simple_Heuristic";
     }
 }

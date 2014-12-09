@@ -159,12 +159,19 @@ public abstract class AI {
      * @param player player to make a move
      * @return new board state that includes the players move
      */
-    abstract double[] exploit(double[] board, int player);
+    public abstract double[] exploit(double[] board, int player);
 
     /**
      * Number of nodes evaluated for the last move the AI made.
      *
      * @return number of nodes evaluated.
      */
-    abstract int numEvaluated();
+    public abstract int numEvaluated();
+
+    /**
+     * Gets the name of the algorithm used by the AI
+     *
+     * @return String containing algorithms name
+     */
+    public abstract String getName();
 }

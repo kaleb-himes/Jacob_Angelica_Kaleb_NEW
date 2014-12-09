@@ -46,6 +46,7 @@ public class TDNN extends AI {
     private double lambda;
 
     private int numIn;
+    private int numHid;
     private int numOut;
 
     /**
@@ -60,6 +61,7 @@ public class TDNN extends AI {
         numIn = in;
         numOut = out;
         evaluated = 0;
+        numHid = hid;
         init(hid, 1);
     }
 
@@ -445,7 +447,7 @@ public class TDNN extends AI {
     }
 
     @Override
-    double[] exploit(double[] input, int desired) {
+    public double[] exploit(double[] input, int desired) {
         double[][] all;
 
         //find all possible moves
@@ -506,7 +508,12 @@ public class TDNN extends AI {
     }
 
     @Override
-    int numEvaluated() {
+    public int numEvaluated() {
         return evaluated;
+    }
+
+    @Override
+    public String getName() {
+        return "TDNN" + numHid;
     }
 }

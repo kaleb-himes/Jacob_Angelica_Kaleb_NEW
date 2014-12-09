@@ -227,7 +227,12 @@ public class Navie_Bayes extends AI {
     }
 
     @Override
-    int numEvaluated() {
+    public int numEvaluated() {
         return evaluated;
+    }
+
+    @Override
+    public String getName() {
+        return "Navie_Bayes";
     }
 }

@@ -1,6 +1,7 @@
 *.class
 *.xml
 *.properties
+*.csv
 
 # solved. Run the following to untrack file changes without deleting them
 # from the repository itself:

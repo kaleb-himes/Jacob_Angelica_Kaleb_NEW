@@ -364,16 +364,16 @@ public class Minimax extends AI {
     }
 
     @Override
-    double[] exploit(double[] in, int player) {
+    public double[] exploit(double[] in, int player) {
         if (in == null) {
             System.out.println("error null board used for exploit");
             return null;
         }
-        
-        if(currentHead != null) {
+
+        if (currentHead != null) {
             currentHead = find(in);
         }
-        
+
         if (currentHead == null) { //restart search from top of list
             currentHead = head;
             currentHead = find(in);
@@ -438,8 +438,13 @@ public class Minimax extends AI {
     }
 
     @Override
-    int numEvaluated() {
+    public int numEvaluated() {
         return evaluated;
+    }
+
+    @Override
+    public String getName() {
+        return "Minimax";
     }
 
     private class node {
