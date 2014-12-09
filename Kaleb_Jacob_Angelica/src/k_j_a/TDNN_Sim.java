@@ -5,6 +5,7 @@
  */
 package k_j_a;
 
+import static k_j_a.GUI.legal_moves;
 import static k_j_a.GUI.m5;
 import static k_j_a.GUI.play_again_but;
 import wincheck.Winchecker;

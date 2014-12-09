@@ -31,7 +31,7 @@ public class Winchecker {
     static int up_right_check = 0;
     static int down_left_check = 0;
     static int connected = 0;
-    static int[][] board = GUI.legal_moves;
+    public static int[][] board = GUI.legal_moves;
     static protected int check_node = 0;
 
     public static int aiWins = 0;
@@ -188,6 +188,7 @@ public class Winchecker {
             GUI.moves_made = 0;
             for (int i = 0; i < legal_moves.length; i++) {
                 legal_moves[i][2] = 0;
+                board[i][2] = 0;
             }
             if (ai == 0) {
                 Graphics g = game_board_panel.getGraphics();
@@ -207,9 +208,7 @@ public class Winchecker {
 //                        } catch (InterruptedException ex) {
 //                            Thread.currentThread().interrupt();
 //                        }
-                for (int k = 0; k < board.length; k++) {
-                    board[k][2] = 0;
-                }
+
                 Graphics g = game_board_panel.getGraphics();
                 game_board_panel.paint(g);
                 g.setColor(Color.LIGHT_GRAY);
@@ -259,8 +258,8 @@ public class Winchecker {
             /* Activate play again button*/
             GUI.play_again_but.setEnabled(true);
             /* And turn on the mouse listeners so user can click it */
-            for (int j = 0; j < GUI.m5.length; j++) {
-                GUI.play_again_but.addMouseListener(GUI.m5[j]);
+            for (int i = 0; i < GUI.m5.length; i++) {
+                GUI.play_again_but.addMouseListener(GUI.m5[i]);
             }
             return winner;
         } else if (winner != 0 && ai == 1) {
@@ -279,9 +278,6 @@ public class Winchecker {
             if (winner == 1) {
                 aiWins++;
                 aiNotLoss++;
-            }
-            for (int k = 0; k < GUI.legal_moves.length; k++) {
-                GUI.legal_moves[k][2] = 0;
             }
             Graphics g = game_board_panel.getGraphics();
             game_board_panel.paint(g);
