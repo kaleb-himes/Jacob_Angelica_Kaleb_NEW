@@ -7,6 +7,7 @@ package wincheck;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseListener;
 import k_j_a.GUI;
 import static k_j_a.GUI.game_board_panel;
 import static k_j_a.GUI.game_over_img;
@@ -180,6 +181,7 @@ public class Winchecker {
      * previously, check current player only for a win.
      * @param ai {0,1} this flag is only set to 1 when ai vs ai is playing. It
      * will not display a game over when the ai beats itself.
+     * @return 
      */
     public static int check2(int node, int player, int ai) {
         /* Case Nobody wins */
@@ -196,8 +198,8 @@ public class Winchecker {
                 /* Activate play again button*/
                 play_again_but.setEnabled(true);
                 /* Turn on the mouse listeners so user can click it */
-                for (int j = 0; j < m5.length; j++) {
-                    play_again_but.addMouseListener(m5[j]);
+                for (MouseListener m51 : m5) {
+                    play_again_but.addMouseListener(m51);
                 }
             } else {
                 /* uncomment if you want to visually verify wins 
@@ -242,8 +244,8 @@ public class Winchecker {
             /* Activate play again button*/
             GUI.play_again_but.setEnabled(true);
             /* And turn on the mouse listeners so user can click it */
-            for (int j = 0; j < GUI.m5.length; j++) {
-                GUI.play_again_but.addMouseListener(GUI.m5[j]);
+            for (MouseListener m51 : GUI.m5) {
+                GUI.play_again_but.addMouseListener(m51);
             }
             return winner;
         } else if (winner == 2 && ai == 0) {
@@ -258,8 +260,8 @@ public class Winchecker {
             /* Activate play again button*/
             GUI.play_again_but.setEnabled(true);
             /* And turn on the mouse listeners so user can click it */
-            for (int i = 0; i < GUI.m5.length; i++) {
-                GUI.play_again_but.addMouseListener(GUI.m5[i]);
+            for (MouseListener m51 : GUI.m5) {
+                GUI.play_again_but.addMouseListener(m51);
             }
             return winner;
         } else if (winner != 0 && ai == 1) {
@@ -270,14 +272,10 @@ public class Winchecker {
             /* uncomment if you want to visually verify wins 
              * tested thouroughly, they work.
              */
-//            try {
-//                Thread.sleep(20000); //1000 milliseconds is one second.
-//            } catch (InterruptedException ex) {
-//                Thread.currentThread().interrupt();
-//            }
-            if (winner == 1) {
-                aiWins++;
-                aiNotLoss++;
+            try {
+                Thread.sleep(20000); //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
             }
             Graphics g = game_board_panel.getGraphics();
             game_board_panel.paint(g);
@@ -300,6 +298,7 @@ public class Winchecker {
      * this node only.
      * @param player the player who just moved. Since no winning state resulted
      * previously, check current player only for a win.
+     * @return 
      */
     public static int check_neighbors(int node, int player) {
         check_node = node;
@@ -337,8 +336,8 @@ public class Winchecker {
          * diagonals.
          */
         if (left_check == 3 || right_check == 3) {
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             left_check = 0;
             right_check = 0;
@@ -346,8 +345,8 @@ public class Winchecker {
             return player;
         } else {
             /* checked left and right, reset neighbor flags */
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             left_check = 0;
             right_check = 0;
@@ -369,8 +368,8 @@ public class Winchecker {
          * diagonals.
          */
         if (right_check == 3 || left_check == 3) {
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             left_check = 0;
             right_check = 0;
@@ -378,8 +377,8 @@ public class Winchecker {
             return player;
         } else {
             /* checked left and right, reset neighbor flags */
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             left_check = 0;
             right_check = 0;
@@ -402,8 +401,8 @@ public class Winchecker {
             }
         }
         if (down_check == 3 || up_check == 3) {
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             down_check = 0;
             up_check = 0;
@@ -413,8 +412,8 @@ public class Winchecker {
             down_check = 0;
             up_check = 0;
             /* checked up and down, reset neighbor flags */
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             down_check = 0;
             up_check = 0;
@@ -429,8 +428,8 @@ public class Winchecker {
             }
         }
         if (down_check == 3 || up_check == 3) {
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             down_check = 0;
             up_check = 0;
@@ -438,8 +437,8 @@ public class Winchecker {
             return player;
         } else {
             /* checked up and down, reset neighbor flags */
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             down_check = 0;
             up_check = 0;
@@ -469,8 +468,8 @@ public class Winchecker {
             }
         }
         if (up_left_check == 3 || down_left_check == 3) {
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             up_left_check = 0;
             down_right_check = 0;
@@ -478,8 +477,8 @@ public class Winchecker {
             return player;
         } else {
             /* checked left-up and right-down, reset neighbor flags */
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             up_left_check = 0;
             down_right_check = 0;
@@ -501,8 +500,8 @@ public class Winchecker {
             }
         }
         if (down_right_check == 3 || up_left_check == 3) {
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             down_right_check = 0;
             up_left_check = 0;
@@ -510,8 +509,8 @@ public class Winchecker {
             return player;
         } else {
             /* checked left-up and right-down, reset neighbor flags */
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             down_right_check = 0;
             up_left_check = 0;
@@ -543,19 +542,19 @@ public class Winchecker {
 //        System.out.println("l3 = " + l3+" contains "+board[l3][2]+""
 //                + " compared to: " + check_node + " contains " + board[check_node+1][2]);
         if (up_right_check == 3 || down_left_check == 3) {
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             up_right_check = 0;
             down_left_check = 0;
             connected = 0;
             return player;
         } else {
-            /* checked right-up and left-down, 
-             * reset neighbor flags before return 
+            /* checked right-up and left-down,
+             * reset neighbor flags before return
              */
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             up_right_check = 0;
             down_left_check = 0;
@@ -576,19 +575,19 @@ public class Winchecker {
             }
         }
         if (down_left_check == 3 || up_right_check == 3) {
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             down_left_check = 0;
             up_right_check = 0;
             connected = 0;
             return player;
         } else {
-            /* checked right-up and left-down, 
-             * reset neighbor flags before return 
+            /* checked right-up and left-down,
+             * reset neighbor flags before return
              */
-            for (int i = 0; i < board.length; i++) {
-                board[i][3] = 0;
+            for (int[] board1 : board) {
+                board1[3] = 0;
             }
             down_left_check = 0;
             up_right_check = 0;
@@ -607,6 +606,7 @@ public class Winchecker {
      * previously, check current player only for a win.
      * @param upper the upper bound of the search.
      * @param lower the lower bound of the search.
+     * @return 
      */
     public static int check_left(int node, int player, int upper, int lower) {
         /* if check node is within the bounds, where upper is an upper bound
@@ -648,6 +648,7 @@ public class Winchecker {
      * previously, check current player only for a win.
      * @param upper the upper bound of the search.
      * @param lower the lower bound of the search.
+     * @return 
      */
     public static int check_right(int node, int player, int upper, int lower) {
         /* if check node is within the bounds, where upper is an upper bound
@@ -687,6 +688,7 @@ public class Winchecker {
      * this node only.
      * @param player the player who just moved. Since no winning state resulted
      * previously, check current player only for a win.
+     * @return 
      */
     public static int check_up(int node, int player) {
         /* it was verified that check_up is ok for first node with "node < 36".
@@ -713,6 +715,7 @@ public class Winchecker {
      * this node only.
      * @param player the player who just moved. Since no winning state resulted
      * previously, check current player only for a win.
+     * @return 
      */
     public static int check_down(int node, int player) {
         /* it was verified that check_down is ok for first node with "node > 11".
@@ -738,6 +741,7 @@ public class Winchecker {
      * this node only.
      * @param player the player who just moved. Since no winning state resulted
      * previously, check current player only for a win.
+     * @return 
      */
     public static int check_rdown(int node, int player) {
         /* right and down = down+1 = node - 12 + 1. Same logic applies,
@@ -772,6 +776,7 @@ public class Winchecker {
      * this node only.
      * @param player the player who just moved. Since no winning state resulted
      * previously, check current player only for a win.
+     * @return 
      */
     public static int check_ldown(int node, int player) {
         /* left and down = down-1 = node - 12 - 1. Same logic applies,
@@ -806,6 +811,7 @@ public class Winchecker {
      * this node only.
      * @param player the player who just moved. Since no winning state resulted
      * previously, check current player only for a win.
+     * @return 
      */
     public static int check_rup(int node, int player) {
         /* right and up = up + 1 = node + 12 + 1. Same logic applies,
@@ -842,6 +848,7 @@ public class Winchecker {
      * this node only.
      * @param player the player who just moved. Since no winning state resulted
      * previously, check current player only for a win.
+     * @return 
      */
     public static int check_lup(int node, int player) {
         /* left and up = up - 1 = node + 12 - 1. Same logic applies,

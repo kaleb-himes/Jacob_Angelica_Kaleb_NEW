@@ -32,8 +32,8 @@ public class Minimax_Sim {
         int d = 2; //depth
 
         //test trained network against random one
-        int win;
-        int notLoss;
+        int win = 0;
+        int notLoss = 0;
         for (int i = 0; i < games_to_play; i++) {
             double[] board = new double[12 * 4];
             int player = (Math.random() > .5) ? 1 : 2;
@@ -68,6 +68,9 @@ public class Minimax_Sim {
                         if (get_x_y[2] == 0) {
                             GUI.playerMove(x, y, 1);
                             if (GUI.won == player) {
+                                win++;
+                                notLoss++;
+                                GUI.moves_made = 0;
                             }
                         }
 //                        try {
@@ -82,8 +85,7 @@ public class Minimax_Sim {
             }
             GUI.game_state_display.append("number of nodes searched: " + index + "\n");
         }
-        win = Winchecker.aiWins;
-        notLoss = Winchecker.aiNotLoss;
+        notLoss += Winchecker.aiNotLoss;
         GUI.game_state_display.append("percent won = " + (double) win / games_to_play + "\n");
         GUI.game_state_display.append("percent not losing = " + (double) notLoss / games_to_play + "\n");
         GUI.game_state_display.append("illegal moves attempted:"
@@ -95,8 +97,8 @@ public class Minimax_Sim {
         for (int j = 0; j < m5.length; j++) {
             play_again_but.addMouseListener(m5[j]);
         }
-        Winchecker.aiWins = 0;
-        Winchecker.aiNotLoss = 0;
+        win = 0;
+        notLoss = 0;
     }
 
     public static void Minimax_move(double[] ai_board, int player) {

@@ -480,6 +480,8 @@ public class GUI extends JFrame {
             legal_moves[i][2] = 0;
             Winchecker.board[i][2] = 0;
         }
+        moves_made = 0;
+        Winchecker.aiNotLoss = 0;
         Graphics g = game_board_panel.getGraphics();
         game_board_panel.paint(g);
         g.setColor(Color.LIGHT_GRAY);
