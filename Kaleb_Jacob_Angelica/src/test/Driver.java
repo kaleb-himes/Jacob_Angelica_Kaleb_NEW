@@ -26,11 +26,12 @@ import wincheck.Winchecker;
  */
 public class Driver {
 
-    private final int numGames = 250;
+    private final int numGames = 1000;
     private final int numTrain = 1000;
 
     TDNN tdnn = new TDNN(48, 40, 3);
     Navie_Bayes baye = new Navie_Bayes();
+    Minimax minm = new Minimax();
 
     public Driver() {
         try {
@@ -39,6 +40,7 @@ public class Driver {
             //train to pit against 
             tdnn.train(numTrain);
             baye.train(numTrain);
+            minm.train(100); //create tree with memory of 100 games
 
             //TDNN 40 hidden nodes test
             File td = new File("TDNN40_Results.csv");
@@ -64,6 +66,7 @@ public class Driver {
             out2.println("Algorithm,win,tie,loss");
             out2.close();
             ai = new Minimax();
+            ((Minimax) ai).train(100);
             againstAll(mn, ai);
 
             //Simple_Heuristic test
@@ -81,7 +84,7 @@ public class Driver {
             out4.close();
             ai = new Navie_Bayes();
             ((Navie_Bayes) ai).train(numTrain);
-            
+
             ((Navie_Bayes) ai).printTable();
             againstAll(nb, ai);
 
@@ -96,7 +99,7 @@ public class Driver {
         String name = ai.getName();
 
         AI tdnn = this.tdnn;
-        AI minm = new Minimax();
+        AI minm = this.minm;
         AI simp = new Simple_Heuristic();
         AI baye = this.baye;
 

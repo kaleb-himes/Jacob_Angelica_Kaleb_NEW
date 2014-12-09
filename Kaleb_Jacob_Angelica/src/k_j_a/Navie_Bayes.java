@@ -82,7 +82,16 @@ public class Navie_Bayes extends AI {
         likely *= (values[player][4] / probRing2);
         likely *= (values[player][6] / probRing3);
         likely *= (values[player][8] / probRing4);
-        likely *= priorP1;
+        
+        if (player == 1) {
+            likely *= priorP1;
+        } else {
+            if (player == 2) {
+                likely *= priorP2;
+            } else {
+                likely *= priorTi;
+            }
+        }
 
         double totEv = probAvg * probRing1 * probRing2 * probRing3 * probRing4;
 
