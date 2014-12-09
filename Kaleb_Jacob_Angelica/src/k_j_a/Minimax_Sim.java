@@ -14,9 +14,10 @@ import wincheck.Winchecker;
  * @author sweetness
  */
 public class Minimax_Sim {
-    
+
     static int games_to_play = 100;
     private static Minimax aiPlayer;
+
     /**
      * @param args the command line arguments
      */
@@ -39,9 +40,15 @@ public class Minimax_Sim {
             do {
                 if (player == 1) {
                     board = tree.exploit(board, player);
+                    if (Winchecker.check(board) > -1) {
+                        break;
+                    }
                     board = tree.random(board, player2);
                 } else {
                     board = tree.random(board, player2);
+                    if (Winchecker.check(board) > -1) {
+                        break;
+                    }
                     board = tree.exploit(board, player);
                 }
             } while (Winchecker.check(board) < 0);
@@ -90,25 +97,24 @@ public class Minimax_Sim {
         Winchecker.aiWins = 0;
         Winchecker.aiNotLoss = 0;
     }
- public static void Minimax_move(double[] ai_board, int player)
-    {
+
+    public static void Minimax_move(double[] ai_board, int player) {
         int x;
         int y;
         int legal;
         int get_x_y[];
-        
-        double[] temp_board = new double[12*4];
-        for (int i = 0; i < 12*4; i++) {
+
+        double[] temp_board = new double[12 * 4];
+        for (int i = 0; i < 12 * 4; i++) {
             if (ai_board[i] == 1.0 || ai_board[i] == 2.0) {
                 temp_board[i] = 3.0;
-            }
-            else {
+            } else {
                 temp_board[i] = 0.0;
             }
         }
         ai_board = aiPlayer.exploit(ai_board, player);
-        
-        for (int i = 0; i < 12*4; i++) {
+
+        for (int i = 0; i < 12 * 4; i++) {
             if ((ai_board[i] == 1.0 || ai_board[i] == 2.0) && temp_board[i] == 0.0) {
                 get_x_y = GUI.legal_moves[i];
                 x = get_x_y[0];
@@ -117,15 +123,14 @@ public class Minimax_Sim {
                 if (legal == 0) {
                     GUI.playerMove(x, y, 0);
                     break;
-                }
-                else {
+                } else {
                     GUI.game_state_display.append("AI attempted an illegal move.\n");
                 }
-            }   
+            }
         }
     }
-    public static void newPlayer()
-    {
+
+    public static void newPlayer() {
         aiPlayer = new Minimax();
         aiPlayer.train(1);
         aiPlayer.setDepth(2);

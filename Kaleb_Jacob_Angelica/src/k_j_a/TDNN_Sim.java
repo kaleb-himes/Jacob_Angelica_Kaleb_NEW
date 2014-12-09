@@ -14,10 +14,10 @@ import wincheck.Winchecker;
  * @author khimes
  */
 public class TDNN_Sim {
-    
+
     static int games_to_play = 100;
     private static TDNN aiPlayer;
-    
+
     public static void tdnn_sim() {
 
         TDNN test = new TDNN(48, 40, 3);
@@ -35,9 +35,15 @@ public class TDNN_Sim {
             do {
                 if (player == 1) {
                     board = test.exploit(board, player);
+                    if (Winchecker.check(board) > -1) {
+                        break;
+                    }
                     board = ran.random(board, player2);
                 } else {
                     board = ran.random(board, player2);
+                    if (Winchecker.check(board) > -1) {
+                        break;
+                    }
                     board = test.exploit(board, player);
                 }
             } while (Winchecker.check(board) < 0);
@@ -66,11 +72,11 @@ public class TDNN_Sim {
         win = Winchecker.aiWins;
         notLoss = Winchecker.aiNotLoss;
         GUI.game_state_display.append("percent won = " + (double) win / games_to_play + "\n");
-        GUI.game_state_display.append("percent not losing = " + (double) notLoss/games_to_play + "\n");
+        GUI.game_state_display.append("percent not losing = " + (double) notLoss / games_to_play + "\n");
         GUI.game_state_display.append("illegal moves attempted:"
-                    + ""+GUI.illegal_moves_made+"\n");
+                + "" + GUI.illegal_moves_made + "\n");
         GUI.illegal_moves_made = 0;
-        
+
         /* Activate play again button*/
         play_again_but.setEnabled(true);
         /* And turn on the mouse listeners so user can click it */
@@ -79,25 +85,24 @@ public class TDNN_Sim {
         }
         Winchecker.aiWins = 0;
     }
-    public static void TDNN_move(double[] ai_board, int player)
-    {
+
+    public static void TDNN_move(double[] ai_board, int player) {
         int x;
         int y;
         int legal;
         int get_x_y[];
-        
-        double[] temp_board = new double[12*4];
-        for (int i = 0; i < 12*4; i++) {
+
+        double[] temp_board = new double[12 * 4];
+        for (int i = 0; i < 12 * 4; i++) {
             if (ai_board[i] == 1.0 || ai_board[i] == 2.0) {
                 temp_board[i] = 3.0;
-            }
-            else {
+            } else {
                 temp_board[i] = 0.0;
             }
         }
         ai_board = aiPlayer.exploit(ai_board, player);
-        
-        for (int i = 0; i < 12*4; i++) {
+
+        for (int i = 0; i < 12 * 4; i++) {
             if ((ai_board[i] == 1.0 || ai_board[i] == 2.0) && temp_board[i] == 0.0) {
                 get_x_y = GUI.legal_moves[i];
                 x = get_x_y[0];
@@ -106,17 +111,16 @@ public class TDNN_Sim {
                 if (legal == 0) {
                     GUI.playerMove(x, y, 0);
                     break;
-                }
-                else {
+                } else {
                     GUI.game_state_display.append("AI attempted an illegal move.\n");
                 }
-            }   
+            }
         }
     }
-    public static void newPlayer()
-    {
+
+    public static void newPlayer() {
         aiPlayer = new TDNN(48, 40, 3);
         aiPlayer.train(1000);
     }
-    
+
 }
