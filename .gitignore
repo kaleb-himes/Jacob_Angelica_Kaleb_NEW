@@ -2,6 +2,7 @@
 *.xml
 *.properties
 *.csv
+*.DS_Store
 
 # solved. Run the following to untrack file changes without deleting them
 # from the repository itself:

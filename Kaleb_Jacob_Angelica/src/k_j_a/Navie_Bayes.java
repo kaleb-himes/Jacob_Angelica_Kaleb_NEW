@@ -133,7 +133,6 @@ public class Navie_Bayes extends AI {
                     break;
                 }
             } while (Winchecker.check(board) < 0);
-            System.out.println("Finished trainging with game " + g + "\nWinner was player " + winner);
 
             //update probbilities in network
             //average heuristic value
@@ -154,21 +153,32 @@ public class Navie_Bayes extends AI {
             avg = avg / total;
             avg2 = avg2 / total2;
 
-            values[3][0]++;
-            values[3][1]++;
             if (winner == 1.0) {
                 if (avg >= 2) {
                     values[0][0]++;
+                    values[3][0]++;
                 } else {
                     values[0][1]++;
+                    values[3][1]++;
                 }
-            }
+            } else {
 
-            if (winner == 2.0) {
-                if (avg2 >= 2) {
-                    values[1][0]++;
+                if (winner == 2.0) {
+                    if (avg2 >= 2) {
+                        values[1][0]++;
+                        values[3][0]++;
+                    } else {
+                        values[1][1]++;
+                        values[3][1]++;
+                    }
                 } else {
-                    values[1][1]++;
+                    if (avg2 >= 2) {
+                        values[2][0]++;
+                        values[3][0]++;
+                    } else {
+                        values[2][1]++;
+                        values[3][1]++;
+                    }
                 }
             }
 
@@ -190,19 +200,32 @@ public class Navie_Bayes extends AI {
                 if (winner == 1.0) {
                     if (p1 >= 5) {
                         values[0][ring]++;
+                        values[3][ring]++;
                     } else {
                         values[0][ring + 1]++;
+                        values[3][ring + 1]++;
                     }
-                }
-                if (winner == 2.0) {
-                    if (p2 >= 5) {
-                        values[1][ring]++;
+                } else {
+                    if (winner == 2.0) {
+                        if (p2 >= 5) {
+                            values[1][ring]++;
+                            values[3][ring]++;
+                        } else {
+                            values[1][ring + 1]++;
+                            values[3][ring + 1]++;
+                        }
                     } else {
-                        values[1][ring + 1]++;
+                        if ((p1 + p2) >= 5) {
+                            values[2][ring]++;
+                            values[3][ring]++;
+                        } else {
+                            values[2][ring + 1]++;
+                            values[3][ring + 1]++;
+                        }
                     }
                 }
-                values[3][ring]++;
-                values[3][ring + 1]++;
+
+                //advance to next ring
                 ring = ring - 2;
             }
 
@@ -217,10 +240,29 @@ public class Navie_Bayes extends AI {
             //increase total
             values[3][numTypes]++;
         }
+    }
+
+    public void printTable() {
         System.out.println("Probability array ****************");
         for (int i = 0; i < numClass + 1; i++) {
+            switch (i) {
+                case 0:
+                    System.out.print("Player 1 : ");
+                    break;
+                case 1:
+                    System.out.print("Player 2 : ");
+                    break;
+                case 2:
+                    System.out.print("Ties     : ");
+                    break;
+                case 3:
+                    System.out.print("Totals   : ");
+                    break;
+                default:
+                    System.out.print("Unknown  : ");
+            }
             for (int j = 0; j < numTypes + 1; j++) {
-                System.out.print(values[i][j] + "\t");
+                System.out.printf("%5.1f \t", values[i][j]);
             }
             System.out.println("");
         }

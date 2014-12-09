@@ -27,22 +27,26 @@ import wincheck.Winchecker;
 public class Driver {
 
     private final int numGames = 250;
+    private final int numTrain = 1000;
+
     TDNN tdnn = new TDNN(48, 40, 3);
+    Navie_Bayes baye = new Navie_Bayes();
 
     public Driver() {
         try {
+            AI ai;
 
-            //train tdnn to pit against 
-            tdnn.train(20000);
+            //train to pit against 
+            tdnn.train(numTrain);
+            baye.train(numTrain);
 
             //TDNN 40 hidden nodes test
             File td = new File("TDNN40_Results.csv");
             PrintWriter out = new PrintWriter(td, "UTF-8");
             out.println("Algorithm,win,tie,loss");
             out.close();
-            TDNN tdnn = new TDNN(48, 40, 3);
-            tdnn.train(20000);
-            AI ai = tdnn;
+            ai = new TDNN(48, 40, 3);
+            ((TDNN) ai).train(numTrain);
             againstAll(td, ai);
 
             //TDNN 160 hidden nodes test
@@ -50,9 +54,8 @@ public class Driver {
             PrintWriter out160 = new PrintWriter(td160, "UTF-8");
             out160.println("Algorithm,win,tie,loss");
             out160.close();
-            tdnn = new TDNN(48, 160, 3);
-            tdnn.train(20000);
-            ai = tdnn;
+            ai = new TDNN(48, 160, 3);
+            ((TDNN) ai).train(numTrain);
             againstAll(td160, ai);
 
             //Minimax test
@@ -74,9 +77,12 @@ public class Driver {
             //Navie_Bayes test
             File nb = new File("Navie_Bayes_Results.csv");
             PrintWriter out4 = new PrintWriter(nb, "UTF-8");
-            out4.println("Algorithm,win,tie,loss");
+            out4.println("vs,win,tie,loss");
             out4.close();
             ai = new Navie_Bayes();
+            ((Navie_Bayes) ai).train(numTrain);
+            
+            ((Navie_Bayes) ai).printTable();
             againstAll(nb, ai);
 
         } catch (Exception ex) {
@@ -92,7 +98,7 @@ public class Driver {
         AI tdnn = this.tdnn;
         AI minm = new Minimax();
         AI simp = new Simple_Heuristic();
-        AI baye = new Navie_Bayes();
+        AI baye = this.baye;
 
         if (!name.equals(tdnn.getName())) {
             runTest(f, ai, tdnn);
@@ -109,6 +115,8 @@ public class Driver {
         if (!name.equals(baye.getName())) {
             runTest(f, ai, baye);
         }
+
+        runRandomTest(f, ai);
     }
 
     /**
@@ -159,6 +167,57 @@ public class Driver {
         }
         System.out.println("Finished " + ai.getName() + " against " + ai2.getName());
         out.write(ai2.getName() + "," + wins + "," + ties + "," + loss + "\n");
+        out.close();
+    }
+
+    /**
+     * Run the test of ai one vs ai two
+     *
+     * @param f File to append info to
+     * @param ai
+     * @param ai2
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public void runRandomTest(File f, AI ai) throws FileNotFoundException,
+            UnsupportedEncodingException,
+            IOException {
+        FileWriter out = new FileWriter(f, true);
+        int wins = 0;
+        int ties = 0;
+        int loss = 0;
+
+        for (int g = 0; g < numGames; g++) {
+            double[] board = new double[12 * 4];
+            int player = (Math.random() > .5) ? 1 : 2;
+            int player2 = (player == 1) ? 2 : 1;
+            do {
+                if (player == 1) {
+                    board = ai.exploit(board, player);
+                    if (Winchecker.check(board) > 0) {
+                        break;
+                    }
+                    board = ai.random(board, player2);
+                } else {
+                    board = ai.random(board, player2);
+                    if (Winchecker.check(board) > 0) {
+                        break;
+                    }
+                    board = ai.exploit(board, player);
+                }
+            } while (Winchecker.check(board) < 0);
+            if (Winchecker.check(board) == player) {
+                wins++;
+            } else {
+                if (Winchecker.check(board) == player2) {
+                    loss++;
+                } else {
+                    ties++;
+                }
+            }
+        }
+        System.out.println("Finished " + ai.getName() + " against Random");
+        out.write("Random" + "," + wins + "," + ties + "," + loss + "\n");
         out.close();
     }
 
