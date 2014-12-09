@@ -478,6 +478,7 @@ public class GUI extends JFrame {
         GUI.player = 'X';
         for (int i = 0; i < legal_moves.length; i++) {
             legal_moves[i][2] = 0;
+            Winchecker.board[i][2] = 0;
         }
         Graphics g = game_board_panel.getGraphics();
         game_board_panel.paint(g);
