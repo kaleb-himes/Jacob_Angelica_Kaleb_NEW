@@ -433,6 +433,7 @@ public class GUI extends JFrame {
         human_second = 0;
         humans_turn = 1;
         human_playing_ai = 1;
+        first_move = 1;
         Human_AI_Options.human_v_ai_options();
         Human_AI_Options.jLabel2.setText("Ok Human is X, AI is O");
         paint_board(game_board_panel.getGraphics());
@@ -445,6 +446,7 @@ public class GUI extends JFrame {
         human_second = 1;
         humans_turn = 0;
         human_playing_ai = 1;
+        first_move = 1;
         Human_AI_Options.human_v_ai_options();
         Human_AI_Options.jLabel2.setText("Ok AI is X, Human is O");
     }
@@ -453,6 +455,7 @@ public class GUI extends JFrame {
         human_first = 1;
         human_second = 1;
         humans_turn = 1;
+        first_move = 1;
         paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
@@ -461,6 +464,7 @@ public class GUI extends JFrame {
     private void ai_v_ai_butMouseClicked(MouseEvent evt) {
         human_first = 0;
         human_second = 0;
+        first_move = 1;
         //paint_board(game_board_panel.getGraphics());
         game_state_display.setText("");
         set_all_non_focusable();
@@ -472,6 +476,7 @@ public class GUI extends JFrame {
         human_second = 0;
         humans_turn = 0;
         human_playing_ai = 0;
+        first_move = 1;
         if (won != 0) {
             won = 0;
         }
@@ -509,6 +514,7 @@ public class GUI extends JFrame {
         }
         if (won == 0) {
             boolean successful = false;
+            has_neighbor = 0;
             int right_x, bottom_y, left_x, top_y;
 
             /* Logic for checking if a move is legal */
@@ -523,17 +529,47 @@ public class GUI extends JFrame {
                 right_x = x + 10;
                 top_y = y - 11;
                 bottom_y = y + 11;
-
+                
+                
+                
                 if ((left_x <= check_x && check_x <= right_x)
                         && (top_y <= check_y && check_y <= bottom_y)
-                        && check_moved == 0) {
-                    if (player == 'X') {
+                        && check_moved == 0 ) {
+                    if (first_move == 0 && ai == 0) {
+                        north = i+12;
+                        east = i+1;
+                        north_east = i+13;
+                        north_west = i+11;
+                        
+                        south = i-12;
+                        west = i-1;
+                        south_east = i-11;
+                        south_west = i-13;
+                        boolean tempBool;
+                        bool0 = CheckDirections.up(north);
+                        bool1 = CheckDirections.up(east);
+                        bool2 = CheckDirections.up(north_east);
+                        bool3 = CheckDirections.up(north_west);
+                        
+                        bool4 = CheckDirections.down(south);
+                        bool5 = CheckDirections.down(west);
+                        bool6 = CheckDirections.down(south_east);
+                        bool7 = CheckDirections.down(south_west);
+                        
+                        result = (bool0||bool1||bool2||bool3||bool4||bool5||bool6||bool7)?true:false;
+                        
+                        if (result == true) {
+                            has_neighbor = 1;
+                        }
+                    }
+                    
+                    if (player == 'X' && (has_neighbor == 1 || first_move == 1 || ai == 1 || human_playing_ai == 1)) {
                         g.drawImage(playerX_img, check_x - 10, check_y - 11, game_board_panel);
                         legal_moves[i][2] = 1;
                         successful = true;
                         moves_made++;
                         won = Winchecker.check2(i, 1, ai);
-                    } else {
+                    } else if (player == 'O' && (has_neighbor == 1 || first_move == 1 || ai == 1 || human_playing_ai == 1)){
                         g.drawImage(playerO_img, check_x - 10, check_y - 11, game_board_panel);
                         legal_moves[i][2] = 2;
                         successful = true;
@@ -546,6 +582,7 @@ public class GUI extends JFrame {
                 }
             } /* END OF IF LEGAL LOOP */
 
+            first_move = 0;
             if (successful == false) {
                 game_state_display.append("Not a Legal Move\n");
                 illegal_moves_made++;
@@ -756,4 +793,25 @@ public class GUI extends JFrame {
             human_v_ai_but.addMouseListener(m4[i]);
         }
     }
+    private static int north;
+    private static int north_east;
+    private static int east;
+    private static int south_east;
+    private static int south;
+    private static int south_west;
+    private static int west;
+    private static int north_west;
+    private static int has_neighbor;
+    private static boolean bool0;
+    private static boolean bool1;
+    private static boolean bool2;
+    private static boolean bool3;
+    private static boolean bool4;
+    private static boolean bool5;
+    private static boolean bool6;
+    private static boolean bool7;
+    private static boolean result;
+    public static int first_move;
+    
+    
 }

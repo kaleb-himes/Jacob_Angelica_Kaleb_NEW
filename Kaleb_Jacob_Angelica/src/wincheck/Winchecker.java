@@ -264,26 +264,6 @@ public class Winchecker {
             }
             return winner;
         } else if (winner != 0 && ai == 1) {
-//        System.out.print("[");
-//        for (int i = 36; i <= 47; i++) {
-//            System.out.print(" " + board[i][2] + ", ");
-//        }
-//        System.out.print("]\n");
-//        System.out.print("[");
-//        for (int i = 24; i <= 35; i++) {
-//            System.out.print(" " + board[i][2] + ", ");
-//        }
-//        System.out.print("]\n");
-//        System.out.print("[");
-//        for (int i = 12; i <= 23; i++) {
-//            System.out.print(" " + board[i][2] + ", ");
-//        }
-//        System.out.print("]\n");
-//        System.out.print("[");
-//        for (int i = 0; i <= 11; i++) {
-//            System.out.print(" " + board[i][2] + ", ");
-//        }
-//        System.out.println("]\n");
             for (int i = 0; i < legal_moves.length; i++) {
                 legal_moves[i][2] = 0;
                 board[i][2] = 0;
