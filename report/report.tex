@@ -83,7 +83,7 @@ Algorithms will be used to play Polar Tic-Tac-Toe. The game is played by alterna
 How the algorithms interact with the game is that the current board state is passed to them at any given time. The algorithm than takes the representation of the board and determines what it's next move would be. Once having done this it returns a representation of the new board state that then gets rendered by the GUI.
 
 \subsection{Traditional Minimax Search}
-The Minimax algorithm used was the conical version of it. At each ply the algorithm is looking to maximize the value achieved or minimize it depending on the player. An adjustibale parameter set for the algorithm is the depth at which it serachs. {\hl}[red] this is varied any where from 1 to 10 in the experiment{\rule} to compare the results. Values are assigned by finding the max or min of the next ply. A terminating node with a win condition for player one is assigned the value of 1 and a loss condition is assigned -1. For ties the value of 0 is assigned to the node.
+The Minimax algorithm used checks at each ply for the maximize value when looking for player ones potential moves. When playing as player two it looks to minimize the possible utility value. An adjustibale parameter set for the algorithm is the depth at which it serachs. {\hl}[red] this is varied any where from 1 to 10 in the experiment{\rule} to compare the results. Values are assigned by finding the max or min of the next ply. A terminating node with a win condition for player one is assigned the value of 5 and a loss condition is assigned -5. For ties the value of 0 is assigned to the node. All nodes in the tree are initialized with the value returned from the simple heuristic if player one, if player two than the node value is initialized as 0. 
 
 \subsection{Minimax with Alpha-Beta Pruning}
 \begin{quote}
@@ -92,11 +92,13 @@ Here, talk about how the alpha-beta algorithm works.  Give the basic algorithm, 
 discuss what needs to be done for your implementation.
 ’’
 \end{quote}
-To turn on the ability for the Minimax algorithm to use the implementation of Alpha-Beta Pruning the function turnPruningOn() is called along with prun given a boolean of either prunning for player one or player two. This than goes through the full tree and pruns branchs that are not needed and marks them so that when searching the tree they are not explored.
+ The ability to use Alpha-Beta Pruning is something that can be adjusted at runtime. It uses almost the same algorithm as the regualer Minimax but has the added check of alpha and beta values. Alpha is set to negative infinity and beta is set to positive infinity when the alpha-beta algorithm is started. This is to insure that an alpha and beta value will be found and that node values will not be over looked while the algorithm is operating. When looking for a minimum value for the next move if the value found is less than alpha the node is returned and the rest of the nodes are not explored. If the value is not less than or equal to alpha than beta is set to the minumum between the current beta value and the current node being explored. When looking for a maximum value for the next move if the value found for the current node being explored is less than or equal to the current beta value than the current node is returned and the rest of the nodes in that ply are not explored. If the value is less than the current beta value than the alpha value is updated to be the maximum value of either the current alpha value or the current node value. 
 
-{\hl}[red] explain process{\rule}
+In our implementation the Alpha-Beta Pruning can be called on an exisiting stored Minimax tree. This works by starting at the head of the tree and recursivily finding the max value or min value from possible moves while keeping track of an alpha value and beta value.  It then marks nodes that the Alpha-Beta Pruning algorithm decided not to visit so that they will not be explored in the future either. 
+
 
 \subsection{Heuristic Functions}
+
 Here you discuss the heuristic functions that have been developed to assist the
 game playing agent. You need to provide a formal specification of the algorithm
 in as much mathematical detail as possible. The following is an example using
@@ -104,6 +106,14 @@ the equation editing capabilities of \LaTeX{} to illustrate using this powerful 
 \[
 V^\pi(s)=\max_{a in \mathcal{A}} \left[ R(s,a) + \gamma \sum_{s' \in \mathcal{S}} P(s'|s,a) V(s') \right].
 \]
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=4in]{heu.png}
+\end{center}
+\caption{Simple Heuristic Examples}
+\label{somefigure}
+\end{figure}
 
 \subsection{Win Checking with Resolution}
 In this section, you will describe your win checker and how you specified your rules. 
@@ -127,7 +137,13 @@ neural network, and the training process.
 
 
 
-When training the TDNN the first 20 games are trained against a random player. This is in hopes of rudecing the risk of falling into an early local minumum. The remander of n games chosen to be trained by a user is than done by pitting the current TDNN against itself. After each game is played the final result is evaluated and each state leading up to the result is compared to the perdiction given by the network. Gradient descent is than done using the error of the network and allowing for adjustments to be made to the networks weights. For each game the network is trained for both players, having the weights adjusted from both players perspectives after each game has ended.
+When training the TDNN the first 20 games are trained against a random player. This is in hopes of rudecing the risk of falling into an early local minumum. The remander of n games chosen to be trained by a user is than done by pitting the current TDNN against itself. After each game is played the final result is evaluated and each state leading up to the result is compared to the perdiction given by the network. Gradient descent is than done using the error of the network and allowing for adjustments to be made to the networks weights. The following equation is used to adjust weights in the network. 
+\[
+{\triangle} w_t = \alpha (V _{t + 1} - V _t)  \overset{t}{\sum_{k = 1}} {\gamme}^{t - k} {\nabla}_w V_k
+\]
+Where alpha is the learning rate and V is the perdicted output.
+
+For each game the network is trained for both players, having the weights adjusted from both players perspectives after each game has ended.
 
 \section{Experimental Methods}
 \begin{quote}
