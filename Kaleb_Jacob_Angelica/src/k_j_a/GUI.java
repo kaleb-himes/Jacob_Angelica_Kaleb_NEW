@@ -62,15 +62,15 @@ public class GUI extends JFrame {
     public JScrollPane game_state_scrollpane;    /* Scroll pane, Long game */
 
 
-    public static int human_playing_ai  = 0;
-    public static int human_first       = 0;
-    public static int human_second      = 0;
-    private static int humans_turn      = 0;
-    public static int playingTDNN       = 0;
-    public static int playingMinimax    = 0;
-    public static int playingNorm       = 0;
-    private static int checkMoves       = 0;
-    private static double[] ai_board    = new double[12 * 4];
+    public static int human_playing_ai = 0;
+    public static int human_first = 0;
+    public static int human_second = 0;
+    private static int humans_turn = 0;
+    public static int playingTDNN = 0;
+    public static int playingMinimax = 0;
+    public static int playingNorm = 0;
+    private static int checkMoves = 0;
+    private static double[] ai_board = new double[12 * 4];
     public static int moves_made = 0;
 
     public static int illegal_moves_made = 0;
@@ -529,47 +529,45 @@ public class GUI extends JFrame {
                 right_x = x + 10;
                 top_y = y - 11;
                 bottom_y = y + 11;
-                
-                
-                
+
                 if ((left_x <= check_x && check_x <= right_x)
                         && (top_y <= check_y && check_y <= bottom_y)
-                        && check_moved == 0 ) {
+                        && check_moved == 0) {
                     if (first_move == 0 && ai == 0) {
-                        north = i+12;
-                        east = i+1;
-                        north_east = i+13;
-                        north_west = i+11;
-                        
-                        south = i-12;
-                        west = i-1;
-                        south_east = i-11;
-                        south_west = i-13;
+                        north = i + 12;
+                        east = i + 1;
+                        north_east = i + 13;
+                        north_west = i + 11;
+
+                        south = i - 12;
+                        west = i - 1;
+                        south_east = i - 11;
+                        south_west = i - 13;
                         boolean tempBool;
                         bool0 = CheckDirections.up(north);
                         bool1 = CheckDirections.up(east);
                         bool2 = CheckDirections.up(north_east);
                         bool3 = CheckDirections.up(north_west);
-                        
+
                         bool4 = CheckDirections.down(south);
                         bool5 = CheckDirections.down(west);
                         bool6 = CheckDirections.down(south_east);
                         bool7 = CheckDirections.down(south_west);
-                        
-                        result = (bool0||bool1||bool2||bool3||bool4||bool5||bool6||bool7)?true:false;
-                        
+
+                        result = (bool0 || bool1 || bool2 || bool3 || bool4 || bool5 || bool6 || bool7) ? true : false;
+
                         if (result == true) {
                             has_neighbor = 1;
                         }
                     }
-                    
+
                     if (player == 'X' && (has_neighbor == 1 || first_move == 1 || ai == 1 || human_playing_ai == 1)) {
                         g.drawImage(playerX_img, check_x - 10, check_y - 11, game_board_panel);
                         legal_moves[i][2] = 1;
                         successful = true;
                         moves_made++;
                         won = Winchecker.check2(i, 1, ai);
-                    } else if (player == 'O' && (has_neighbor == 1 || first_move == 1 || ai == 1 || human_playing_ai == 1)){
+                    } else if (player == 'O' && (has_neighbor == 1 || first_move == 1 || ai == 1 || human_playing_ai == 1)) {
                         g.drawImage(playerO_img, check_x - 10, check_y - 11, game_board_panel);
                         legal_moves[i][2] = 2;
                         successful = true;
@@ -589,8 +587,9 @@ public class GUI extends JFrame {
             } else if (player == 'X') {
                 if (human_playing_ai == 1) {
                     if (human_first == 1) {
-                        if (won == 0)
+                        if (won == 0) {
                             game_state_display.append("Computers turn puny mortal.\n");
+                        }
                         player = 'O';
                         humans_turn = 0;
                         if (playingTDNN == 1) {
@@ -624,12 +623,13 @@ public class GUI extends JFrame {
                             }
                             Minimax_Sim.Minimax_move(ai_board, 2);
                         } else {
-                            Simple_Heuristic.Normal_move();
+                            //Simple_Heuristic.exploit(ai_board, 2);
                         }
 
                     } else if (human_second == 1) {
-                        if (won == 0 )
+                        if (won == 0) {
                             game_state_display.append("Your turn puny human.\n");
+                        }
                         player = 'O';
                         humans_turn = 1;
                     }
@@ -640,13 +640,15 @@ public class GUI extends JFrame {
             } else {
                 if (human_playing_ai == 1) {
                     if (human_first == 1) {
-                        if (won == 0)
+                        if (won == 0) {
                             game_state_display.append("Your turn puny human.\n");
+                        }
                         player = 'X';
                         humans_turn = 1;
                     } else if (human_second == 1) {
-                        if (won == 0)
+                        if (won == 0) {
                             game_state_display.append("Computers turn puny mortal.\n");
+                        }
                         player = 'X';
                         humans_turn = 0;
                         if (playingTDNN == 1) {
@@ -680,7 +682,7 @@ public class GUI extends JFrame {
                             }
                             Minimax_Sim.Minimax_move(ai_board, 1);
                         } else {
-                            Simple_Heuristic.Normal_move();
+                            //Simple_Heuristic.exploit(ai_board, 1);
                         }
                     }
                 } else {
@@ -812,6 +814,5 @@ public class GUI extends JFrame {
     private static boolean bool7;
     private static boolean result;
     public static int first_move;
-    
-    
+
 }

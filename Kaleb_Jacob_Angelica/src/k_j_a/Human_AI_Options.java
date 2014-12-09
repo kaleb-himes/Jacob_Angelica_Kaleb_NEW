@@ -38,45 +38,45 @@ public class Human_AI_Options extends JFrame {
     public Human_AI_Options() {
         initComponents();
     }
-
-    @SuppressWarnings("unchecked")                       
+    
+    @SuppressWarnings("unchecked")    
     private void initComponents() {
-
+        
         jLabel1 = new JLabel();
         normalAI_but = new JButton();
         tdnn_but = new JButton();
         minimax_but = new JButton();
         jLabel2 = new JLabel();
-
+        
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+        
         jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel1.setText("Which AI would you like to play against?");
-
+        
         normalAI_but.setText("Normal AI");
         normalAI_but.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 normalAI_butMouseClicked(evt);
             }
         });
-
+        
         tdnn_but.setText("TDNN");
         tdnn_but.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 tdnn_butMouseClicked(evt);
             }
         });
-
+        
         minimax_but.setText("Minimax");
         minimax_but.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
                 minimax_butMouseClicked(evt);
             }
         });
-
+        
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel2.setText("");
-
+        
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,10 +103,10 @@ public class Human_AI_Options extends JFrame {
                                 .addComponent(minimax_but))
                         .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
+        
         pack();
-    }                       
-
+    }    
+    
     private void normalAI_butMouseClicked(MouseEvent evt) {
         GUI.playingNorm = 1;
         this.setVisible(false);
@@ -114,7 +114,7 @@ public class Human_AI_Options extends JFrame {
         game_state_display.setText("");
         set_all_non_focusable();
     }
-
+    
     private void tdnn_butMouseClicked(MouseEvent evt) {
         GUI.playingTDNN = 1;
         TDNN_Sim.newPlayer();
@@ -124,7 +124,7 @@ public class Human_AI_Options extends JFrame {
         set_all_non_focusable();
         if (GUI.human_second == 1) {
             int get_x_y[], x, y;
-            double rand = Math.random()*47;
+            double rand = Math.random() * 47;
             int castRand = (int) rand;
             get_x_y = GUI.legal_moves[castRand];
             x = get_x_y[0];
@@ -132,7 +132,7 @@ public class Human_AI_Options extends JFrame {
             GUI.playerMove(x, y, 0);
         }
     }
-
+    
     private void minimax_butMouseClicked(MouseEvent evt) {
         GUI.playingMinimax = 1;
         Minimax_Sim.newPlayer();
@@ -142,7 +142,7 @@ public class Human_AI_Options extends JFrame {
         set_all_non_focusable();
         if (GUI.human_second == 1) {
             int get_x_y[], x, y;
-            double rand = Math.random()*47;
+            double rand = Math.random() * 47;
             int castRand = (int) rand;
             get_x_y = GUI.legal_moves[castRand];
             x = get_x_y[0];
@@ -150,8 +150,8 @@ public class Human_AI_Options extends JFrame {
             GUI.playerMove(x, y, 0);
         }
     }
-
+    
     public static void human_v_ai_options() {
         new Human_AI_Options().setVisible(true);
-    }                
+    }    
 }

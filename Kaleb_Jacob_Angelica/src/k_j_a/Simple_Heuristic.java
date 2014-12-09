@@ -10,9 +10,10 @@ package k_j_a;
  *
  * @author sweetness
  */
-public class Simple_Heuristic extends AI{
+public class Simple_Heuristic extends AI {
 
-    static int offset = 12;
+    private static int offset = 12;
+    private int evaluated;
 
     public Simple_Heuristic() {
 
@@ -263,9 +264,11 @@ public class Simple_Heuristic extends AI{
     private double[] best(double[][] all, int player, double[] board) {
         double heur = 0.0;
         int index = 0;
+        evaluated = 0;
 
         for (int i = 0; i < all.length; i++) {
             double temp = getHeuristic(all[i], board);
+            evaluated++;
             if (temp > heur) {
                 heur = temp;
                 index = i;
@@ -274,7 +277,6 @@ public class Simple_Heuristic extends AI{
 
         return all[index];
     }
-
 
     @Override
     double[] exploit(double[] input, int desired) {
@@ -289,8 +291,9 @@ public class Simple_Heuristic extends AI{
         //evaluate possible moves and choose best
         return best(all, desired, input);
     }
-    public static void Normal_move()
-    {
-        
+
+    @Override
+    int numEvaluated() {
+        return evaluated;
     }
 }

@@ -30,13 +30,14 @@ public class Navie_Bayes extends AI {
      ____________________ ____________________ 
      Total        |                    |
      */
-    double[][] values;
-    int numTypes;
-    int numClass;
-    int offset = 12;
+    private double[][] values;
+    private int numTypes;
+    private int numClass;
+    private int offset = 12;
+    private int evaluated;
 
-    double[] rememberedBoard;
-    Simple_Heuristic sh;
+    private double[] rememberedBoard;
+    private Simple_Heuristic sh;
 
     /**
      * Preset dimensions for polar tic tac toe game
@@ -45,6 +46,7 @@ public class Navie_Bayes extends AI {
         sh = new Simple_Heuristic();
         numTypes = 10;
         numClass = 3;
+        evaluated = 0;
         values = new double[numClass + 1][numTypes + 1];
         //add one to acount for totals
 
@@ -94,10 +96,12 @@ public class Navie_Bayes extends AI {
         int index = 0;
         double highest = Double.MIN_VALUE;
         double[][] all = possible(in, player);
+        evaluated = 0;
 
         //find board state with highest probability for player to win
         for (int i = 0; i < all.length; i++) {
             double temp = probability(all[i], player);
+            evaluated++;
             if (temp > highest) {
                 index = i;
                 highest = temp;
@@ -220,5 +224,10 @@ public class Navie_Bayes extends AI {
             }
             System.out.println("");
         }
+    }
+
+    @Override
+    int numEvaluated() {
+        return evaluated;
     }
 }

@@ -30,6 +30,7 @@ public class Minimax extends AI {
     private boolean prunning;
 
     private int maxDepth;
+    private int evaluated;
 
     private final Simple_Heuristic sh = new Simple_Heuristic();
 
@@ -38,6 +39,7 @@ public class Minimax extends AI {
 
     public Minimax() {
         offset = 12;
+        evaluated = 0;
         int player = 2; //start with player one
         maxDepth = 2;
         double[] board = new double[offset * 4];
@@ -84,6 +86,7 @@ public class Minimax extends AI {
         Stack<node> stk2 = new Stack();
         int localDepth = 0;
         node prunFrom = localHead; //in case of pruning
+        evaluated = 0;
 
         stk2.push(localHead);
         while (!stk2.isEmpty() && localDepth < depth) {
@@ -91,6 +94,7 @@ public class Minimax extends AI {
                 stk.push(stk2.pop());
             }
             while (!stk.isEmpty()) {
+                evaluated++;
                 localHead = stk.pop();
                 player = localHead.player;
                 if (localHead == null) {
@@ -377,7 +381,7 @@ public class Minimax extends AI {
             localHead = best(player, localHead, maxDepth);
             return localHead.getState();
         }
-        
+
         currentHead = best(player, currentHead, maxDepth);
         return currentHead.getState();
     }
@@ -427,6 +431,11 @@ public class Minimax extends AI {
      */
     public void setDepth(int d) {
         maxDepth = d;
+    }
+
+    @Override
+    int numEvaluated() {
+        return evaluated;
     }
 
     private class node {

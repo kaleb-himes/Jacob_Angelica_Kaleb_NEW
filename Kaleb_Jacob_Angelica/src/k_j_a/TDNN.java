@@ -32,20 +32,21 @@ import wincheck.Winchecker;
  */
 public class TDNN extends AI {
 
-    Stack<double[][]> Y;  //memory for outcomes of moves
-    Stack<double[][]> Y2; //memory for outcomes of moves
+    private Stack<double[][]> Y;  //memory for outcomes of moves
+    private Stack<double[][]> Y2; //memory for outcomes of moves
 
-    double[][] w;      //weights [layer][node]
-    double[][] state;  //output of nodes [layer][node]
+    private double[][] w;      //weights [layer][node]
+    private double[][] state;  //output of nodes [layer][node]
 
-    static int offset = 12; //number of points int a row of game board
+    private static int offset = 12; //number of points int a row of game board
+    private int evaluated;
 
-    double lr;
-    double bias;
-    double lambda;
+    private double lr;
+    private double bias;
+    private double lambda;
 
-    int numIn;
-    int numOut;
+    private int numIn;
+    private int numOut;
 
     /**
      * Tempral Difference Neural Network
@@ -58,6 +59,7 @@ public class TDNN extends AI {
     public TDNN(int in, int hid, int out) {
         numIn = in;
         numOut = out;
+        evaluated = 0;
         init(hid, 1);
     }
 
@@ -66,7 +68,10 @@ public class TDNN extends AI {
         int numStateLayers = lay + 2;
         int numWeightLayers = lay + 1;
         int i;
+
         Random r = new Random();
+        r.setSeed(0);
+
         lr = 0.001;
         bias = -1.0;
         lambda = 0.3;
@@ -81,7 +86,6 @@ public class TDNN extends AI {
         }
         state[i] = new double[numOut];
 
-        r.setSeed(0);
         for (i = 0; i < numWeightLayers; i++) {
             w[i] = new double[hid + 1]; //plus one for bias
             for (int j = 0; j < w[i].length; j++) {
@@ -361,14 +365,6 @@ public class TDNN extends AI {
                     state = derP2;
                 }
             }
-
-            //System.out.println("Weights");
-            for (int i = 0; i < w.length; i++) {
-                for (int j = 0; j < w[i].length; j++) {
-                    //System.out.print(" " + w[i][j]);
-                }
-                // System.out.println("");
-            }
         }
     }
 
@@ -377,9 +373,11 @@ public class TDNN extends AI {
         double max = 0.0; //diffrence in win vs loss for desired
         double[] out = new double[numOut];
         int index = 0;
+        evaluated = 0;
 
         for (int i = 0; i < all.length; i++) {
             double local = 0.0;
+            evaluated++;
             out = forwardPass(all[i]);
             for (int j = 0; j < numOut; j++) {
                 local += out[desired] - out[j];
@@ -505,5 +503,10 @@ public class TDNN extends AI {
             Logger.getLogger(TDNN.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    @Override
+    int numEvaluated() {
+        return evaluated;
     }
 }

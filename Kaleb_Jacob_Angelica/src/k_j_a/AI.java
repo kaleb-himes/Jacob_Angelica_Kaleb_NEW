@@ -166,5 +166,5 @@ public abstract class AI {
      *
      * @return number of nodes evaluated.
      */
-    //abstract int numEvaluated();
+    abstract int numEvaluated();
 }
