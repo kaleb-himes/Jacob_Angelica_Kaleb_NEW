@@ -27,16 +27,51 @@ Use of AI in industry and commercial settings is on the rise. Such as with the u
  
 In previous work Minimax algorithms have been used to solve chess moves and are well suited for board games in general \cite{flyingMinimax}. We also hypothisise that the Minimax algorithm will perform best when implemented to play polar tic-tac-toe. This is because it will be looking ahead a couple moves and making decisions based off of that and stored outcomes from previous games where as the TDNN and Naive Bayes algorithms are trying to learn how to make inferences given the current board state. Making inferences with this board may take more precalculations than what will be done in the experiments.
 
-Previous work with the TDNN has been done on the backgammon board game \cite{stanfordTDNN}. It has shown to be able to play at a grand master level in backgammon. Here it will be implemented to make decisions on moves with the polar tic-tac-toe game. In the TDNN implementations gradient descent is used to update the weight values \cite{gradientTDNN}.
+Previous work with the TDNN has been done on the backgammon board game \cite{stanfordTDNN}. It has shown to be able to play at a grand master level in backgammon. Here it will be implemented to make decisions on moves with the polar tic-tac-toe game. To simulate the process of learning the TDNN implementations gradient descent to update the weight values \cite{gradientTDNN}. With having the weights updated it can adjust the predicted outcomes of board states to match what it is seeing in actual tests. 
 
 This paper is divided into an explenation of the problem followed by an explenation of each algorithm implemented. After defining the problem and showing the algorithms used there is a section on the experimental methods and on the that came from conducting the experiment. The end of the paper has sections to discuss the results of the experiment and at the very end a conclusion.
 
 
 \section{Problem Statement}
-Algorithms will be used to play Polar Tic-Tac-Toe. The game is played by alternating turns of who gets to pick a move on the board. Spots picked are represented visually by a O or an X indicating which player has chosen the spot. A player having 4 spots in a row, either diagonally or in a straight line, constitutes as a win. Algorithms being experimented with will attempt to learn information about the state space of the game, to make perdictions on which move to make and ultimatly try to not lose.
+Algorithms will be used to play Polar Tic-Tac-Toe. The game is played by alternating turns of who gets to pick a move on the board. A spot being controlled by a player is represented visually by a O or an X indicating which player has chosen the spot. If at any time a player has 4 spots in a row, either diagonally or in a straight line, they win the game. The game consists of four rings, with each ring containing 12 evenly spaced locations for a possible move. In this experiment it is only a legal move if the space being chosen has one edge touching a space that has previously been chosen by either player. This though is relaxed on the very first move since no previous moves have been made.
+
+The problem to be solved by the algorithms being experimented with is to attempt learning information about the state space of the game. Each of the algorithms is to make perdictions on which move to make and ultimatly each will try to not lose.
 
 \subsection{Traditional Minimax Search}
-The Minimax algorithm used checks at each ply for the maximize value when looking for player ones potential moves. When playing as player two it looks to minimize the possible utility value. An adjustibale parameter set for the algorithm is the depth at which it searchs. Values are assigned by finding the max or min of the next ply. A terminating node with a win condition for player one is assigned the value of 5 and a loss condition is assigned -5. For ties the value of 0 is assigned to the node. All nodes in the tree are initialized with the value returned from the simple heuristic if player one, if player two than the node value is initialized as 0. 
+The Minimax algorithm used checks at each ply for the maximize value when looking for player ones potential moves. When playing as player two it looks to minimize the possible utility value. An adjustibale parameter set for the algorithm is the depth at which it searchs. Values are assigned by finding the max or min of the next ply. A terminating node with a win condition for player one is assigned the value of 5 and a loss condition is assigned -5. For ties the value of 0 is assigned to the node. All nodes in the tree are initialized with the value returned from the simple heuristic if player one, if player two than the node value is initialized as 0.
+
+The process can be shown in the following pseudocode. \cite{textBook} \newline 
+
+function Minimax(state) return action
+
+return arg max a \in Actions(s) Min-Values(Result(state,a)) \newline
+
+function Max-Value(state) returns a utility value
+
+if Terminal node than return utility of state
+
+else set v to negative infinity
+
+for each a in Actions(state) do
+
+v set as the max between v and Min-Value(Result(s,a))
+
+return v \newline
+
+function Min-Value(state) returns a utility value
+
+if Terminal node than return utility of state
+
+else set v to positive infinity
+
+for each a in Actions(state) do
+
+v set as the min between v and Max-Value(Result(s,a))
+
+return v \newline
+
+The biggest difference between our implementation and the cononical version is that we have a cutoff point specified by depth instead of going all the way to terminal nodes. In the Minimax experimented with it also retains the state, action, and utility values in a tree for future use.
+ 
 
 \subsection{Minimax with Alpha-Beta Pruning}
  The ability to use Alpha-Beta Pruning is something that can be adjusted at runtime. It uses almost the same algorithm as the regualer Minimax but has the added check of alpha and beta values. Alpha is set to negative infinity and beta is set to positive infinity when the alpha-beta algorithm is started. This is to insure that an alpha and beta value will be found and that node values will not be over looked while the algorithm is operating. When looking for a minimum value for the next move if the value found is less than alpha the node is returned and the rest of the nodes are not explored. If the value is not less than or equal to alpha than beta is set to the minumum between the current beta value and the current node being explored. When looking for a maximum value for the next move if the value found for the current node being explored is less than or equal to the current beta value than the current node is returned and the rest of the nodes in that ply are not explored. If the value is less than the current beta value than the alpha value is updated to be the maximum value of either the current alpha value or the current node value. 
@@ -114,7 +149,11 @@ n \in \{l1, l2, l3, l4\} \Rightarrow rn \in \{a1, a2, a3, a4\}
 While for each of the logic checks a connected value of 4 is not found it goes through the other 3 first order rules. If at the end no winner has been found, connected = 0, It then becomes the other player’s turn.
 
 \subsection{Game Evaluation with Classifiers}
-Classifing the board is done with a Naive Bayes network. 
+The canonical version of Naive Bayes was chosen to be the classifier in the project. Types for the board state when being run through the algorithm is broken up into average heuristic value of all current player’s pieces and number of plays in each of the 4 rings that a player has. Average heuristic is divided into being greater than or equal to two, while number of plays in a ring is divided into being higher than 5 or not. The heuristic value here is determined using the simple heuristic implementation described earlier.
+
+There are three possible classes for the Naive Bayes network. It can classify the board state as a win for player one, a win for player two, or a tie. Along with classifying the board, the algorithm will also be able to give the probability with which the board state falls into that particular class.
+
+In addition to being able to classify a board state the Naive Bayes algorithm will be able to make a move. This will be done by considering all possible moves and their probabilities for a given outcome. The board state with the probability that is highest for a desired outcome will be the move selected by the algorithm. 
 
 \subsection{Temproal Diffrence Neural Network}
 When training the TDNN the first 20 games are trained against a random player. This is in hopes of reducing the risk of falling into an early local minimum. The remainder of n games chosen to be trained by a user is than done by pitting the current TDNN against itself. After each game is played the final result is evaluated and each state leading up to the result is compared to the prediction given by the network. Gradient descent is than done using the error of the network and allowing for adjustments to be made to the networks weights. The following equation is used to adjust weights in the network. 
