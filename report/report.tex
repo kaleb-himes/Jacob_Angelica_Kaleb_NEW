@@ -83,10 +83,6 @@ In our implementation the Alpha-Beta Pruning can be called on an exisiting store
 
 In the simple heuristic implementation, the heuristic value is the number of similar player pieces in a line adjacent to each other that include the play to be evaluated. This value ranges from one to three since a value of four signifies a win. This can be exploited to make a move by determining from all possible moves which has the highest heuristic value. This heuristic is admissible but not the closest to the actual heuristic it could be since there is a condition where there could be two in a row with a space than a another spot where the player had moved. In this case the actual heuristic value should be three but will be evaluated to two.
 
-\[
-V^\pi(s)=\max_{a in \mathcal{A}} \left[ R(s,a) + \gamma \sum_{s' \in \mathcal{S}} P(s'|s,a) V(s') \right].
-\]
-
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=4in]{heu.png}
@@ -156,18 +152,23 @@ There are three possible classes for the Naive Bayes network. It can classify th
 In addition to being able to classify a board state the Naive Bayes algorithm will be able to make a move. This will be done by considering all possible moves and their probabilities for a given outcome. The board state with the probability that is highest for a desired outcome will be the move selected by the algorithm. 
 
 \subsection{Temproal Diffrence Neural Network}
-When training the TDNN the first 20 games are trained against a random player. This is in hopes of reducing the risk of falling into an early local minimum. The remainder of n games chosen to be trained by a user is than done by pitting the current TDNN against itself. After each game is played the final result is evaluated and each state leading up to the result is compared to the prediction given by the network. Gradient descent is than done using the error of the network and allowing for adjustments to be made to the networks weights. The following equation is used to adjust weights in the network. 
+When training the TDNN the first 20 games are trained against a random player. This is in hopes of reducing the risk of falling into an early local minimum. The remainder of n games chosen to be trained by a user is than done by pitting the current TDNN against itself. After each game is played the final result is evaluated and each state leading up to the result is compared to the prediction given by the network. For each game the network is trained for both players, having the weights adjusted from both players perspectives after each game has ended. The training was don using gradient descent, finding the error of the network and allowing for adjustments to be made to the networks weights. The following equation is used to adjust weights in the network. 
 \[
 {\triangle} w_t = \alpha (V _{t + 1} - V _t)  \overset{t}{\sum_{k = 1}} {\gamme}^{t - k} {\nabla}_w V_k
 \]
-Where alpha is the learning rate and V is the perdicted output.
+Where alpha is the learning rate and V is the perdicted output. The weights of the network are bound between -3 and 3. This is to help prevent the neural network from getting flooded. For the learning rate in the network the value of alpha was set to 0.001 the value of lambda was 0.3 and a bias of -1 was used. 
 
-For each game the network is trained for both players, having the weights adjusted from both players perspectives after each game has ended.
+The topology of the network impolemented is 48 inputs, one hidden layer with 40 nodes, and 3 output nodes. Input nodes to represent each possible state for a move and 3 output nodes; one for player 1 win, one for player 2 win, and one for a tie perdicted. Along with these nodes there is a bias node fully connected to the hidden layer and a bias node fully connected to the output layer. 
 
-The topology of the network is 48 inputs, one hidden layer with 40 nodes, and 3 output nodes. 48 input nodes to represent each possible state for a move and 3 output nodes; one for player 1 win, one for player 2 win, and one for a tie perdicted. 
+For the hidden nodes a sigmoid activation function was used. The activation function is as follows. 
+\[
+1 / (1+exp(-x))
+\]
 
 \section{Experimental Methods}
-In conducting experiments with the implemented algorithms we had them compete against each other 1000 games each. All algorithms competed against the other 3 and also against a random player. To get the performance result of using alpha beta pruning on minimax, it will also compete against the other 3 algorithms and against a random player while using alpha beta pruning. 
+In conducting experiments with the implemented algorithms we had them compete against each other 1000 games each. All algorithms competed against the other 3 and also against a random player. To get the performance result of using alpha beta pruning on minimax, it will also compete against the other 3 algorithms and against a random player while using alpha beta pruning.
+
+The number of training games used for the Naive Bayes was 1000 and 200000 for the TDNN algorithm. Minimax was run through 100 games to memorise a tree of some utility values and outcomes. 
 
 
 \clearpage
@@ -225,6 +226,8 @@ Minimax with Pruning & Random & 982 & 1 & 17\\
 \label{MinimaxTable}
 \end{table}
 
+The table \ref{MinimaxTable} shows the performance of both the Minimax algorithm without alpha beta pruning and with alpha beta pruning. Below the table \ref{NaiveBayesTable} show how the classifier did when used to perdict moves to make in the game. In Figure \ref{WinGraph} and Table \ref{WinPercentTable} the total win percentages for each algorithm through out the experiment is displayed.
+
 
 \begin{table}[h]
 \begin{center}
@@ -245,6 +248,7 @@ Naive Bayes & Random & 936 & 1 & 64\\
 \caption{Naive Bayes Performance}
 \label{NaiveBayesTable}
 \end{table}
+
 
 \begin{table}[h]
 \begin{center}
@@ -298,15 +302,16 @@ Random & 3.6\\
 \label{WinGraph}
 \end{figure}
 
+
 \clearpage
 
 \section{Discussion}
-In all of the tests the Simple Heuristic and the Minimax algorithms outperformed the TDNN and the Naive Bayes network. This pattern was consistent through out all of the tests that were ran. All algorithms were able to do better than random but that does not provide us with much information about the performance of the algorithm. 
+In all of the tests the Simple Heuristic and the Minimax algorithms outperformed the TDNN and the Naive Bayes network. This pattern was consistent through out all of the tests that were ran. All algorithms were able to do better than random but that does not provide us with much information about the performance of the algorithm. The hypothisis that Minimax would do best was not confermed from the experiments since the Simple Heuristic did as well as the Minimax algorithm. 
 
 \section{Conclusions}
 While conducting the experiment it was shown that the simple heuristic and minimax algorthims performed best out of all of the implementations. It was also apparant while running the experiments that the Minimax tree gets very large relatively quickly when stored. The results lead to the suspicion that the topology of the TDNN is a large factor in it's ability to perform well.
 
-In the experiment the TDNN did not perform well. We think this could be due to the amount of input nodes in comparision to the number of hidden nodes used. To test this we briefly ran a network that had 160 hidden nodes but still did not see a performance gain. Future exploration of the reason for it's lack of performance could be done in investigating the effect of having 48 input values. It may increase performance to do calculations to reduce the number of inputs since the state search space for backgammon in which it excelled was only 20. 
+In the experiment the TDNN did not perform well. We think this could be due to the amount of input nodes in comparision to the number of hidden nodes used. To test this we briefly ran a network that had 160 hidden nodes but still did not see a performance gain. Future exploration of the reason for it's lack of performance could be done in investigating the effect of having 48 input values. It may increase performance to do calculations to reduce the number of inputs since the state search space for backgammon in which it excelled was only 20. Another short comming of the network was no checking for if it was over training. Although overtraining was unlikely with the number of training games being used.
 
 
 
