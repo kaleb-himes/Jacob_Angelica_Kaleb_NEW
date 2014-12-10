@@ -23,14 +23,13 @@ This is an experiment to compare the ability of four different algorithms to win
 \end{abstract}
 
 \section{Introduction}
-Use of AI in industry and commercial settings is on the rise. Such as with the use of TDNN's in robots 
-\cite{robotTDNN}.
+Use of AI in industry and commercial settings is on the rise. Such as with the use of TDNN's in robots \cite{robotTDNN}. With the broad applications for AI algorithms knowing the best algorithm to use for a problem is important. Since there is "no free lunch" (not an algorithm that is best at all) than the best fit needs to be determined either by mathmatical proof or imperical evedince , or by both. This paper goes through an experiment in finding the best AI algorithm for being used to solve a problem. By testing the performance of each algorithm it is shown that you can find evedience of which will be best suited.
  
-Minimax algorithms have been used in chess and are well suited for games \cite{flyingMinimax}. We also hypothisise that the minimax algorithm will perform best when implemented to play polar tic-tac-toe.
+In previous work Minimax algorithms have been used to solve chess moves and are well suited for board games in general \cite{flyingMinimax}. We also hypothisise that the Minimax algorithm will perform best when implemented to play polar tic-tac-toe. This is because it will be looking ahead a couple moves and making decisions based off of that and stored outcomes from previous games where as the TDNN and Naive Bayes algorithms are trying to learn how to make inferences given the current board state. Making inferences with this board may take more precalculations than what will be done in the experiments.
 
 Previous work with the TDNN has been done on the backgammon board game \cite{stanfordTDNN}. It has shown to be able to play at a grand master level in backgammon. Here it will be implemented to make decisions on moves with the polar tic-tac-toe game. In the TDNN implementations gradient descent is used to update the weight values \cite{gradientTDNN}.
 
-This paper is divided into an explenation of the problem followed by an explenation of each algorithm implemented. After defining the problem and showing the algorithms used there is a section on the experimental methods and on the results that came from conducting the experiment. The end of the paper has sections to discuss the results of the experiment and at the very end a conclusion.
+This paper is divided into an explenation of the problem followed by an explenation of each algorithm implemented. After defining the problem and showing the algorithms used there is a section on the experimental methods and on the that came from conducting the experiment. The end of the paper has sections to discuss the results of the experiment and at the very end a conclusion.
 
 
 \section{Problem Statement}
@@ -131,6 +130,36 @@ In conducting experiments with the implemented algorithms we had them compete ag
 
 
 \newpage
+\section{Results}
+
+The results section should contain your results.  It should \emph{not} contain
+your interpretation of those results.  That comes later.  This section should be
+made up primarily of graphs and tables that show your data.  You should also
+have a small amount of text describing what each of the tables and graphs shows,
+since the caption on the figures should be short.  Having text describing the
+specifics of the experiment that led to that particular table would also be
+good.  
+
+I am not going to tell you exactly what tables or graphs you should have here,
+since it will depend a bit on your results.  You should be sure that your
+results section contains sufficient data to support your conclusions about the
+relative strengths and weaknesses of the different algorithms.  You should also
+be sure that your data is complete; that is, do not leave data out simply because
+it does not support the point you are trying to make.
+
+You should also be sure that your results are clear and interpretable.  Seven
+pages of raw binary data will do nothing to edify your reader.  Similarly, a
+1 inch square graph with 12 lines plotted on it will be difficult to extract
+meaning from, as will a graph with poor (or no) labels on the axes.  Your
+results should be legible both on screen and in hard copy. By the way, do
+not rely on color difference to make your points since many people read
+black-and-white print outs of the papers (including your instructor).
+
+You do not want to present results that are just raw data, since that is hard to
+interpret.  But you do not want to be overly abstract, either, since that leads to
+results that have little or no meaning (e.g., ``the average over all different
+data sets, algorithms, and parameters'' is a completely useless statistic for
+comparing algorithms).
 
 \begin{table}
 \begin{center}
@@ -211,7 +240,7 @@ Simple Heuristic & TDNN & 1000 & 0 & 03\\
 \hline 
 Simple Heuristic & Minimax & 494 & 0 & 506\\
 \hline 
-Simple Heuristic & Navie Bayes & 1000 & 0 & 0\\
+Simple Heuristic & Naive Bayes & 1000 & 0 & 0\\
 \hline 
 Simple Heuristic & Random & 991 & 0 & 9\\
 \hline 
@@ -231,7 +260,7 @@ TDNN & 36.4\\
 \hline 
 Simple Heuristic & 87.1\\
 \hline 
-Navie Bayes & 35.6\\
+Naive Bayes & 35.6\\
 \hline 
 Minimax & 86.4\\
 \hline 
@@ -252,35 +281,6 @@ Random & 3.6\\
 \caption{Win Percentage}
 \label{WinGraph}
 \end{figure}
-
-The results section should contain your results.  It should \emph{not} contain
-your interpretation of those results.  That comes later.  This section should be
-made up primarily of graphs and tables that show your data.  You should also
-have a small amount of text describing what each of the tables and graphs shows,
-since the caption on the figures should be short.  Having text describing the
-specifics of the experiment that led to that particular table would also be
-good.  
-
-I am not going to tell you exactly what tables or graphs you should have here,
-since it will depend a bit on your results.  You should be sure that your
-results section contains sufficient data to support your conclusions about the
-relative strengths and weaknesses of the different algorithms.  You should also
-be sure that your data is complete; that is, do not leave data out simply because
-it does not support the point you are trying to make.
-
-You should also be sure that your results are clear and interpretable.  Seven
-pages of raw binary data will do nothing to edify your reader.  Similarly, a
-1 inch square graph with 12 lines plotted on it will be difficult to extract
-meaning from, as will a graph with poor (or no) labels on the axes.  Your
-results should be legible both on screen and in hard copy. By the way, do
-not rely on color difference to make your points since many people read
-black-and-white print outs of the papers (including your instructor).
-
-You do not want to present results that are just raw data, since that is hard to
-interpret.  But you do not want to be overly abstract, either, since that leads to
-results that have little or no meaning (e.g., ``the average over all different
-data sets, algorithms, and parameters'' is a completely useless statistic for
-comparing algorithms).
 
 \section{Discussion}
 In all of the tests the Simple Heuristic and the Minimax algorithms outperformed the TDNN and the Naive Bayes network. This pattern was consistent through out all of the tests that were ran. All algorithms were able to do better than random but that does not provide us with much information about the performance of the algorithm. 
