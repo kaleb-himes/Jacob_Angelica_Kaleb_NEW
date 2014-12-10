@@ -19,7 +19,7 @@
 \maketitle
 
 \begin{abstract}
-This is an experiment to compare the ability of four different algorithms to win a polar tic tac toe game. The four algorithms used are; a simple heuristic, Naive Bayes Network, Temporal Difference Neural Network (TDNN) and the Minimax Algorithm. Algorithms are compared in their ability to learn and their ability to win when compared.
+This is an experiment to compare the ability of four different algorithms to win a polar tic tac toe game. The four algorithms used are; a simple heuristic, Naive Bayes Network, Temporal Difference Neural Network (TDNN) and the Minimax Algorithm. Algorithms are compared in their ability to learn and their ability to win when competing against each other.
 \end{abstract}
 
 \section{Introduction}
@@ -57,16 +57,16 @@ citations in any given paper can usually be found in the introduction or a
 separate related works section, as that
 is where the most related publications are discussed.
 "
-
-This paper is divided into an explenation of the problem followed by an explenation of each algorithm implemented. After defining the problem and showing the algorithms used there is a section on the experimental methods and on the results that came from conducting the experiment. The end of the paper has sections to discuss the results of the experiment and at the very end a conclusion.
 \end{quote}
 
+Use of AI in industry and commercial settings is on the rise. Such as with the use of TDNN's in robots 
+\cite{robotTDNN}.
+ 
+Minimax algorithms have been used in chess and are well suited for games \cite{flyingMinimax}. We also hypothisise that the minimax algorithm will perform best when implemented to play polar tic-tac-toe.
 
+Previous work with the TDNN has been done on the backgammon board game \cite{stanfordTDNN}. It has shown to be able to play at a grand master level in backgammon. Here it will be implemented to make decisions on moves with the polar tic-tac-toe game. In the TDNN implementations gradient descent is used to update the weight values \cite{gradientTDNN}.
 
-
-The TDNN uses gradient descent when training \cite{gradientTDNN}.
-\cite{stanfordTDNN}
-\cite{robotTDNN}
+This paper is divided into an explenation of the problem followed by an explenation of each algorithm implemented. After defining the problem and showing the algorithms used there is a section on the experimental methods and on the results that came from conducting the experiment. The end of the paper has sections to discuss the results of the experiment and at the very end a conclusion.
 
 
 \section{Problem Statement}
@@ -76,12 +76,6 @@ Algorithms will be used to play Polar Tic-Tac-Toe. The game is played by alterna
 The Minimax algorithm used checks at each ply for the maximize value when looking for player ones potential moves. When playing as player two it looks to minimize the possible utility value. An adjustibale parameter set for the algorithm is the depth at which it searchs. Values are assigned by finding the max or min of the next ply. A terminating node with a win condition for player one is assigned the value of 5 and a loss condition is assigned -5. For ties the value of 0 is assigned to the node. All nodes in the tree are initialized with the value returned from the simple heuristic if player one, if player two than the node value is initialized as 0. 
 
 \subsection{Minimax with Alpha-Beta Pruning}
-\begin{quote}
-`` 
-Here, talk about how the alpha-beta algorithm works.  Give the basic algorithm, and
-discuss what needs to be done for your implementation.
-’’
-\end{quote}
  The ability to use Alpha-Beta Pruning is something that can be adjusted at runtime. It uses almost the same algorithm as the regualer Minimax but has the added check of alpha and beta values. Alpha is set to negative infinity and beta is set to positive infinity when the alpha-beta algorithm is started. This is to insure that an alpha and beta value will be found and that node values will not be over looked while the algorithm is operating. When looking for a minimum value for the next move if the value found is less than alpha the node is returned and the rest of the nodes are not explored. If the value is not less than or equal to alpha than beta is set to the minumum between the current beta value and the current node being explored. When looking for a maximum value for the next move if the value found for the current node being explored is less than or equal to the current beta value than the current node is returned and the rest of the nodes in that ply are not explored. If the value is less than the current beta value than the alpha value is updated to be the maximum value of either the current alpha value or the current node value. 
 
 In our implementation the Alpha-Beta Pruning can be called on an exisiting stored Minimax tree. This works by starting at the head of the tree and recursivily finding the max value or min value from possible moves while keeping track of an alpha value and beta value.  It then marks nodes that the Alpha-Beta Pruning algorithm decided not to visit so that they will not be explored in the future either. 
@@ -89,10 +83,8 @@ In our implementation the Alpha-Beta Pruning can be called on an exisiting store
 
 \subsection{Heuristic Functions}
 
-Here you discuss the heuristic functions that have been developed to assist the
-game playing agent. You need to provide a formal specification of the algorithm
-in as much mathematical detail as possible. The following is an example using
-the equation editing capabilities of \LaTeX{} to illustrate using this powerful capability.
+In the simple heuristic implementation, the heuristic value is the number of similar player pieces in a line adjacent to each other that include the play to be evaluated. This value ranges from one to three since a value of four signifies a win. This can be exploited to make a move by determining from all possible moves which has the highest heuristic value. This heuristic is admissible but not the closest to the actual heuristic it could be since there is a condition where there could be two in a row with a space than a another spot where the player had moved. In this case the actual heuristic value should be three but will be evaluated to two.
+
 \[
 V^\pi(s)=\max_{a in \mathcal{A}} \left[ R(s,a) + \gamma \sum_{s' \in \mathcal{S}} P(s'|s,a) V(s') \right].
 \]
