@@ -23,42 +23,6 @@ This is an experiment to compare the ability of four different algorithms to win
 \end{abstract}
 
 \section{Introduction}
-\begin{quote}
-`` 
-In the first section of your paper, which should be entitled ``Introduction,''
-you should introduce the subject of your paper to the reader.  There are several
-components to this.  You probably want to begin by talking about what problem
-your work is trying to solve, and why it is a problem worth trying to solve.
-Explain to your reader why they should care.  This is also a good time to
-introduce basic nomenclature related to your subject.  You can assume that your
-reader is a reasonably well educated individual and has some knowledge of
-computer science, but you should not assume that they are an expert in your field.  You have
-spent a bunch of time studying your topic (in this case, game AI), but
-your reader may not have.  Take the time to bring him or her up to speed; this
-is what the introduction is all about.
-
-The introduction in a real paper is generally several pages, but yours does not
-need to be that long for this assignment.  It should, however, be long enough to
-convey the information you need to convey.  It should move from the initial, high level
-overview of the topic to a more detailed description of what other related work
-has been done on the topic, and any other background information needed to
-understand the later parts of the paper.  For example, you should talk about the nature
-of game search in general, and what other work has been
-done to solve this important problem.  More specific details of the algorithms and
-techniques you used should wait for later sections.
-
-Because your introduction discusses prior related work, you should be sure to
-properly cite that prior related work. An example citation is included here
-If your introduction does not have at
-least a couple of citations, then it is either inadequate in scope, or it fails
-to properly cite works referenced.  Later sections of the
-paper should also contain proper citations where needed, but the bulk of the
-citations in any given paper can usually be found in the introduction or a 
-separate related works section, as that
-is where the most related publications are discussed.
-"
-\end{quote}
-
 Use of AI in industry and commercial settings is on the rise. Such as with the use of TDNN's in robots 
 \cite{robotTDNN}.
  
@@ -98,17 +62,61 @@ V^\pi(s)=\max_{a in \mathcal{A}} \left[ R(s,a) + \gamma \sum_{s' \in \mathcal{S}
 \end{figure}
 
 \subsection{Win Checking with Resolution}
-In this section, you will describe your win checker and how you specified your rules. 
-You should include the rules if there are not too many of them. Otherwise, list the most important
-ones (but be sure to include all of the rules in your design document). You also need to describe 
-your unification procedure and your resolution procedure. This is not the place to include code; 
-however, you may provide pseudocode if you think it will help the description.
+The win checker used in the experiment determined a win, lose, or tie by using first order logic, resolution and unification.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c||c|}
+\hline
+player = p & north east neighbor = urn 
+(for upper right neighbor)\\
+\hline 
+neighbor = n & north west neighbor = uln
+(for upper left neighbor)\\
+\hline 
+left neighbor = ln & south east neighbor = drn
+(for down right neighbor)\\
+\hline 
+right neighbor = rn & south west neighbor = dln
+(for down left neighbor)\\
+\hline 
+upper neighbor = un & \\
+\hline 
+down neighbor = dn & \\
+\hline 
+\end{tabular}
+\end{center}
+\caption{Notation used in winchecker}
+\label{Notation}
+\end{table}
+
+
+Let p = X \bigoplus O
+
+Let connected = 4 be a winning state If n is moved on by p, perform a local search with that node as the origin.
+
+\exists n \ni p \in {O,X} \bigwedge p \in n
+
+An example of one of the sections of logic would be the check horizontal portion.
+
+check left:
+n \in \{a1, a2, a3, a4\} \Rightarrow ln \in \{l1, l2, l3, l4\}
+
+\neg n \in \{a1, a2, a3, a4\} \bigwedge (n-1) \geqslant 0 \bigwedge p \in (n-1) \Rightarrow connected
+
+check right:
+
+n \in \{l1, l2, l3, l4\} \Rightarrow rn \in \{a1, a2, a3, a4\}
+
+\neg n \in \{l1, l2, l3, l4\} \bigwedge (n+1) \leqslant 47 \bigwedge p \in (n+1) \Rightarrow connected
+
+While for each of the logic checks a connected value of 4 is not found it goes through the other 3 first order rules. If at the end no winner has been found, connected = 0, It then becomes the other player’s turn.
 
 \subsection{Game Evaluation with Classifiers}
 Classifing the board is done with a Naive Bayes network. 
 
 \subsection{Temproal Diffrence Neural Network}
-When training the TDNN the first 20 games are trained against a random player. This is in hopes of rudecing the risk of falling into an early local minumum. The remander of n games chosen to be trained by a user is than done by pitting the current TDNN against itself. After each game is played the final result is evaluated and each state leading up to the result is compared to the perdiction given by the network. Gradient descent is than done using the error of the network and allowing for adjustments to be made to the networks weights. The following equation is used to adjust weights in the network. 
+When training the TDNN the first 20 games are trained against a random player. This is in hopes of reducing the risk of falling into an early local minimum. The remainder of n games chosen to be trained by a user is than done by pitting the current TDNN against itself. After each game is played the final result is evaluated and each state leading up to the result is compared to the prediction given by the network. Gradient descent is than done using the error of the network and allowing for adjustments to be made to the networks weights. The following equation is used to adjust weights in the network. 
 \[
 {\triangle} w_t = \alpha (V _{t + 1} - V _t)  \overset{t}{\sum_{k = 1}} {\gamme}^{t - k} {\nabla}_w V_k
 \]
@@ -119,22 +127,7 @@ For each game the network is trained for both players, having the weights adjust
 The topology of the network is 48 inputs, one hidden layer with 40 nodes, and 3 output nodes. 48 input nodes to represent each possible state for a move and 3 output nodes; one for player 1 win, one for player 2 win, and one for a tie perdicted. 
 
 \section{Experimental Methods}
-\begin{quote}
-`` 
-In this section, you describe your experimental methodology; this is where you talk
-about your data and what you did with it.  Talk about what sorts of experiments
-you performed, and how you validated them.  For example, if you used self-play
-or you experimented with a human playing with the computer, you would say that 
-you used it, define what it is, and discuss how you implemented it.  
-
-Since this project includes several requirements to be satisfied, this is where you describe
-how those requirements are tested, and how the resulting features are being compared.
-A well constructed experiment (and your description of that experiment) will go a long
-way towards demonstrating that you met the project's requirements.
-’’
-\end{quote}
-
-In conducting experiments with the implemented algorithms we had them compete against each other in a 1000 games each. All algorithms competed against the other 3 and also against a random player. To get the performance result of using alpha beta pruning on minimax it will also compete against the other 3 algorithms and against a random player. 
+In conducting experiments with the implemented algorithms we had them compete against each other 1000 games each. All algorithms competed against the other 3 and also against a random player. To get the performance result of using alpha beta pruning on minimax, it will also compete against the other 3 algorithms and against a random player while using alpha beta pruning. 
 
 
 \newpage
@@ -290,53 +283,14 @@ data sets, algorithms, and parameters'' is a completely useless statistic for
 comparing algorithms).
 
 \section{Discussion}
-The discussion section is where you discuss your interpretation of the data you
-presented in the results section.  This is where you tell the reader how great
-your algorithm is, and how interesting it is that \emph{this} performed better
-than \emph{that} on some given data set.  You can also speculate about causes
-for interesting behaviors; for example, if you think you might know why it fails
-so badly on some particular case, or if you have an insight into why it did well
-on another case.  You do not want to be making wild guesses, but as long as you
-make it clear that you are not making claims of factual proof, you can go out on
-a limb a little.  For example,
-
-\begin{quote}
-``In most cases, algorithm A outperforms algorithm B with a significance of
-99.8\%.  However, as can be seen from Figure when applied to
-the E. E. Smith data set, algorithm A does no better than random chance.  It
-seems likely that the failure of algorithm A to learn is due to the extremely
-sparse distribution of that data set.  Because of algorithm A's heavy reliance
-on data being densely sampled from the true underlying distribution, any sparse
-data set is likely to show this behavior.''
-\end{quote}
+In all of the tests the Simple Heuristic and the Minimax algorithms outperformed the TDNN and the Naive Bayes network. This pattern was consistent through out all of the tests that were ran. All algorithms were able to do better than random but that does not provide us with much information about the performance of the algorithm. 
 
 \section{Conclusions}
-The conclusion section should be relatively short, and should not be a summary
-of your paper.  It should, however, bring up what you learned and what impact
-your results have on the rest of the field (and society as a
-whole, if applicable).  You should conclude, and bring your paper to an  end
-with any parting thoughts that are appropriate.
+While conducting the experiment it was shown that the simple heuristic and minimax algorthims performed best out of all of the implementations. It was also apparant while running the experiments that the Minimax tree gets very large relatively quickly when stored. The results lead to the suspicion that the topology of the TDNN is a large factor in it's ability to perform well.
 
-Certain types of papers can be ended with a ``Summary'' section instead of a
-``Conclusions'' section, in which case you would, in fact, summarize the main
-points of your paper.  For this paper, you should write a Conclusions section,
-not a Summary.
+In the experiment the TDNN did not perform well. We think this could be due to the amount of input nodes in comparision to the number of hidden nodes used. To test this we briefly ran a network that had 160 hidden nodes but still did not see a performance gain. Future exploration of the reason for it's lack of performance could be done in investigating the effect of having 48 input values. It may increase performance to do calculations to reduce the number of inputs since the state search space for backgammon in which it excelled was only 20. 
 
-Conclusions also often contain information about what else you would like
-to do.  Sometimes this is a separate subsection, or even a section, entitled
-``Future Work.''  The basic idea here is to talk about what the next steps to
-take would be.  This is of benefit to others who are interested in your
-work and may want to help advance it.  It is also a chance for you to
-acknowledge shortcomings in your work; since we never have infinite time to
-prepare a paper, there are always more experiments that would have been nice to
-include.  If you list them as future work, then it at least makes it clear that
-you did not do those things because you didn't have time, rather than because you
-didn't realize that they were important to do.
 
-In your paper, you should include a brief discussion of avenues for possible
-future work in your Conclusions section.  It should be tied in with the rest of
-your conclusion, and should not be an unrelated section tacked on the end (or
-the middle).
 
 \newpage
 
