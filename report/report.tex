@@ -10,7 +10,7 @@
 
 \documentclass[12pt,letterpaper]{article}
 
-\usepackage{amsmath, amsthm, graphicx, multicol}
+\usepackage{amsmath, amsthm, graphicx, multicol, natbib}
 
 \title{AI Learning Polar Tic-Tac-Toe: \\ Simple Hurestic, Naive Bayes, Temporal Difference Neural Network, Minimax}
 \author{Jacob Barthelmeh, Kaleb Himes, Angelica Davis}
@@ -94,7 +94,7 @@ V^\pi(s)=\max_{a in \mathcal{A}} \left[ R(s,a) + \gamma \sum_{s' \in \mathcal{S}
 \includegraphics[width=4in]{heu.png}
 \end{center}
 \caption{Simple Heuristic Examples}
-\label{somefigure}
+\label{heuristicExample}
 \end{figure}
 
 \subsection{Win Checking with Resolution}
@@ -137,15 +137,7 @@ way towards demonstrating that you met the project's requirements.
 In conducting experiments with the implemented algorithms we had them compete against each other in a 1000 games each. All algorithms competed against the other 3 and also against a random player. To get the performance result of using alpha beta pruning on minimax it will also compete against the other 3 algorithms and against a random player. 
 
 
-
-\section{Results}
-\begin{figure}
-\begin{center}
-\includegraphics[width=2.5in]{P-TTT-ex.png}
-\end{center}
-\caption{This is a caption on the figure}
-\label{somefigure}
-\end{figure}
+\newpage
 
 \begin{table}
 \begin{center}
@@ -164,7 +156,7 @@ TDNN & Random & 948 & 0 & 52\\
 \end{tabular}
 \end{center}
 \caption{Tempral Diffrence Neural Network performance with 40 hidden nodes}
-\label{sometable}
+\label{TDNNtable}
 \end{table}
 
 \begin{table}
@@ -185,14 +177,14 @@ Minimax with Pruning & TDNN & 1000 & 0 & 0\\
 \hline 
 Minimax with Pruning & Simple Heuristic & 474 & 0 & 526\\
 \hline 
-Minimax with Pruning & Navie Bayes & 1000 & 0 & 0\\
+Minimax with Pruning & Naive Bayes & 1000 & 0 & 0\\
 \hline 
 Minimax with Pruning & Random & 982 & 1 & 17\\
 \hline 
 \end{tabular}
 \end{center}
 \caption{Minimax Performance with depth of 2}
-\label{sometable}
+\label{MinimaxTable}
 \end{table}
 
 
@@ -202,18 +194,18 @@ Minimax with Pruning & Random & 982 & 1 & 17\\
 \hline
 & vs & win & tie & loss\\
 \hline \hline
-Navie Bayes & TDNN & 487 & 0 & 513\\
+Naive Bayes & TDNN & 487 & 0 & 513\\
 \hline 
-Navie Bayes & Simple Heuristic & 0 & 0 & 1000\\
+Naive Bayes & Simple Heuristic & 0 & 0 & 1000\\
 \hline 
-Navie Bayes & Navie Bayes & 0 & 0 & 1000\\
+Naive Bayes & Minimax & 0 & 0 & 1000\\
 \hline 
-Navie Bayes & Random & 936 & 1 & 64\\
+Naive Bayes & Random & 936 & 1 & 64\\
 \hline 
 \end{tabular}
 \end{center}
-\caption{Navie Bayes Performance}
-\label{sometable}
+\caption{Naive Bayes Performance}
+\label{NaiveBayesTable}
 \end{table}
 
 \begin{table}
@@ -233,7 +225,7 @@ Simple Heuristic & Random & 991 & 0 & 9\\
 \end{tabular}
 \end{center}
 \caption{Simple Heuristic Performance}
-\label{sometable}
+\label{HeuristicTable}
 \end{table}
 
 \begin{table}
@@ -257,7 +249,7 @@ Random & 3.6\\
 \end{tabular}
 \end{center}
 \caption{Win percentage of algorithms in experiment}
-\label{sometable}
+\label{WinPercentTable}
 \end{table}
 
 \begin{figure}
@@ -265,7 +257,7 @@ Random & 3.6\\
 \includegraphics[width=7in]{winpercent.png}
 \end{center}
 \caption{Win Percentage}
-\label{somefigure}
+\label{WinGraph}
 \end{figure}
 
 The results section should contain your results.  It should \emph{not} contain
@@ -310,7 +302,7 @@ a limb a little.  For example,
 
 \begin{quote}
 ``In most cases, algorithm A outperforms algorithm B with a significance of
-99.8\%.  However, as can be seen from Figure \ref{somefigure}, when applied to
+99.8\%.  However, as can be seen from Figure when applied to
 the E. E. Smith data set, algorithm A does no better than random chance.  It
 seems likely that the failure of algorithm A to learn is due to the extremely
 sparse distribution of that data set.  Because of algorithm A's heavy reliance
@@ -346,7 +338,10 @@ future work in your Conclusions section.  It should be tied in with the rest of
 your conclusion, and should not be an unrelated section tacked on the end (or
 the middle).
 
+\newpage
+
 \bibliographystyle{plain}
-\bibliography{refrences}
+\bibliography{reffrences}
+\nocite{*}
 
 \end{document}
