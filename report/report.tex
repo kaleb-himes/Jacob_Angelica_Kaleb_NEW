@@ -52,7 +52,7 @@ In the simple heuristic implementation, the heuristic value is the number of sim
 V^\pi(s)=\max_{a in \mathcal{A}} \left[ R(s,a) + \gamma \sum_{s' \in \mathcal{S}} P(s'|s,a) V(s') \right].
 \]
 
-\begin{figure}
+\begin{figure}[h]
 \begin{center}
 \includegraphics[width=4in]{heu.png}
 \end{center}
@@ -63,7 +63,7 @@ V^\pi(s)=\max_{a in \mathcal{A}} \left[ R(s,a) + \gamma \sum_{s' \in \mathcal{S}
 \subsection{Win Checking with Resolution}
 The win checker used in the experiment determined a win, lose, or tie by using first order logic, resolution and unification.
 
-\begin{table}
+\begin{table}[h]
 \begin{center}
 \begin{tabular}{|c||c|}
 \hline
@@ -89,7 +89,6 @@ down neighbor = dn & \\
 \label{Notation}
 \end{table}
 
-
 Let p = X \bigoplus O
 
 Let connected = 4 be a winning state If n is moved on by p, perform a local search with that node as the origin.
@@ -99,7 +98,10 @@ Let connected = 4 be a winning state If n is moved on by p, perform a local sear
 An example of one of the sections of logic would be the check horizontal portion.
 
 check left:
+
 n \in \{a1, a2, a3, a4\} \Rightarrow ln \in \{l1, l2, l3, l4\}
+
+
 
 \neg n \in \{a1, a2, a3, a4\} \bigwedge (n-1) \geqslant 0 \bigwedge p \in (n-1) \Rightarrow connected
 
@@ -107,7 +109,7 @@ check right:
 
 n \in \{l1, l2, l3, l4\} \Rightarrow rn \in \{a1, a2, a3, a4\}
 
-\neg n \in \{l1, l2, l3, l4\} \bigwedge (n+1) \leqslant 47 \bigwedge p \in (n+1) \Rightarrow connected
+\neg n \in \{l1, l2, l3, l4\} \bigwedge (n+1) \leqslant 47 \bigwedge p \in (n+1) \Rightarrow connected \newline
 
 While for each of the logic checks a connected value of 4 is not found it goes through the other 3 first order rules. If at the end no winner has been found, connected = 0, It then becomes the other player’s turn.
 
@@ -129,39 +131,12 @@ The topology of the network is 48 inputs, one hidden layer with 40 nodes, and 3 
 In conducting experiments with the implemented algorithms we had them compete against each other 1000 games each. All algorithms competed against the other 3 and also against a random player. To get the performance result of using alpha beta pruning on minimax, it will also compete against the other 3 algorithms and against a random player while using alpha beta pruning. 
 
 
+\clearpage
 \newpage
+
 \section{Results}
 
-The results section should contain your results.  It should \emph{not} contain
-your interpretation of those results.  That comes later.  This section should be
-made up primarily of graphs and tables that show your data.  You should also
-have a small amount of text describing what each of the tables and graphs shows,
-since the caption on the figures should be short.  Having text describing the
-specifics of the experiment that led to that particular table would also be
-good.  
-
-I am not going to tell you exactly what tables or graphs you should have here,
-since it will depend a bit on your results.  You should be sure that your
-results section contains sufficient data to support your conclusions about the
-relative strengths and weaknesses of the different algorithms.  You should also
-be sure that your data is complete; that is, do not leave data out simply because
-it does not support the point you are trying to make.
-
-You should also be sure that your results are clear and interpretable.  Seven
-pages of raw binary data will do nothing to edify your reader.  Similarly, a
-1 inch square graph with 12 lines plotted on it will be difficult to extract
-meaning from, as will a graph with poor (or no) labels on the axes.  Your
-results should be legible both on screen and in hard copy. By the way, do
-not rely on color difference to make your points since many people read
-black-and-white print outs of the papers (including your instructor).
-
-You do not want to present results that are just raw data, since that is hard to
-interpret.  But you do not want to be overly abstract, either, since that leads to
-results that have little or no meaning (e.g., ``the average over all different
-data sets, algorithms, and parameters'' is a completely useless statistic for
-comparing algorithms).
-
-\begin{table}
+\begin{table}[h]
 \begin{center}
 \begin{tabular}{|c||c|c|c|c|}
 \hline
@@ -171,7 +146,7 @@ TDNN & Minimax & 0 & 0 & 1000\\
 \hline 
 TDNN & Simple Heuristic & 0 & 0 & 1000\\
 \hline 
-TDNN & Navie Bayes & 507 & 0 & 493\\
+TDNN & Naive Bayes & 507 & 0 & 493\\
 \hline 
 TDNN & Random & 948 & 0 & 52\\
 \hline 
@@ -181,7 +156,9 @@ TDNN & Random & 948 & 0 & 52\\
 \label{TDNNtable}
 \end{table}
 
-\begin{table}
+This is a table \ref{TDNNtable} that shows win, loss, and ties against the Minimax, Simple Heuristic and Naive Bayes algorithms along with the results of it playing a random player.
+
+\begin{table}[h]
 \begin{center}
 \begin{tabular}{|c||c|c|c|c|}
 \hline
@@ -210,7 +187,7 @@ Minimax with Pruning & Random & 982 & 1 & 17\\
 \end{table}
 
 
-\begin{table}
+\begin{table}[h]
 \begin{center}
 \begin{tabular}{|c||c|c|c|c|}
 \hline
@@ -230,7 +207,7 @@ Naive Bayes & Random & 936 & 1 & 64\\
 \label{NaiveBayesTable}
 \end{table}
 
-\begin{table}
+\begin{table}[h]
 \begin{center}
 \begin{tabular}{|c||c|c|c|c|}
 \hline
@@ -250,7 +227,7 @@ Simple Heuristic & Random & 991 & 0 & 9\\
 \label{HeuristicTable}
 \end{table}
 
-\begin{table}
+\begin{table}[h]
 \begin{center}
 \begin{tabular}{|c||c|}
 \hline
@@ -274,13 +251,15 @@ Random & 3.6\\
 \label{WinPercentTable}
 \end{table}
 
-\begin{figure}
+\begin{figure}[h]
 \begin{center}
 \includegraphics[width=7in]{winpercent.png}
 \end{center}
 \caption{Win Percentage}
 \label{WinGraph}
 \end{figure}
+
+\clearpage
 
 \section{Discussion}
 In all of the tests the Simple Heuristic and the Minimax algorithms outperformed the TDNN and the Naive Bayes network. This pattern was consistent through out all of the tests that were ran. All algorithms were able to do better than random but that does not provide us with much information about the performance of the algorithm. 
