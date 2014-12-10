@@ -181,7 +181,7 @@ public class Minimax extends AI {
 
             if (temp <= alpha) {
                 for (int j = 0; j < ch.size(); j++) {
-                    if (j != i) {
+                    if (j != i && ch.get(j).getValue() != 0) {
                         ch.get(j).prunned = true;
                     }
                 }
@@ -217,7 +217,7 @@ public class Minimax extends AI {
 
             if (temp >= beta) {
                 for (int j = 0; j < ch.size(); j++) {
-                    if (j != i) {
+                    if (j != i && ch.get(j).getValue() != 0) {
                         ch.get(j).prunned = true;
                         //System.out.println("prunned");
                     }

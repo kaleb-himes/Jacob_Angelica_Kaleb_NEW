@@ -11,7 +11,7 @@ import java.util.Arrays;
  *
  * @author sweetness
  */
-public abstract class AI {
+public abstract class AI{
 
     static int offset = 12;
     static int max; //used as a counter in possible_helper

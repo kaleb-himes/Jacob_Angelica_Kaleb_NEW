@@ -38,8 +38,8 @@ public class Driver {
             AI ai;
 
             //train to pit against 
-            tdnn.train(numTrain);
-            baye.train(numTrain);
+            tdnn.setWeights("weights40.csv");
+            baye.train(1000000);
             minm.train(100); //create tree with memory of 100 games
 
             //TDNN 40 hidden nodes test
@@ -48,7 +48,7 @@ public class Driver {
             out.println("Algorithm,win,tie,loss");
             out.close();
             ai = new TDNN(48, 40, 3);
-            ((TDNN) ai).train(numTrain);
+            ((TDNN) ai).train(1);
             againstAll(td, ai);
 
             //TDNN 160 hidden nodes test
@@ -57,7 +57,7 @@ public class Driver {
             out160.println("Algorithm,win,tie,loss");
             out160.close();
             ai = new TDNN(48, 160, 3);
-            ((TDNN) ai).train(numTrain);
+            ((TDNN) ai).train(1);
             againstAll(td160, ai);
 
             //Minimax test

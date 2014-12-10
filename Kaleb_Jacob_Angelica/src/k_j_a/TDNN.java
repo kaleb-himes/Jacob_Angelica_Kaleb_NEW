@@ -16,9 +16,13 @@
 package k_j_a;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -462,23 +466,26 @@ public class TDNN extends AI {
     /**
      * If user has predefined weights they want to use.
      *
-     * @param in weights to set between nodes [layer][weight] where layer 0 is
-     * between input and next layer (Don't forget bias weight)
+     * @param file weights to set between nodes [layer][weight] where layer 0 is
+     * between input and next layer (Don't forget bias weight) .csv file created
+     * by save weights.
      */
-    public void setWeights(double[][] in) {
-        if (in.length != w.length) {
-            //System.out.println("Error with set weight input!");
-            return;
-        }
-
-        for (int i = 0; i < w.length; i++) {
-            if (in[i].length != w[i].length) {
-                //System.out.println("Error setting weights");
-                return;
+    public void setWeights(String file) {
+        try {
+            Scanner sc = new Scanner(new FileReader(file));
+            int index = 0;
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                String temp[] = line.split(",");
+                for (int i = 0; i < temp.length; i++) {
+                    w[index][i] = Double.parseDouble(temp[i]);
+                }
+                index++;
             }
-            for (int j = 0; j < w[i].length; j++) {
-                w[i][j] = in[i][j];
-            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(TDNN.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            System.out.println("Exception " + ex);
         }
     }
 
