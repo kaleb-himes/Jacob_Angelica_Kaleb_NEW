@@ -23,22 +23,22 @@ This is an experiment to compare the ability of four different algorithms to win
 \end{abstract}
 
 \section{Introduction}
-Use of AI in industry and commercial settings is on the rise. Such as with the use of TDNN's in robots \cite{robotTDNN}. With the broad applications for AI algorithms knowing the best algorithm to use for a problem is important. Since there is "no free lunch" (not an algorithm that is best at all) than the best fit needs to be determined either by mathmatical proof or imperical evedince , or by both. This paper goes through an experiment in finding the best AI algorithm for being used to solve a problem. By testing the performance of each algorithm it is shown that you can find evedience of which will be best suited.
+Use of AI in industry and commercial settings is on the rise. Such as with the use of TDNN's in robots \cite{robotTDNN}. With the broad applications for AI algorithms knowing the best algorithm to use for a problem is important. Since there is "no free lunch" (not an algorithm that is best at all) than the best fit needs to be determined either by mathematical proof or empirical evidence , or by both. This paper goes through an experiment in finding the best AI algorithm for being used to solve a problem. By testing the performance of each algorithm it is shown that you can find evidence of which will be best suited.
  
-In previous work Minimax algorithms have been used to solve chess moves and are well suited for board games in general \cite{flyingMinimax}. We also hypothisise that the Minimax algorithm will perform best when implemented to play polar tic-tac-toe. This is because it will be looking ahead a couple moves and making decisions based off of that and stored outcomes from previous games where as the TDNN and Naive Bayes algorithms are trying to learn how to make inferences given the current board state. Making inferences with this board may take more precalculations than what will be done in the experiments.
+In previous work Minimax algorithms have been used to solve chess moves and are well suited for board games in general \cite{flyingMinimax}. We also hypothesize that the Minimax algorithm will perform best when implemented to play polar tic-tac-toe. This is because it will be looking ahead a couple moves and making decisions based off of that and stored outcomes from previous games where as the TDNN and Naive Bayes algorithms are trying to learn how to make inferences given the current board state. Making inferences with this board may take more pre-calculations than what will be done in the experiments.
 
 Previous work with the TDNN has been done on the backgammon board game \cite{stanfordTDNN}. It has shown to be able to play at a grand master level in backgammon. Here it will be implemented to make decisions on moves with the polar tic-tac-toe game. To simulate the process of learning the TDNN implementations gradient descent to update the weight values \cite{gradientTDNN}. With having the weights updated it can adjust the predicted outcomes of board states to match what it is seeing in actual tests. 
 
-This paper is divided into an explenation of the problem followed by an explenation of each algorithm implemented. After defining the problem and showing the algorithms used there is a section on the experimental methods and on the that came from conducting the experiment. The end of the paper has sections to discuss the results of the experiment and at the very end a conclusion.
+This paper is divided into an explanation of the problem followed by an explanation of each algorithm implemented. After defining the problem and showing the algorithms used there is a section on the experimental methods and on the that came from conducting the experiment. The end of the paper has sections to discuss the results of the experiment and at the very end a conclusion.
 
 
 \section{Problem Statement}
 Algorithms will be used to play Polar Tic-Tac-Toe. The game is played by alternating turns of who gets to pick a move on the board. A spot being controlled by a player is represented visually by a O or an X indicating which player has chosen the spot. If at any time a player has 4 spots in a row, either diagonally or in a straight line, they win the game. The game consists of four rings, with each ring containing 12 evenly spaced locations for a possible move. In this experiment it is only a legal move if the space being chosen has one edge touching a space that has previously been chosen by either player. This though is relaxed on the very first move since no previous moves have been made.
 
-The problem to be solved by the algorithms being experimented with is to attempt learning information about the state space of the game. Each of the algorithms is to make perdictions on which move to make and ultimatly each will try to not lose.
+The problem to be solved by the algorithms being experimented with is to attempt learning information about the state space of the game. Each of the algorithms is to make predictions on which move to make and ultimately each will try to not lose.
 
 \subsection{Traditional Minimax Search}
-The Minimax algorithm used checks at each ply for the maximize value when looking for player ones potential moves. When playing as player two it looks to minimize the possible utility value. An adjustibale parameter set for the algorithm is the depth at which it searchs. Values are assigned by finding the max or min of the next ply. A terminating node with a win condition for player one is assigned the value of 5 and a loss condition is assigned -5. For ties the value of 0 is assigned to the node. All nodes in the tree are initialized with the value returned from the simple heuristic if player one, if player two than the node value is initialized as 0.
+The Minimax algorithm used checks at each ply for the maximize value when looking for player ones potential moves. When playing as player two it looks to minimize the possible utility value. An adjustable parameter set for the algorithm is the depth at which it searches. Values are assigned by finding the max or min of the next ply. A terminating node with a win condition for player one is assigned the value of 5 and a loss condition is assigned -5. For ties the value of 0 is assigned to the node. All nodes in the tree are initialized with the value returned from the simple heuristic if player one, if player two than the node value is initialized as 0.
 
 The process can be shown in the following pseudocode. \cite{textBook} \newline 
 
@@ -70,14 +70,13 @@ v set as the min between v and Max-Value(Result(s,a))
 
 return v \newline
 
-The biggest difference between our implementation and the cononical version is that we have a cutoff point specified by depth instead of going all the way to terminal nodes. In the Minimax experimented with it also retains the state, action, and utility values in a tree for future use.
+The biggest difference between our implementation and the canonical version is that we have a cutoff point specified by depth instead of going all the way to terminal nodes. In the Minimax experimented with it also retains the state, action, and utility values in a tree for future use.
  
 
 \subsection{Minimax with Alpha-Beta Pruning}
- The ability to use Alpha-Beta Pruning is something that can be adjusted at runtime. It uses almost the same algorithm as the regualer Minimax but has the added check of alpha and beta values. Alpha is set to negative infinity and beta is set to positive infinity when the alpha-beta algorithm is started. This is to insure that an alpha and beta value will be found and that node values will not be over looked while the algorithm is operating. When looking for a minimum value for the next move if the value found is less than alpha the node is returned and the rest of the nodes are not explored. If the value is not less than or equal to alpha than beta is set to the minumum between the current beta value and the current node being explored. When looking for a maximum value for the next move if the value found for the current node being explored is less than or equal to the current beta value than the current node is returned and the rest of the nodes in that ply are not explored. If the value is less than the current beta value than the alpha value is updated to be the maximum value of either the current alpha value or the current node value. 
+ The ability to use Alpha-Beta Pruning is something that can be adjusted at runtime. It uses almost the same algorithm as the regular Minimax but has the added check of alpha and beta values. Alpha is set to negative infinity and beta is set to positive infinity when the alpha-beta algorithm is started. This is to insure that an alpha and beta value will be found and that node values will not be over looked while the algorithm is operating. When looking for a minimum value for the next move if the value found is less than alpha the node is returned and the rest of the nodes are not explored. If the value is not less than or equal to alpha than beta is set to the minimum between the current beta value and the current node being explored. When looking for a maximum value for the next move if the value found for the current node being explored is less than or equal to the current beta value than the current node is returned and the rest of the nodes in that ply are not explored. If the value is less than the current beta value than the alpha value is updated to be the maximum value of either the current alpha value or the current node value. 
 
-In our implementation the Alpha-Beta Pruning can be called on an exisiting stored Minimax tree. This works by starting at the head of the tree and recursivily finding the max value or min value from possible moves while keeping track of an alpha value and beta value.  It then marks nodes that the Alpha-Beta Pruning algorithm decided not to visit so that they will not be explored in the future either. 
-
+In our implementation the Alpha-Beta Pruning can be called on an existing stored Minimax tree. This works by starting at the head of the tree and recursively finding the max value or min value from possible moves while keeping track of an alpha value and beta value.  It then marks nodes that the Alpha-Beta Pruning algorithm decided not to visit so that they will not be explored in the future either. 
 
 \subsection{Heuristic Functions}
 
@@ -156,9 +155,9 @@ When training the TDNN the first 20 games are trained against a random player. T
 \[
 {\triangle} w_t = \alpha (V _{t + 1} - V _t)  \overset{t}{\sum_{k = 1}} {\gamme}^{t - k} {\nabla}_w V_k
 \]
-Where alpha is the learning rate and V is the perdicted output. The weights of the network are bound between -3 and 3. This is to help prevent the neural network from getting flooded. For the learning rate in the network the value of alpha was set to 0.001 the value of lambda was 0.3 and a bias of -1 was used. 
+Where alpha is the learning rate and V is the predicted output. The weights of the network are bound between -3 and 3. This is to help prevent the neural network from getting flooded. For the learning rate in the network the value of alpha was set to 0.001 the value of lambda was 0.3 and a bias of -1 was used. 
 
-The topology of the network impolemented is 48 inputs, one hidden layer with 40 nodes, and 3 output nodes. Input nodes to represent each possible state for a move and 3 output nodes; one for player 1 win, one for player 2 win, and one for a tie perdicted. Along with these nodes there is a bias node fully connected to the hidden layer and a bias node fully connected to the output layer. 
+The topology of the network implemented is 48 inputs, one hidden layer with 40 nodes, and 3 output nodes. Input nodes to represent each possible state for a move and 3 output nodes; one for player 1 win, one for player 2 win, and one for a tie predicted. Along with these nodes there is a bias node fully connected to the hidden layer and a bias node fully connected to the output layer. 
 
 For the hidden nodes a sigmoid activation function was used. The activation function is as follows. 
 \[
@@ -168,7 +167,7 @@ For the hidden nodes a sigmoid activation function was used. The activation func
 \section{Experimental Methods}
 In conducting experiments with the implemented algorithms we had them compete against each other 1000 games each. All algorithms competed against the other 3 and also against a random player. To get the performance result of using alpha beta pruning on minimax, it will also compete against the other 3 algorithms and against a random player while using alpha beta pruning.
 
-The number of training games used for the Naive Bayes was 1000 and 200000 for the TDNN algorithm. Minimax was run through 100 games to memorise a tree of some utility values and outcomes. 
+The number of training games used for the Naive Bayes was 1000 and 200000 for the TDNN algorithm. Minimax was run through 100 games to memorize a tree of some utility values and outcomes. 
 
 
 \clearpage
@@ -208,7 +207,7 @@ Minimax & TDNN & 1000 & 0 & 0\\
 \hline 
 Minimax & Simple Heuristic & 476 & 0 & 524\\
 \hline 
-Minimax & Navie Bayes & 1000 & 0 & 0\\
+Minimax & Naive Bayes & 1000 & 0 & 0\\
 \hline 
 Minimax & Random & 979 & 1 & 20\\
 \hline 
@@ -226,7 +225,7 @@ Minimax with Pruning & Random & 982 & 1 & 17\\
 \label{MinimaxTable}
 \end{table}
 
-The table \ref{MinimaxTable} shows the performance of both the Minimax algorithm without alpha beta pruning and with alpha beta pruning. Below the table \ref{NaiveBayesTable} show how the classifier did when used to perdict moves to make in the game. In Figure \ref{WinGraph} and Table \ref{WinPercentTable} the total win percentages for each algorithm through out the experiment is displayed.
+The table \ref{MinimaxTable} shows the performance of both the Minimax algorithm without alpha beta pruning and with alpha beta pruning. Below the table \ref{NaiveBayesTable} show how the classifier did when used to predict moves to make in the game. In Figure \ref{WinGraph} and Table \ref{WinPercentTable} the total win percentages for each algorithm through out the experiment is displayed.
 
 
 \begin{table}[h]
@@ -306,12 +305,12 @@ Random & 3.6\\
 \clearpage
 
 \section{Discussion}
-In all of the tests the Simple Heuristic and the Minimax algorithms outperformed the TDNN and the Naive Bayes network. This pattern was consistent through out all of the tests that were ran. All algorithms were able to do better than random but that does not provide us with much information about the performance of the algorithm. The hypothisis that Minimax would do best was not confermed from the experiments since the Simple Heuristic did as well as the Minimax algorithm. 
+In all of the tests the Simple Heuristic and the Minimax algorithms outperformed the TDNN and the Naive Bayes network. This pattern was consistent through out all of the tests that were ran. All algorithms were able to do better than random but that does not provide us with much information about the performance of the algorithm. The hypothesis that Minimax would do best was not confirmed from the experiments since the Simple Heuristic did as well as the Minimax algorithm. 
 
 \section{Conclusions}
-While conducting the experiment it was shown that the simple heuristic and minimax algorthims performed best out of all of the implementations. It was also apparant while running the experiments that the Minimax tree gets very large relatively quickly when stored. The results lead to the suspicion that the topology of the TDNN is a large factor in it's ability to perform well.
+While conducting the experiment it was shown that the simple heuristic and minimax algorithms performed best out of all of the implementations. It was also apparent while running the experiments that the Minimax tree gets very large relatively quickly when stored. The results lead to the suspicion that the topology of the TDNN is a large factor in it's ability to perform well.
 
-In the experiment the TDNN did not perform well. We think this could be due to the amount of input nodes in comparision to the number of hidden nodes used. To test this we briefly ran a network that had 160 hidden nodes but still did not see a performance gain. Future exploration of the reason for it's lack of performance could be done in investigating the effect of having 48 input values. It may increase performance to do calculations to reduce the number of inputs since the state search space for backgammon in which it excelled was only 20. Another short comming of the network was no checking for if it was over training. Although overtraining was unlikely with the number of training games being used.
+In the experiment the TDNN did not perform well. We think this could be due to the amount of input nodes in comparison to the number of hidden nodes used. To test this we briefly ran a network that had 160 hidden nodes but still did not see a performance gain. Future exploration of the reason for it's lack of performance could be done in investigating the effect of having 48 input values. It may increase performance to do calculations to reduce the number of inputs since the state search space for backgammon in which it excelled was only 20. Another short coming of the network was no checking for if it was over training. Although over training was unlikely with the number of training games being used.
 
 
 
